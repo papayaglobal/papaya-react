@@ -1,0 +1,46 @@
+html {
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Open Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 1rem;
+  color: #373e44;
+}
+h1 {
+  font-size: 24px;
+  font-weight: normal;
+}
+h2 {
+  font-size: 20px;
+  font-weight: normal;
+}
+h3 {
+  font-size: 18px;
+  font-weight: bold;
+}
+h4 {
+  font-size: 16px;
+  font-weight: bold;
+}
+h5 {
+  font-size: 14px;
+  font-weight: bold;
+}
+h6 {
+  font-size: 12px;
+  font-weight: bold;
+}
+button {
+  font-family: "Open Sans", sans-serif !important;
+}
+.btnIcon {
+  height: 1rem;
+}
+.btnText {
+  margin: 0 0.6rem;
+}
