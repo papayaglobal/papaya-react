@@ -9,6 +9,8 @@ const AppButton = styled.button`
     props.outline ? "transparent" : props.type === "secondary" ? Color.BRIGHT3 : Color.ACCENT1};
   border-color: ${props =>
     props.outline ? (props.type === "secondary" ? Color.DARK3 : Color.ACCENT1) : "transparent"};
+    border-width: ${props => 
+    props.outline ? "1px" : "none"};
   border-radius: 0.3rem;
   color: ${props =>
     props.type === "secondary"
