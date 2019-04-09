@@ -3,7 +3,12 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
+  margin: 10px;
 }
-.App button {
+.App button,
+.App input {
   margin: 0 10px;
+}
+.App.spinner {
+  display: inline-flex;
 }
