@@ -9,6 +9,23 @@
 .App input {
   margin: 0 10px;
 }
+.App.alert {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.App.alert > div {
+  margin: 10px;
+}
+.App.tooltip {
+  flex: 1;
+  position: relative;
+}
+.App.popover {
+  flex: 1;
+  position: relative;
+}
 .App.spinner {
   display: inline-flex;
 }
