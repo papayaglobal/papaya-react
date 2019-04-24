@@ -13,11 +13,13 @@ const AppCheckBox = styled(CheckBox)`
   width: 1rem;
   height: 1rem;
   border: 1px solid ${Colors.DARK1};
+  border-radius: 2px;
   opacity: 0.3;
   box-shadow: none;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 
   :focus,
   :active,

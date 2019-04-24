@@ -1,6 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
-  <defs>
-    <path id="pending-a" d="M9.99,0 C4.47,0 0,4.48 0,10 C0,15.52 4.47,20 9.99,20 C15.52,20 20,15.52 20,10 C20,4.48 15.52,0 9.99,0 Z M10,18 C5.58,18 2,14.42 2,10 C2,5.58 5.58,2 10,2 C14.42,2 18,5.58 18,10 C18,14.42 14.42,18 10,18 Z M10.5,5 L9,5 L9,11 L14.25,14.15 L15,12.92 L10.5,10.25 L10.5,5 Z"/>
-  </defs>
-  <use  transform="translate(2 2)" xlink:href="#pending-a"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Pending</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M8.325,0 C3.725,0 0,3.73333333 0,8.33333333 C0,12.9333333 3.725,16.6666667 8.325,16.6666667 C12.9333333,16.6666667 16.6666667,12.9333333 16.6666667,8.33333333 C16.6666667,3.73333333 12.9333333,0 8.325,0 Z M8.33333333,15 C4.65,15 1.66666667,12.0166667 1.66666667,8.33333333 C1.66666667,4.65 4.65,1.66666667 8.33333333,1.66666667 C12.0166667,1.66666667 15,4.65 15,8.33333333 C15,12.0166667 12.0166667,15 8.33333333,15 Z M8.75,4.16666667 L7.5,4.16666667 L7.5,9.16666667 L11.875,11.7916667 L12.5,10.7666667 L8.75,8.54166667 L8.75,4.16666667 Z" id="path-1"></path>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Time-Off/List/PTO/Desktop/By-Month" transform="translate(-1043.000000, -1.000000)">
+            <g id="Icons/Pending" transform="translate(1042.000000, 0.000000)">
+                <g id="icon/device/access_time_24px" transform="translate(1.666667, 1.666667)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use fill="#F9A01C" xlink:href="#path-1"></use>
+                </g>
+            </g>
+        </g>
+    </g>
 </svg>

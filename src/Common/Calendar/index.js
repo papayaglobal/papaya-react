@@ -1,4 +1,5 @@
 import React from "react";
+import { CSSTransition } from "react-transition-group";
 import {
   format,
   startOfWeek,
@@ -24,27 +25,36 @@ export default class Calendar extends React.Component {
   state = {
     currentMonth: new Date(),
     selectedDate: new Date(),
+    animate: false,
     sickLeave: [
       "2019/04/01",
       "2019/04/07",
-      "2019/04/15",
-      "2019/04/16",
-      "2019/04/17",
       "2019/04/18",
       "2019/04/19",
+      "2019/05/02",
+      "2019/05/03",
+      "2019/05/04",
       "2019/05/20"
     ],
-    vacationLeave: ["2019/04/03", "2019/04/12", "2019/04/26", "2019/04/27", "2019/04/28"]
+    vacations: ["2019/04/03", "2019/04/12", "2019/04/26", "2019/04/27", "2019/04/28"],
+    direction: ""
   };
   componentDidMount() {}
   renderHeading = () => {
-    const { currentMonth } = this.state;
+    const { currentMonth, animate, direction } = this.state;
     const dateFormat = "MMMM, yyyy";
     return (
       <div className="calendar-header">
-        <div className="header-date">
-          <span className="current-month">{format(currentMonth, dateFormat)}</span>
-        </div>
+        <CSSTransition
+          in={animate}
+          timeout={200}
+          classNames={{ enter: `${direction === "ltr" ? "slideinltr-enter" : "slideinrtl-enter"}`, enterActive: `${direction === "ltr" ? "slideinltr-enter-active" : "slideinrtl-enter-active"}` }}
+          onEntered={() => this.setState({ animate: false })}
+        >
+          <div className="header-date">
+            <span className="current-month">{format(currentMonth, dateFormat)}</span>
+          </div>
+        </CSSTransition>
         <div className="prev-next-icon">
           <img src={prevIcon} alt="Previous" onClick={() => this.previousMonth()} />
           <img src={nextIcon} alt="Next" onClick={() => this.nextMonth()} />
@@ -57,10 +67,8 @@ export default class Calendar extends React.Component {
     const d = [];
     for (let i in days) {
       d.push(
-        <div className="number">
-          <div className="days" key={i}>
-            {days[i]}
-          </div>
+        <div className="number" key={i}>
+          <div className="days">{days[i]}</div>
         </div>
       );
     }
@@ -113,15 +121,15 @@ export default class Calendar extends React.Component {
     return rows;
   };
   isSickLeave = day => {
-    const { sickLeave } = this.state;
-    // console.log("Day: ", format(new Date(sickLeave[0]), ));
-    for (let i in sickLeave) {
-      if (isSameDay(new Date(day), new Date(sickLeave[i]))) {
-        if (isSameDay(new Date(sickLeave[i]), new Date())) {
+    const { sickLeaves } = this.props;
+    // console.log("Day: ", format(new Date(sickLeaves[0]), ));
+    for (let i in sickLeaves) {
+      if (isSameDay(new Date(day), new Date(sickLeaves[i]))) {
+        if (isSameDay(new Date(sickLeaves[i]), new Date())) {
           return "sick planned";
-        } else if (isAfter(new Date(sickLeave[i]), new Date())) {
+        } else if (isAfter(new Date(sickLeaves[i]), new Date())) {
           return "sick pending";
-        } else if (isBefore(new Date(sickLeave[i]), new Date())) {
+        } else if (isBefore(new Date(sickLeaves[i]), new Date())) {
           return "sick passed";
         } else {
           return "";
@@ -130,15 +138,15 @@ export default class Calendar extends React.Component {
     }
   };
   isVacationLeave = day => {
-    const { vacationLeave } = this.state;
-    // console.log("Day: ", format(new Date(vacationLeave[0]), ));
-    for (let i in vacationLeave) {
-      if (isSameDay(new Date(day), new Date(vacationLeave[i]))) {
-        if (isSameDay(new Date(vacationLeave[i]), new Date())) {
+    const { vacationLeaves } = this.props;
+    // console.log("Day: ", format(new Date(vacationLeaves[0]), ));
+    for (let i in vacationLeaves) {
+      if (isSameDay(new Date(day), new Date(vacationLeaves[i]))) {
+        if (isSameDay(new Date(vacationLeaves[i]), new Date())) {
           return "vacation planned";
-        } else if (isAfter(new Date(vacationLeave[i]), new Date())) {
+        } else if (isAfter(new Date(vacationLeaves[i]), new Date())) {
           return "vacation pending";
-        } else if (isBefore(new Date(vacationLeave[i]), new Date())) {
+        } else if (isBefore(new Date(vacationLeaves[i]), new Date())) {
           return "vacation passed";
         } else {
           return "";
@@ -151,22 +159,34 @@ export default class Calendar extends React.Component {
   };
   nextMonth = () => {
     this.setState({
-      currentMonth: addMonths(this.state.currentMonth, 1)
+      currentMonth: addMonths(this.state.currentMonth, 1),
+      animate: true,
+      direction: "ltr"
     });
   };
   previousMonth = () => {
     this.setState({
-      currentMonth: subMonths(this.state.currentMonth, 1)
+      currentMonth: subMonths(this.state.currentMonth, 1),
+      animate: true,
+      direction: "rtl"
     });
   };
   render() {
+    const { animate, direction } = this.state;
     return (
       <div className="calendar-wrapper">
         {this.renderHeading()}
-        <div className="calendar-body">
-          {this.renderBody()}
-          <div className="rows-wrapper">{this.renderCells()}</div>
-        </div>
+        <CSSTransition
+          in={animate}
+          timeout={200}
+          classNames={{ enter: `${direction === "ltr" ? "slideinltr-enter" : "slideinrtl-enter"}`, enterActive: `${direction === "ltr" ? "slideinltr-enter-active" : "slideinrtl-enter-active"}` }}
+          onEntered={() => this.setState({ animate: false })}
+        >
+          <div className="calendar-body">
+            {this.renderBody()}
+            <div className="rows-wrapper">{this.renderCells()}</div>
+          </div>
+        </CSSTransition>
       </div>
     );
   }

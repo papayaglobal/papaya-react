@@ -33,21 +33,25 @@ const AppTextInput = styled.input`
       : ""});
   background-repeat: no-repeat;
   background-attachment: scroll;
-  background-position: 18.2rem 0.7rem;
+  background-position: 18.5rem 0.8rem;
+  background-size: auto 12px;
   padding-right: 40px;
+  color: #343949;
 
   ::-webkit-input-placeholder {
     font-family: "Open Sans", sans-serif !important;
+    color: #b5b7bd;
   }
 
   :focus {
     border-color: #3785fa;
-    opacity: 0.5;
+    opacity: 0.8;
     outline: none;
   }
 
   :disabled {
     opacity: 0.6;
+    cursor: default;
   }
 `;
 

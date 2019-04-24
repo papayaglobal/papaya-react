@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="3px" height="13px" viewBox="0 0 3 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>More</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Time-Off/List/PTO/Desktop/By-Month" transform="translate(-1090.000000, -4.000000)" fill="#C2C3C8">
+            <g id="UI/More" transform="translate(1090.000000, 4.000000)">
+                <g id="Elements/More-btn">
+                    <path d="M1.5,3.0952381 C0.671572875,3.0952381 0,2.40234545 0,1.54761905 C0,0.692892649 0.671572875,-1.0658141e-14 1.5,-1.0658141e-14 C2.32842712,-1.0658141e-14 3,0.692892649 3,1.54761905 C3,2.40234545 2.32842712,3.0952381 1.5,3.0952381 Z M1.5,8.04761905 C0.671572875,8.04761905 0,7.3547264 0,6.5 C0,5.6452736 0.671572875,4.95238095 1.5,4.95238095 C2.32842712,4.95238095 3,5.6452736 3,6.5 C3,7.3547264 2.32842712,8.04761905 1.5,8.04761905 Z M1.5,13 C0.671572875,13 0,12.3071074 0,11.452381 C0,10.5976546 0.671572875,9.9047619 1.5,9.9047619 C2.32842712,9.9047619 3,10.5976546 3,11.452381 C3,12.3071074 2.32842712,13 1.5,13 Z" id="Combined-Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

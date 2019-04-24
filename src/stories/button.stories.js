@@ -20,7 +20,7 @@ storiesOf("Button", module)
   .add("Default", () => (
     <div className="App">
       <AppButton type="primary" {...actions}>
-        <span>{text("label", "With Text")}</span>
+        <span className="btnText">{text("label", "With Text")}</span>
       </AppButton>
     </div>
   ))

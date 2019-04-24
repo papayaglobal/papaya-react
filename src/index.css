@@ -41,6 +41,10 @@ button {
 .btnIcon {
   height: 1rem;
 }
+span {
+  line-height: 1;
+}
 .btnText {
   margin: 0 0.6rem;
+  line-height: 1;
 }
