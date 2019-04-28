@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import * as Color from "../../Constants/colors";
 
-const AppButton = styled.button`
+const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -74,4 +74,4 @@ const AppButton = styled.button`
   }
 `;
 
-export default AppButton;
+export default Button;

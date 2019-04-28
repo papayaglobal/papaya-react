@@ -1,14 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 
-const Message = ({ className, children, icon }) => (
+const MessageComponent = ({ className, children, icon }) => (
   <div className={className}>
     {icon && <img src={icon} alt="Message Icon" />}
     {children}
   </div>
 );
 
-const AppMessage = styled(Message)`
+const Message = styled(MessageComponent)`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -30,4 +30,4 @@ const AppMessage = styled(Message)`
   }
 `;
 
-export default AppMessage;
+export default Message;

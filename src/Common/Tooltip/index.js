@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import * as Colors from "../../Constants/colors";
 
-class ToolTip extends React.Component {
+class ToolTipComponent extends React.Component {
   state = {
     displayTooltip: this.props.displayTooltip || false
   };
@@ -35,7 +35,7 @@ class ToolTip extends React.Component {
   }
 }
 
-const AppToolTip = styled(ToolTip)`
+const ToolTip = styled(ToolTipComponent)`
   position: relative;
 
   & .tooltip-trigger {
@@ -128,4 +128,4 @@ const AppToolTip = styled(ToolTip)`
   }
 `;
 
-export default AppToolTip;
+export default ToolTip;

@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import { withKnobs, text, boolean } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
 
-import AppSelect from "../Common/Select";
+import SelectBox from "../Common/Select";
 
 import "./stories.css";
 
@@ -18,12 +18,12 @@ const options = [
 storiesOf("Select", module)
   .addDecorator(withKnobs)
   .add("Default", () => (
-    <div className="App">
-      <AppSelect options={options} placeholder="Placeholder" isMulti={false} />
+    <div className="app">
+      <SelectBox options={options} placeholder="Placeholder" isMulti={false} />
     </div>
   ))
   .add("Multiple Values", () => (
-    <div className="App">
-      <AppSelect options={options} placeholder="Placeholder" isMulti={boolean("isMulti", true)} />
+    <div className="app">
+      <SelectBox options={options} placeholder="Placeholder" isMulti={boolean("isMulti", true)} />
     </div>
   ));

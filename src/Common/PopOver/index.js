@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import * as Colors from "../../Constants/colors";
 
-class PopOver extends React.Component {
+class PopOverComponent extends React.Component {
   state = {
     displayPopOver: this.props.displayPopOver || false
   };
@@ -31,7 +31,7 @@ class PopOver extends React.Component {
   }
 }
 
-const AppPopOver = styled(PopOver)`
+const PopOver = styled(PopOverComponent)`
   position: relative;
 
   & .popup-trigger {
@@ -130,4 +130,4 @@ const AppPopOver = styled(PopOver)`
   }
 `;
 
-export default AppPopOver;
+export default PopOver;

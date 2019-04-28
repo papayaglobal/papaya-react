@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import AppButton from "./Common/Button";
+import Button from "./Common/Button";
 import Spinner from "./Common/Spinner";
 import "./App.css";
 
@@ -8,13 +8,13 @@ import attachment from "./assets/icons/attachment-white.svg";
 class App extends Component {
   render() {
     return (
-      <div className="App">
+      <div className="app">
         <header className="App-header">
           <h1>Welcome to papaya</h1>
-          <AppButton size="small" type="primary">
+          <Button size="small" type="primary">
             <Spinner color="#ffffff" />
             <span className="btnText">Button</span>
-          </AppButton>
+          </Button>
           <br />
         </header>
       </div>

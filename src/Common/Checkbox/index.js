@@ -4,11 +4,11 @@ import React from "react";
 import * as Colors from "../../Constants/colors";
 import check from "../../assets/icons/check.svg";
 
-const CheckBox = ({ className, children, checked }) => (
+const CheckBoxComponent = ({ className, children, checked }) => (
   <input type="checkbox" className={className} checked={checked} />
 );
 
-const AppCheckBox = styled(CheckBox)`
+const CheckBox = styled(CheckBoxComponent)`
   appearance: none;
   width: 1rem;
   height: 1rem;
@@ -39,4 +39,4 @@ const AppCheckBox = styled(CheckBox)`
   }
 `;
 
-export default AppCheckBox;
+export default CheckBox;

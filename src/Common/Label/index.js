@@ -3,13 +3,13 @@ import styled from "styled-components";
 
 import * as Colors from "../../Constants/colors";
 
-const Label = ({ className, title }) => (
+const LabelComponent = ({ className, title }) => (
   <div className={className}>
     <p>{title}</p>
   </div>
 );
 
-const AppLabel = styled(Label)`
+const Label = styled(LabelComponent)`
   background-color: ${Colors.STATUSOK};
   color: #ffffff;
   border-radius: 20px;
@@ -27,4 +27,4 @@ const AppLabel = styled(Label)`
   }
 `;
 
-export default AppLabel;
+export default Label;

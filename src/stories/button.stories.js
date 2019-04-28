@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import { withKnobs, text, boolean, object } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
 
-import AppButton from "../Common/Button";
+import Button from "../Common/Button";
 import attachment from "../assets/icons/attachment-white.svg";
 
 import "../assets/css/normalize.css";
@@ -18,122 +18,122 @@ export const actions = {
 storiesOf("Button", module)
   .addDecorator(withKnobs)
   .add("Default", () => (
-    <div className="App">
-      <AppButton type="primary" {...actions}>
+    <div className="app">
+      <Button type="primary" {...actions}>
         <span className="btnText">{text("label", "With Text")}</span>
-      </AppButton>
+      </Button>
     </div>
   ))
   .add("Icon with Text", () => (
-    <div className="App">
-      <AppButton {...actions}>
+    <div className="app">
+      <Button {...actions}>
         <img className="btnIcon" src={attachment} alt="icon" />
         <span className="btnText">{text("label", "With Icon and Text")}</span>
-      </AppButton>
+      </Button>
     </div>
   ))
   .add("Icon Only", () => (
-    <div className="App">
-      <AppButton {...actions}>
+    <div className="app">
+      <Button {...actions}>
         <img className="btnIcon" src={attachment} alt="icon" />
-      </AppButton>
+      </Button>
     </div>
   ))
   .add("Sizes", () => (
-    <div className="App">
-      <AppButton size="large" {...actions}>
+    <div className="app">
+      <Button size="large" {...actions}>
         <img className="btnIcon" src={attachment} alt="icon" />
         <span className="btnText">{text("label", "Large")}</span>
-      </AppButton>
-      <AppButton size="medium" {...actions}>
+      </Button>
+      <Button size="medium" {...actions}>
         <img className="btnIcon" src={attachment} alt="icon" />
         <span className="btnText">{text("label", "Medium")}</span>
-      </AppButton>
-      <AppButton size="small" {...actions}>
+      </Button>
+      <Button size="small" {...actions}>
         <img className="btnIcon" src={attachment} alt="icon" />
         <span className="btnText">{text("label", "Small")}</span>
-      </AppButton>
+      </Button>
     </div>
   ))
   .add("Types", () => (
     <div>
-      <div className="App">
-        <AppButton size="large" type="primary" {...actions}>
+      <div className="app">
+        <Button size="large" type="primary" {...actions}>
           <span className="btnText">{text("label", "Primary")}</span>
-        </AppButton>
-        <AppButton size="large" type="secondary" {...actions}>
+        </Button>
+        <Button size="large" type="secondary" {...actions}>
           <span className="btnText">{text("label", "Secondary")}</span>
-        </AppButton>
+        </Button>
       </div>
-      <div className="App">
-        <AppButton size="medium" type="primary" {...actions}>
+      <div className="app">
+        <Button size="medium" type="primary" {...actions}>
           <span className="btnText">{text("label", "Primary")}</span>
-        </AppButton>
-        <AppButton size="medium" type="secondary" {...actions}>
+        </Button>
+        <Button size="medium" type="secondary" {...actions}>
           <span className="btnText">{text("label", "Secondary")}</span>
-        </AppButton>
+        </Button>
       </div>
-      <div className="App">
-        <AppButton size="small" type="primary" {...actions}>
+      <div className="app">
+        <Button size="small" type="primary" {...actions}>
           <span className="btnText">{text("label", "Primary")}</span>
-        </AppButton>
-        <AppButton size="small" type="secondary" {...actions}>
+        </Button>
+        <Button size="small" type="secondary" {...actions}>
           <span className="btnText">{text("label", "Secondary")}</span>
-        </AppButton>
+        </Button>
       </div>
     </div>
   ))
   .add("Outline", () => (
     <div>
-      <div className="App">
-        <AppButton size="large" type="primary" outline {...actions}>
+      <div className="app">
+        <Button size="large" type="primary" outline {...actions}>
           <span className="btnText">{text("label", "Primary")}</span>
-        </AppButton>
-        <AppButton size="large" type="secondary" outline {...actions}>
+        </Button>
+        <Button size="large" type="secondary" outline {...actions}>
           <span className="btnText">{text("label", "Secondary")}</span>
-        </AppButton>
+        </Button>
       </div>
-      <div className="App">
-        <AppButton size="medium" type="primary" outline {...actions}>
+      <div className="app">
+        <Button size="medium" type="primary" outline {...actions}>
           <span className="btnText">{text("label", "Primary")}</span>
-        </AppButton>
-        <AppButton size="medium" type="secondary" outline {...actions}>
+        </Button>
+        <Button size="medium" type="secondary" outline {...actions}>
           <span className="btnText">{text("label", "Secondary")}</span>
-        </AppButton>
+        </Button>
       </div>
-      <div className="App">
-        <AppButton size="small" type="primary" outline {...actions}>
+      <div className="app">
+        <Button size="small" type="primary" outline {...actions}>
           <span className="btnText">{text("label", "Primary")}</span>
-        </AppButton>
-        <AppButton size="small" type="secondary" outline {...actions}>
+        </Button>
+        <Button size="small" type="secondary" outline {...actions}>
           <span className="btnText">{text("label", "Secondary")}</span>
-        </AppButton>
+        </Button>
       </div>
     </div>
   ))
   .add("Disabled", () => (
     <div>
-      <div className="App">
-        <AppButton size="large" type="primary" disabled {...actions}>
+      <div className="app">
+        <Button size="large" type="primary" disabled {...actions}>
           <span className="btnText">{text("label", "Primary")}</span>
-        </AppButton>
-        <AppButton size="large" type="secondary" disabled {...actions}>
+        </Button>
+        <Button size="large" type="secondary" disabled {...actions}>
           <span className="btnText">{text("label", "Secondary")}</span>
-        </AppButton>
+        </Button>
       </div>
-      <div className="App">
-        <AppButton size="large" type="primary" outline disabled {...actions}>
+      <div className="app">
+        <Button size="large" type="primary" outline disabled {...actions}>
           <span className="btnText">{text("label", "Primary")}</span>
-        </AppButton>
-        <AppButton size="large" type="secondary" outline disabled {...actions}>
+        </Button>
+        <Button size="large" type="secondary" outline disabled {...actions}>
           <span className="btnText">{text("label", "Secondary")}</span>
-        </AppButton>
+        </Button>
       </div>
     </div>
   ))
   .add("Props", () => (
-    <div className="App">
-      <AppButton
+    <div className="app">
+      <Button
         type={text("type", "primary")}
         size={text("size", "large")}
         outline={boolean("outline", true)}
@@ -141,12 +141,12 @@ storiesOf("Button", module)
         {...actions}
       >
         <span className="btnText">{text("label", "With Props")}</span>
-      </AppButton>
+      </Button>
     </div>
   ))
   .add("Custom Style", () => (
-    <div className="App">
-      <AppButton
+    <div className="app">
+      <Button
         {...actions}
         style={object("style", {
           backgroundColor: "#ff1b1b",
@@ -154,6 +154,6 @@ storiesOf("Button", module)
         })}
       >
         <span className="btnText">{text("label", "Custom Style")}</span>
-      </AppButton>
+      </Button>
     </div>
   ));

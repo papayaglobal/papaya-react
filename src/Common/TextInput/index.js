@@ -6,7 +6,7 @@ import WarningIcon from "../../assets/icons/warning.svg";
 
 import * as Colors from "../../Constants/colors";
 
-const AppTextInput = styled.input`
+const TextInput = styled.input`
   min-width: 20.5rem;
   height: 2.5rem;
   padding: 7px 16px;
@@ -55,4 +55,4 @@ const AppTextInput = styled.input`
   }
 `;
 
-export default AppTextInput;
+export default TextInput;
