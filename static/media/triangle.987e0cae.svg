@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="6px" height="4px" viewBox="0 0 6 4" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>Triangle</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Desktop" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Time-Off-Reports---1440" transform="translate(-1389.000000, -113.000000)" fill="#343949" fill-rule="nonzero">
+            <g id="btn-secondary" transform="translate(1243.000000, 97.000000)">
+                <g id="tri-angel" transform="translate(132.000000, 0.000000)">
+                    <g id="Arrow/Triangle/Normal" transform="translate(14.000000, 16.000000)">
+                        <path d="M3.21213203,0.962132034 L5.48786797,3.23786797 C5.60502525,3.35502525 5.60502525,3.54497475 5.48786797,3.66213203 C5.43160705,3.71839295 5.35530088,3.75 5.27573593,3.75 L0.724264069,3.75 C0.558578644,3.75 0.424264069,3.61568542 0.424264069,3.45 C0.424264069,3.37043505 0.455871121,3.29412888 0.512132034,3.23786797 L2.78786797,0.962132034 C2.90502525,0.844974747 3.09497475,0.844974747 3.21213203,0.962132034 Z" id="Triangle" transform="translate(3.000000, 2.250000) rotate(-180.000000) translate(-3.000000, -2.250000) "></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
