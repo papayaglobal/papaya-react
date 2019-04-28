@@ -1,11 +1,11 @@
 import React from "react";
-import AppButton from "../Button";
+import Button from "../Button";
 
 import dropIcon from "../../assets/icons/triangle.svg";
 
 import "./index.css";
 
-export default class AppDropdown extends React.Component {
+export default class Dropdown extends React.Component {
   state = {
     toggleDisplay: false,
     selectedItem: this.props.list[0].name
@@ -34,7 +34,7 @@ export default class AppDropdown extends React.Component {
     const { icon } = this.props;
     return (
       <div className="dropdown">
-        <AppButton
+        <Button
           style={{ backgroundColor: "#ebebec", color: "#343949", fontSize: "1rem", height: 36 }}
           onClick={() => this.setState({ toggleDisplay: !toggleDisplay })}
         >
@@ -48,7 +48,7 @@ export default class AppDropdown extends React.Component {
               <img src={dropIcon} className="btnIcon" style={{ height: 6 }} alt="Dropdown Icon" />
             </React.Fragment>
           )}
-        </AppButton>
+        </Button>
         <div
           className={`dropdown-menu ${toggleDisplay ? "show" : "hide"}`}
           aria-labelledby="dropdownMenuButton"

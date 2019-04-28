@@ -3,14 +3,14 @@ import styled from "styled-components";
 
 import * as Colors from "../../Constants/colors";
 
-const Switch = ({ className, children, checked }) => (
+const SwitchComponent = ({ className, children, checked }) => (
   <label className={className}>
     <input type="checkbox" />
     <span className="slider round" />
   </label>
 );
 
-const AppSwitch = styled(Switch)`
+const Switch = styled(SwitchComponent)`
   position: relative;
   display: inline-block;
   width: 1.5rem;
@@ -72,4 +72,4 @@ const AppSwitch = styled(Switch)`
   }
 `;
 
-export default AppSwitch;
+export default Switch;

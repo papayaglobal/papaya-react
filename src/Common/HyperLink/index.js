@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import * as Colors from "../../Constants/colors";
 
-const AppLink = styled.a`
+const Link = styled.a`
   color: ${Colors.ACCENT1};
   font-size: ${props => (props.size === "small" ? "0.9rem" : "1rem")};
   cursor: pointer;
@@ -17,4 +17,4 @@ const AppLink = styled.a`
   }
 `;
 
-export default AppLink;
+export default Link;

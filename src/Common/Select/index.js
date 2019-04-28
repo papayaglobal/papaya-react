@@ -92,7 +92,7 @@ const SelectComponent = ({ className, options, placeholder, onChange, isMulti })
   );
 };
 
-const AppSelect = styled(SelectComponent)`
+const SelectBox = styled(SelectComponent)`
   min-width: 250px;
   box-shadow: 0 0 0 0 transparent;
   border-radius: 4px;
@@ -105,4 +105,4 @@ const AppSelect = styled(SelectComponent)`
   }
 `;
 
-export default AppSelect;
+export default SelectBox;

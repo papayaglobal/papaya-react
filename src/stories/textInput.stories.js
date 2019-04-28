@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import { withKnobs, text, boolean, object } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
 
-import AppTextInput from "../Common/TextInput";
+import TextInput from "../Common/TextInput";
 
 import "../assets/css/normalize.css";
 import "./stories.css";
@@ -15,30 +15,30 @@ export const actions = {
 storiesOf("InputText", module)
   .addDecorator(withKnobs)
   .add("Default", () => (
-    <div className="App">
-      <AppTextInput placeholder="Placeholder" {...actions} />
+    <div className="app">
+      <TextInput placeholder="Placeholder" {...actions} />
     </div>
   ))
   .add("Disabled", () => (
-    <div className="App">
-      <AppTextInput placeholder="Disabled Input" disabled />
+    <div className="app">
+      <TextInput placeholder="Disabled Input" disabled />
     </div>
   ))
   .add("Validations", () => (
-    <div className="App">
-      <AppTextInput
+    <div className="app">
+      <TextInput
         placeholder="Valid Input"
         value={text("value", "Valid Input")}
         validationType="valid"
         {...actions}
       />
-      <AppTextInput
+      <TextInput
         placeholder="Warning Input"
         value="Warning Input"
         validationType="warning"
         {...actions}
       />
-      <AppTextInput
+      <TextInput
         placeholder="Error Input"
         value="Error Input"
         validationType="error"
@@ -47,8 +47,8 @@ storiesOf("InputText", module)
     </div>
   ))
   .add("Props", () => (
-    <div className="App">
-      <AppTextInput
+    <div className="app">
+      <TextInput
         placeholder="Placeholder"
         validationType={text("validationType", "valid")}
         {...actions}

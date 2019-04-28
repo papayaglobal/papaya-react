@@ -22,8 +22,9 @@
 .dropdown-item {
   display: block;
   min-width: 160px;
-  padding: 0.5rem 1.5rem;
+  padding: 10px 25px;
   clear: both;
+  font-size: 1rem;
   font-weight: 400;
   color: #343949;
   text-align: inherit;
@@ -33,5 +34,5 @@
   text-decoration: none;
 }
 .dropdown-item:hover {
-  background: #f0f0f0;
+  background: #f7f8fb;
 }

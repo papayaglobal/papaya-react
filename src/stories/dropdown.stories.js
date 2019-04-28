@@ -2,7 +2,7 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 import { withKnobs, text, number } from "@storybook/addon-knobs";
 
-import AppDropdown from "../Common/Dropdown";
+import Dropdown from "../Common/Dropdown";
 import bars from "../assets/icons/bars.svg";
 
 import "./stories.css";
@@ -25,12 +25,12 @@ const colours = [
 storiesOf("Dropdown", module)
   .addDecorator(withKnobs)
   .add("Default", () => (
-    <div className="App spinner">
-      <AppDropdown list={colours} />
+    <div className="app spinner">
+      <Dropdown list={colours} />
     </div>
   ))
   .add("Icon Only", () => (
-    <div className="App spinner">
-      <AppDropdown list={colours} icon={bars} />
+    <div className="app spinner">
+      <Dropdown list={colours} icon={bars} />
     </div>
   ));

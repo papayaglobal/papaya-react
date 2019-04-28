@@ -1,35 +1,35 @@
-.App {
+.app {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
   margin: 10px;
 }
-.App button,
-.App input {
+.app button,
+.app input {
   margin: 0 10px;
 }
-.App.alert,
-.App.label {
+.app.alert,
+.app.label {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
 }
-.App.alert > div {
+.app.alert > div {
   margin: 10px;
 }
-.App.tooltip {
+.app.tooltip {
   flex: 1;
   position: relative;
 }
-.App.popover {
+.app.popover {
   flex: 1;
   position: relative;
 }
-.App.spinner {
+.app.spinner {
   display: inline-flex;
 }
-.App.attachment {
+.app.attachment {
   margin: 40px 20px;
 }

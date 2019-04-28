@@ -5,14 +5,14 @@ import close from "../../assets/icons/X.svg";
 
 import * as Colors from "../../Constants/colors";
 
-const Alert = ({ className, children, message, dismissable, onClick }) => (
+const AlertComponent = ({ className, children, message, dismissable, onClick }) => (
   <div className={className}>
     <p>{message}</p>
     {dismissable && <img src={close} alt="" onClick={onClick} />}
   </div>
 );
 
-const AppAlert = styled(Alert)`
+const Alert = styled(AlertComponent)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -52,4 +52,4 @@ const AppAlert = styled(Alert)`
   }
 `;
 
-export default AppAlert;
+export default Alert;

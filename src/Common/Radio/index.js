@@ -4,11 +4,11 @@ import React from "react";
 import * as Colors from "../../Constants/colors";
 import check from "../../assets/icons/check.svg";
 
-const Radio = ({ className, children, checked }) => (
+const RadioComponent = ({ className, children, checked }) => (
   <input type="radio" className={className} checked={checked} />
 );
 
-const AppRadio = styled(Radio)`
+const RadioButton = styled(RadioComponent)`
   appearance: none;
   width: 1rem;
   height: 1rem;
@@ -43,4 +43,4 @@ const AppRadio = styled(Radio)`
   }
 `;
 
-export default AppRadio;
+export default RadioButton;

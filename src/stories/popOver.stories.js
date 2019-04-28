@@ -3,16 +3,16 @@ import { storiesOf } from "@storybook/react";
 import { withKnobs, text, boolean } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
 
-import AppPopOver from "../Common/PopOver";
-import AppButton from "../Common/Button";
+import PopOver from "../Common/PopOver";
+import Button from "../Common/Button";
 
 import "./stories.css";
 
 storiesOf("PopOvers", module)
   .addDecorator(withKnobs)
   .add("Default", () => (
-    <div className="App" style={{ margin: 50 }}>
-      <AppPopOver
+    <div className="app" style={{ margin: 50 }}>
+      <PopOver
         position="right"
         message="Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum."
         displayPopOver
@@ -28,46 +28,46 @@ storiesOf("PopOvers", module)
         marginTop: 80
       }}
     >
-      <div className="App popover">
-        <AppPopOver
+      <div className="app popover">
+        <PopOver
           position="right"
           message="Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum."
         >
-          <AppButton type="primary">
+          <Button type="primary">
             <span>Display Right popover</span>
-          </AppButton>
-        </AppPopOver>
+          </Button>
+        </PopOver>
       </div>
       <br />
-      <div className="App popover">
-        <AppPopOver
+      <div className="app popover">
+        <PopOver
           position="left"
           message="Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum."
         >
-          <AppButton type="primary">
+          <Button type="primary">
             <span>Display Left popover</span>
-          </AppButton>
-        </AppPopOver>
+          </Button>
+        </PopOver>
       </div>
-      <div className="App popover">
-        <AppPopOver
+      <div className="app popover">
+        <PopOver
           position="top"
           message="Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum."
         >
-          <AppButton type="primary">
+          <Button type="primary">
             <span>Display Top popover</span>
-          </AppButton>
-        </AppPopOver>
+          </Button>
+        </PopOver>
       </div>
-      <div className="App popover">
-        <AppPopOver
+      <div className="app popover">
+        <PopOver
           position="bottom"
           message="Sed posuere consectetur est at lobortis. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum."
         >
-          <AppButton type="primary">
+          <Button type="primary">
             <span>Display Bottom popover</span>
-          </AppButton>
-        </AppPopOver>
+          </Button>
+        </PopOver>
       </div>
     </div>
   ));

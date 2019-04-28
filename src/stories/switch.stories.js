@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import { withKnobs, text, boolean, object } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
 
-import AppSwitch from "../Common/Switch";
+import Switch from "../Common/Switch";
 
 import "./stories.css";
 
@@ -14,7 +14,7 @@ export const actions = {
 storiesOf("Switch", module)
   .addDecorator(withKnobs)
   .add("Default", () => (
-    <div className="App">
-      <AppSwitch {...actions} />
+    <div className="app">
+      <Switch {...actions} />
     </div>
   ));
