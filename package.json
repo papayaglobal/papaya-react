@@ -1,5 +1,5 @@
 {
-    "name": "papaya",
+    "name": "@papayagl/papaya-react",
     "version": "0.1.0",
     "dependencies": {
         "date-fns": "^2.0.0-alpha.27",
