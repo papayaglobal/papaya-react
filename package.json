@@ -1,45 +1,65 @@
 {
-    "name": "@papayagl/papaya-react",
-    "version": "0.1.6",
-    "dependencies": {
-        "date-fns": "^2.0.0-alpha.27",
-        "react": "^16.8.6",
-        "react-dom": "^16.8.6",
-        "react-scripts": "2.1.8",
-        "react-select": "^2.4.2",
-        "react-transition-group": "^4.0.0",
-        "styled-components": "^4.2.0"
-    },
-    "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
-        "test": "react-scripts test",
-        "eject": "react-scripts eject",
-        "storybook": "start-storybook -p 9009 -s public",
-        "build-storybook": "build-storybook -s public",
-        "deploy-storybook": "storybook-to-ghpages"
-    },
-    "eslintConfig": {
-        "extends": "react-app"
-    },
-    "browserslist": [
-        ">0.2%",
-        "not dead",
-        "not ie <= 11",
-        "not op_mini all"
-    ],
-    "devDependencies": {
-        "@babel/core": "^7.4.0",
-        "@storybook/addon-actions": "^5.0.6",
-        "@storybook/addon-info": "^5.0.6",
-        "@storybook/addon-knobs": "^5.0.6",
-        "@storybook/addon-links": "^5.0.6",
-        "@storybook/addon-storyshots": "^5.0.6",
-        "@storybook/addons": "^5.0.6",
-        "@storybook/react": "^5.0.6",
-        "@storybook/storybook-deployer": "^2.8.1",
-        "babel-loader": "^8.0.5",
-        "react-test-renderer": "^16.8.6",
-        "require-context.macro": "^1.0.4"
-    }
+  "name": "@papayagl/papaya-react",
+  "version": "0.1.7",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "private": true,
+  "dependencies": {
+    "date-fns": "^2.0.0-alpha.27",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-select": "^2.4.2",
+    "react-transition-group": "^4.0.0",
+    "styled-components": "^4.2.0"
+  },
+  "scripts": {
+    "start": "rollup -c -w",
+    "build": "rollup -c",
+    "predeploy": "cd example && npm install && npm run build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public",
+    "deploy-storybook": "storybook-to-ghpages"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "@svgr/rollup": "^4.2.0",
+    "babel-core": "^6.26.3",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "@storybook/addon-actions": "^5.0.6",
+    "@storybook/addon-info": "^5.0.6",
+    "@storybook/addon-knobs": "^5.0.6",
+    "@storybook/addon-links": "^5.0.6",
+    "@storybook/addon-storyshots": "^5.0.6",
+    "@storybook/addons": "^5.0.6",
+    "@storybook/react": "^5.0.6",
+    "@storybook/storybook-deployer": "^2.8.1",
+    "babel-loader": "^8.0.5",
+    "react-test-renderer": "^16.8.6",
+    "require-context.macro": "^1.0.4",
+    "react-scripts": "^2.1.8",
+    "rollup": "^1.10.1",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-commonjs": "^9.3.4",
+    "rollup-plugin-node-resolve": "^4.2.3",
+    "rollup-plugin-peer-deps-external": "^2.2.0",
+    "rollup-plugin-postcss": "^2.0.3",
+    "rollup-plugin-url": "^2.2.1"
+  },
+  "files": [
+    "dist"
+  ]
 }
