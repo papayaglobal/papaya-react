@@ -35,9 +35,9 @@ export default {
     resolve(),
     commonjs({
       include: [
-        'node_modules/**',
-        /node_modules\/prop-types/,
-      ],
+          'node_modules/**',
+          /node_modules\/prop-types/,
+        ],
         exclude: [
           'node_modules/process-es6/**',
         ],
@@ -64,5 +64,6 @@ export default {
         ]
       }
     })
-  ]
+  ],
+  external: ['react', 'react-dom', 'prop-types', 'styled-components']
 }
