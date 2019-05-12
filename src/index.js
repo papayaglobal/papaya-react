@@ -14,6 +14,7 @@ import Dropdown from "./Common/Dropdown";
 import Link from "./Common/HyperLink";
 import Label from "./Common/Label";
 import Message from "./Common/Message";
+import PaymentRow from "./Common/PaymentRow";
 import PopOver from "./Common/PopOver";
 import RadioButton from "./Common/Radio";
 import ReportRow from "./Common/ReportRow";
@@ -34,6 +35,7 @@ export {
   Link,
   Label,
   Message,
+  PaymentRow,
   PopOver,
   RadioButton,
   ReportRow,
