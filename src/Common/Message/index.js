@@ -14,7 +14,6 @@ const Message = styled(MessageComponent)`
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin: 5px auto;
 
   & img {
     margin-bottom: 15px;

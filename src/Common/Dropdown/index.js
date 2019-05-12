@@ -1,14 +1,17 @@
 import React from "react";
+import styled from "styled-components";
+import onClickOutside from "react-onclickoutside";
 import Button from "../Button";
 
 import dropIcon from "../../assets/icons/triangle.svg";
 
-import "./index.css";
-
-export default class Dropdown extends React.Component {
+class DropdownComponent extends React.Component {
   state = {
     toggleDisplay: false,
     selectedItem: this.props.list[0].name
+  };
+  handleClickOutside = evt => {
+    this.setState({ toggleDisplay: false });
   };
   select = item => {
     this.setState({
@@ -22,7 +25,7 @@ export default class Dropdown extends React.Component {
     for (let i = 0; i < this.props.list.length; i++) {
       let item = this.props.list[i];
       items.push(
-        <span className="dropdown-item" onClick={this.select.bind(null, item)}>
+        <span className="dropdown-item" onClick={this.select.bind(null, item)} key={i}>
           {item.name}
         </span>
       );
@@ -31,9 +34,9 @@ export default class Dropdown extends React.Component {
   };
   render() {
     const { toggleDisplay, selectedItem } = this.state;
-    const { icon } = this.props;
+    const { icon, className } = this.props;
     return (
-      <div className="dropdown">
+      <div className={className}>
         <Button
           style={{ backgroundColor: "#ebebec", color: "#343949", fontSize: "1rem", height: 36 }}
           onClick={() => this.setState({ toggleDisplay: !toggleDisplay })}
@@ -66,3 +69,45 @@ export default class Dropdown extends React.Component {
     );
   }
 }
+
+const Dropdown = styled(onClickOutside(DropdownComponent))`
+  position: relative;
+  .dropdown-menu {
+    position: absolute;
+    top: 18%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 12rem;
+    margin: 0.125rem 0 0;
+    text-align: left;
+    list-style: none;
+    background-clip: padding-box;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+  }
+  .dropdown-menu.show {
+    display: block;
+  }
+  .dropdown-item {
+    display: block;
+    min-width: 160px;
+    padding: 10px 25px;
+    clear: both;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #343949;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+    text-decoration: none;
+  }
+  .dropdown-item:hover {
+    background: #f7f8fb;
+    cursor: pointer;
+  }
+`;
+export default Dropdown;

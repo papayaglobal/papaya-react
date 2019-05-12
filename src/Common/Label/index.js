@@ -14,6 +14,7 @@ const Label = styled(LabelComponent)`
   color: #ffffff;
   border-radius: 20px;
   height: 22px;
+  min-width: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
