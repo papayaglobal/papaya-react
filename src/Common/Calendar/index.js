@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import { CSSTransition } from "react-transition-group";
 import {
   format,
@@ -19,9 +20,7 @@ import {
 import prevIcon from "../../assets/icons/prev-circle.svg";
 import nextIcon from "../../assets/icons/next-circle.svg";
 
-import "./index.css";
-
-export default class Calendar extends React.Component {
+class CalendarComponent extends React.Component {
   state = {
     currentMonth: new Date(),
     previousMonth: null,
@@ -289,8 +288,12 @@ export default class Calendar extends React.Component {
   };
   render() {
     const { direction } = this.state;
+    const { className, flat } = this.props;
     return (
-      <div className="calendar-wrapper">
+      <div
+        className={className}
+        style={{ boxShadow: flat ? "none" : "0 2px 10px 0 rgba(0, 0, 0, 0.1)" }}
+      >
         {this.renderHeading()}
 
         <div className="calendar-body">
@@ -313,3 +316,197 @@ export default class Calendar extends React.Component {
     );
   }
 }
+
+const Calendar = styled(CalendarComponent)`
+  max-width: 337px;
+  min-height: 271px;
+  background: #ffffff;
+  border-radius: 4px;
+  padding: 5px;
+  overflow: hidden;
+  .current-month {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  .calendar-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header-date {
+    flex: 3;
+  }
+  .prev-next-icon {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+  .prev-next-icon img {
+    margin: 0 5px;
+    width: 24px;
+    height: 24px;
+  }
+  .calendar-body {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+  }
+  .monthsWrapper {
+    display: flex;
+    flex-direction: row;
+    transition: transform 0s linear;
+    will-change: transform;
+    transform: translateX(0px);
+  }
+  .monthsWrapper.nxt {
+    transition: transform 0.3s linear;
+    transform: translateX(336px);
+  }
+  .monthsWrapper.prev {
+    transition: transform 0.3s linear;
+    transform: translateX(-336px);
+  }
+  .row {
+    padding: 8px 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .col {
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 100%;
+  }
+  .rows-wrapper {
+    flex-shrink: 0;
+    overflow: auto;
+  }
+  .days-wrapper,
+  .row-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .row-wrapper {
+    padding: 8px 0;
+    position: relative;
+    z-index: 0;
+  }
+  .days-wrapper .number .days,
+  .cell {
+    /* margin: 8px 15px; */
+    font-size: 0.9rem;
+    color: #c2c3c8;
+  }
+  .days:first-child {
+    margin-left: 0;
+  }
+  .days:last-child {
+    margin-right: 0;
+  }
+  .number {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 8px;
+    cursor: pointer;
+  }
+  .number .days {
+    display: block;
+    font-size: 0.9rem;
+    color: #343949;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .disabled .days {
+    color: #d4d5d8;
+    cursor: default;
+  }
+  .number.sick.pending {
+    background-color: #e24381;
+    border-radius: 24px;
+    position: relative;
+    /* z-index: 10; */
+  }
+  .number.sick.passed {
+    border: 1px solid #e24381;
+    border-radius: 24px;
+    position: relative;
+    /* z-index: 10; */
+  }
+  .number.sick.pending .days {
+    color: #ffffff;
+    /* margin-right: 15px; */
+  }
+  .number.sick.pending + .number.sick.pending:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    background: inherit;
+    top: 0;
+    bottom: 0;
+    left: -95%;
+    right: 50%;
+  }
+  .number.vacation.pending {
+    background-color: #976fed;
+    border-radius: 24px;
+    position: relative;
+    /* z-index: 10; */
+  }
+  .number.vacation.passed {
+    border: 1px solid #976fed;
+    border-radius: 24px;
+    position: relative;
+    /* z-index: 10; */
+  }
+  .number.vacation.pending .days {
+    color: #ffffff;
+    /* margin-right: 15px; */
+  }
+  .number.vacation.pending + .number.vacation.pending:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    background: inherit;
+    top: 0;
+    bottom: 0;
+    left: -95%;
+    right: 50%;
+  }
+  .slideinltr-enter {
+    opacity: 0;
+    transform: translateX(-336px);
+  }
+  .slideinltr-enter-active {
+    opacity: 1;
+    transition: transform 1s linear;
+    transform: translate(0, 0);
+    transform: translate3d(0, 0, 0);
+    transition-property: transform, opacity;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.175, 0.665, 0.32, 1), linear;
+  }
+  .slideinrtl-enter {
+    opacity: 0;
+    transform: translateX(336px);
+  }
+  .slideinrtl-enter-active {
+    opacity: 1;
+    transition: transform 1s linear;
+    transform: translate(0, 0);
+    transform: translate3d(0, 0, 0);
+    transition-property: transform, opacity;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.175, 0.665, 0.32, 1), linear;
+  }
+`;
+
+export default Calendar;
