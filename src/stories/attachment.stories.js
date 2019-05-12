@@ -13,8 +13,22 @@ storiesOf("Attachment", module)
       <Attachment attachments={["file1.pdf"]} />
     </div>
   ))
-  .add("Multiple Attahments", () => (
+  .add("With Filename", () => (
+    <div className="app attachment">
+      <Attachment attachments={["file1.pdf"]} displayName type="link" />
+    </div>
+  ))
+  .add("Multiple Attachments", () => (
     <div className="app attachment">
       <Attachment attachments={array("attachments", ["file1.pdf", "file2.pdf", "file3.pdf"])} />
+    </div>
+  ))
+  .add("Multiple Attachments with FileName", () => (
+    <div className="app attachment">
+      <Attachment
+        attachments={array("attachments", ["file1.pdf", "file2.pdf", "file3.pdf"])}
+        displayName
+        type="link"
+      />
     </div>
   ));
