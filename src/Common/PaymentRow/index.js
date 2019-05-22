@@ -121,7 +121,8 @@ const PaymentRow = styled(PaymentRowComponent)`
   }
   .amount {
     color: #343949;
-    font-family: OpenSans-SemiBold;
+    font-weight: 600;
+    font-size: 0.9rem;
   }
   .reportedDateWrapper .date {
     color: #b5b7bd;
@@ -136,6 +137,7 @@ const PaymentRow = styled(PaymentRowComponent)`
     display: flex;
     flex: 2;
     justify-content: flex-end;
+    font-size: 0.9rem;
   }
   .attachments.md {
     display: none;
@@ -147,7 +149,7 @@ const PaymentRow = styled(PaymentRowComponent)`
     margin: 0 5px;
   }
   .icon {
-    height: 16px;
+    height: 15px;
   }
   .moreWrapper button {
     min-width: 1.2rem;

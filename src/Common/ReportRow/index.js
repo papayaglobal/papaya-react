@@ -107,6 +107,7 @@ const ReportRow = styled(ReportRowComponent)`
   padding: 0 0 0 15px;
   border-radius: 4px;
   background-color: rgb(247, 248, 251);
+  box-shadow: 0 1px 1px rgba(0,0,0,0.07);
 
   &.planned {
     background-color: rgb(247, 248, 251);
@@ -138,9 +139,7 @@ const ReportRow = styled(ReportRowComponent)`
   .leaveBorder {
     width: 3px;
     height: 14px;
-    border-width: 2px;
-    border-style: solid;
-    border-color: ${props => (props.type === "sick" ? "#E24C84" : "#976FED")};
+    background-color: ${props => (props.type === "sick" ? "#E24C84" : "#976FED")};
     border-radius: 2.5px;
   }
   .leaveWrapper {
@@ -160,6 +159,7 @@ const ReportRow = styled(ReportRowComponent)`
     color: #797c87;
     margin-left: 10px;
     line-height: 1;
+    font-size: 0.9rem;
   }
   .daysReported {
     flex: 1;
@@ -177,6 +177,7 @@ const ReportRow = styled(ReportRowComponent)`
   }
   .dateWrapper .date {
     flex: 1;
+    font-size: 0.9rem;
   }
   .date {
     font-size: 0.9rem;
@@ -194,10 +195,10 @@ const ReportRow = styled(ReportRowComponent)`
   .attachments {
     display: flex;
     justify-content: flex-end;
-    margin: 0 20px;
+    margin: 0 10px;
   }
   .timeWrapper {
-    margin: 0 15px;
+    margin: 0 10px;
   }
   &.small-size .timeWrapper {
     margin: 0 5px;
@@ -209,7 +210,7 @@ const ReportRow = styled(ReportRowComponent)`
     margin: 0 5px;
   }
   .icon {
-    height: 16px;
+    height: 15px;
   }
   .moreWrapper button {
     min-width: 1.2rem;

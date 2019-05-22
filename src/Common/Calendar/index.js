@@ -336,6 +336,7 @@ const Calendar = styled(CalendarComponent)`
   }
   .header-date {
     flex: 3;
+    padding-left: 10px;
   }
   .prev-next-icon {
     display: flex;
@@ -347,6 +348,7 @@ const Calendar = styled(CalendarComponent)`
     margin: 0 5px;
     width: 24px;
     height: 24px;
+    cursor: pointer;
   }
   .calendar-body {
     margin-top: 25px;
@@ -393,7 +395,7 @@ const Calendar = styled(CalendarComponent)`
     align-items: center;
   }
   .row-wrapper {
-    padding: 8px 0;
+    padding: 3px 0;
     position: relative;
     z-index: 0;
   }
