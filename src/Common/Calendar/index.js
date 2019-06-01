@@ -319,10 +319,11 @@ class CalendarComponent extends React.Component {
 
 const Calendar = styled(CalendarComponent)`
   max-width: 337px;
-  min-height: 271px;
+  min-height: 320px;
   background: #ffffff;
   border-radius: 4px;
   padding: 5px;
+  margin: 0 auto;
   overflow: hidden;
   .current-month {
     font-size: 1rem;
@@ -365,11 +366,11 @@ const Calendar = styled(CalendarComponent)`
     transform: translateX(0px);
   }
   .monthsWrapper.nxt {
-    transition: transform 0.3s linear;
+    transition: transform 0.8s linear;
     transform: translateX(336px);
   }
   .monthsWrapper.prev {
-    transition: transform 0.3s linear;
+    transition: transform 0.8s linear;
     transform: translateX(-336px);
   }
   .row {
@@ -489,11 +490,11 @@ const Calendar = styled(CalendarComponent)`
   }
   .slideinltr-enter-active {
     opacity: 1;
-    transition: transform 1s linear;
+    transition: transform 3s linear;
     transform: translate(0, 0);
     transform: translate3d(0, 0, 0);
     transition-property: transform, opacity;
-    transition-duration: 300ms;
+    transition-duration: 800ms;
     transition-timing-function: cubic-bezier(0.175, 0.665, 0.32, 1), linear;
   }
   .slideinrtl-enter {
@@ -502,11 +503,11 @@ const Calendar = styled(CalendarComponent)`
   }
   .slideinrtl-enter-active {
     opacity: 1;
-    transition: transform 1s linear;
+    transition: transform 3s linear;
     transform: translate(0, 0);
     transform: translate3d(0, 0, 0);
     transition-property: transform, opacity;
-    transition-duration: 300ms;
+    transition-duration: 800ms;
     transition-timing-function: cubic-bezier(0.175, 0.665, 0.32, 1), linear;
   }
 `;

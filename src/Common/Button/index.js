@@ -29,11 +29,7 @@ const Button = styled.button`
   min-height: ${props =>
     props.size === "small" ? "1.9rem" : props.size === "medium" ? "2.3rem" : "2.8rem"};
   padding: ${props =>
-    props.size === "small"
-      ? "0.4rem 0.9rem"
-      : props.size === "medium"
-      ? "0.5rem 1rem"
-      : "0.9rem 0.9rem"};
+    props.size === "small" ? "0.4rem" : props.size === "medium" ? "0.5rem" : "0.9rem 0.9rem"};
 
   :hover {
     background: ${props =>
@@ -71,6 +67,13 @@ const Button = styled.button`
   & img {
     height: ${props =>
       props.size === "small" ? "0.7rem" : props.size === "medium" ? "0.8rem" : "1rem"};
+  }
+  & btnText {
+    margin: 0 0.6rem;
+    line-height: 1;
+  }
+  & btnIcon {
+    height: 1rem;
   }
 `;
 

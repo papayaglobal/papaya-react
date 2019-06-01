@@ -228,7 +228,7 @@ const ReportRow = styled(ReportRowComponent)`
     }
     .leaveWrapper {
       margin-right: 5px;
-      flex: 1 1 25%;
+      flex: 1;
     }
     .daysReported, .reportedDateWrapper {
       display: none;
@@ -245,7 +245,7 @@ const ReportRow = styled(ReportRowComponent)`
       margin: 0 5px;
     }
     .dateWrapper {
-      flex: 1;
+      flex: 2;
       margin: 0 5px;
     }
     .daysReported, .reportedDateWrapper, .timeWrapper {
