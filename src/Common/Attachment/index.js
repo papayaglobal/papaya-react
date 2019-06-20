@@ -5,7 +5,14 @@ import media from "../../Constants/mediaQueries";
 
 import attachment from "../../assets/icons/attachment-link.svg";
 
-const AttachmentComponent = ({ className, children, attachments, displayName, type }) => (
+const AttachmentComponent = ({
+  className,
+  children,
+  attachments,
+  displayName,
+  type,
+  isExpanded
+}) => (
   <div
     className={className}
     style={{ backgroundColor: type === "link" ? "transparent" : "rgba(25, 117, 240, 0.05)" }}
@@ -15,7 +22,11 @@ const AttachmentComponent = ({ className, children, attachments, displayName, ty
     <img src={attachment} alt="Attachment Icon" className="icon" />
     {displayName && (
       <span className="fileName">
-        {attachments.length > 1 ? `${attachments.length} Files` : attachments}
+        {attachments.length > 1
+          ? `${attachments.length} Files`
+          : isExpanded
+          ? attachments.fileName
+          : attachments[0].fileName}
       </span>
     )}
   </div>
@@ -46,12 +57,12 @@ const Attachment = styled(AttachmentComponent)`
 
   ${media.sm`
   .attachmentCount {
-    display: none;
+    display: block;
   }
   `}
   ${media.md`
   .attachmentCount {
-    display: none;
+    display: block;
   }
   `}
 `;

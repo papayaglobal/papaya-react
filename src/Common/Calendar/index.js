@@ -126,7 +126,7 @@ class CalendarComponent extends React.Component {
                 : ""
             }`}
             key={day}
-            onClick={() => this.onDateClick(toDate(cloneDay))}
+            onClick={() => this.props.onDateClick(toDate(cloneDay))}
           >
             <div className="days">{formattedDate}</div>
           </div>
@@ -171,7 +171,7 @@ class CalendarComponent extends React.Component {
                 : ""
             }`}
             key={day}
-            onClick={() => this.onDateClick(toDate(cloneDay))}
+            onClick={() => this.props.onDateClick(toDate(cloneDay))}
           >
             <div className="days">{formattedDate}</div>
           </div>
@@ -217,7 +217,7 @@ class CalendarComponent extends React.Component {
                 : ""
             }`}
             key={day}
-            onClick={() => this.onDateClick(toDate(cloneDay))}
+            onClick={() => this.props.onDateClick(toDate(cloneDay))}
           >
             <div className="days">{formattedDate}</div>
           </div>
