@@ -2,8 +2,9 @@ import React from "react";
 import styled from "styled-components";
 
 import media from "../../Constants/mediaQueries";
+import * as Color from "../../Constants/colors";
 
-import attachment from "../../assets/icons/attachment-link.svg";
+import { ReactComponent as AttachmentIcon } from "../../assets/icons/attachment.svg";
 
 const AttachmentComponent = ({
   className,
@@ -19,7 +20,7 @@ const AttachmentComponent = ({
   >
     {!displayName &&
       (attachments.length > 1 && <span className="attachmentCount">{attachments.length}</span>)}
-    <img src={attachment} alt="Attachment Icon" className="icon" />
+    <AttachmentIcon className="icon" />
     {displayName && (
       <span className="fileName">
         {attachments.length > 1
@@ -43,7 +44,7 @@ const Attachment = styled(AttachmentComponent)`
 
   .attachmentCount {
     padding: 0 5px;
-    color: #1975f0;
+    color: ${Color.ACCENT1};
     margin-right: 5px;
   }
   .fileName {
@@ -53,6 +54,16 @@ const Attachment = styled(AttachmentComponent)`
 
   & :hover {
     cursor: pointer;
+    color: ${Color.ACCENT1DARK};
+    fill: ${Color.ACCENT1DARK};
+  }
+
+  .icon {
+    fill: ${Color.ACCENT1};
+  }
+
+  .icon:hover {
+    fill: ${Color.ACCENT1DARK};
   }
 
   ${media.sm`

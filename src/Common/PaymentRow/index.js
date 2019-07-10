@@ -191,6 +191,10 @@ const PaymentRow = styled(PaymentRowComponent)`
   display: flex;
   flex: 1;
   flex-direction: column;
+  & .wrapper:hover {
+    cursor: pointer;
+    box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1);
+  }
   & .wrapper {
     display: flex;
     flex: 1;
@@ -224,6 +228,10 @@ const PaymentRow = styled(PaymentRowComponent)`
     border-radius: 4px;
     background-color: #ffffff;
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
+  }
+  &.singleAttachment:hover {
+    cursor: pointer;
+    box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1);
   }
 
   & .subComponent {
@@ -337,7 +345,7 @@ const PaymentRow = styled(PaymentRowComponent)`
     margin: 0 5px;
   }
   .icon {
-    height: 15px;
+    height: 16px;
   }
   .moreWrapper button {
     min-width: 1.2rem;
@@ -384,7 +392,9 @@ const PaymentRow = styled(PaymentRowComponent)`
     }
   `}
   ${media.sm`
-    padding: 0 5px;
+    &.singleAttachment, & .multipleAttachments {
+      padding: 0 10px;
+    }
     .amountWrapper {
       flex: 1;
     }

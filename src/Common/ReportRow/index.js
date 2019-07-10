@@ -107,13 +107,26 @@ const ReportRow = styled(ReportRowComponent)`
   padding: 0 0 0 15px;
   border-radius: 4px;
   background-color: rgb(247, 248, 251);
-  box-shadow: 0 1px 1px rgba(0,0,0,0.07);
-
+  box-shadow: none;
+  :hover {
+    cursor: pointer;
+    box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1);
+  }
   &.planned {
+    box-shadow: none;
     background-color: rgb(247, 248, 251);
   }
+  &.planned:hover {
+    cursor: pointer;
+    box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1);
+  }
   &.history {
+    box-shadow: none;
     background-color: rgb(247, 248, 251, 0);
+  }
+  &.history:hover {
+    cursor: pointer;
+    box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1);
   }
 
   & :hover {
@@ -261,6 +274,7 @@ const ReportRow = styled(ReportRowComponent)`
     }
   `}
   ${media.sm`
+    padding: 0 10px;
     .leaveWrapper {
       flex: 1;
       margin-right: 20px;
@@ -269,11 +283,11 @@ const ReportRow = styled(ReportRowComponent)`
       display: none;
     }
     .timeWrapper, .moreWrapper {
-      margin: 0 5px;
+      margin: 0;
     }
     .dateWrapper {
       flex: 1;
-      margin: 0 5px;
+      margin: 0 0px;
     }
     .attachments {
       margin: 0 5px;

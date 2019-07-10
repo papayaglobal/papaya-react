@@ -421,6 +421,10 @@ const Calendar = styled(CalendarComponent)`
     margin: 0 8px;
     cursor: pointer;
   }
+  .number:hover {
+    background-color: #f2f3f5;
+    border-radius: 16px;
+  }
   .number .days {
     display: block;
     font-size: 0.9rem;
