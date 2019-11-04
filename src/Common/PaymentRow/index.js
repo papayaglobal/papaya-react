@@ -24,7 +24,7 @@ class PaymentRowComponent extends React.Component {
     const {
       className,
       children,
-      attachments,
+      attachments = [],
       dates,
       actions,
       reportedDate,
@@ -94,7 +94,7 @@ class PaymentRowComponent extends React.Component {
             style={{ border: isNew ? "1px solid #2ED6BC" : "none" }}
           >
             {attachments.map((attachment, i) => (
-              <div className="subComponentRow">
+              <div key={i} className="subComponentRow">
                 <div className="leftWrapper">
                   {selectable && (
                     <div className="selectWrapper">

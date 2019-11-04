@@ -22,6 +22,7 @@ const SelectComponent = ({ className, options, placeholder, onChange, isMulti })
             ...styles,
             backgroundColor: "#ffffff",
             boxShadow: "0 1px 5px 0 rgba(0,0,0,0.10)",
+            padding: "0",
             borderColor: "transparent",
             borderBottomLeftRadius: isFocused ? 0 : 4,
             borderBottomRightRadius: isFocused ? 0 : 4
