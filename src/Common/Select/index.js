@@ -2,15 +2,16 @@ import React from "react";
 import Select from "react-select";
 import styled from "styled-components";
 
-const SelectComponent = ({ className, options, placeholder, onChange, isMulti }) => {
+const SelectComponent = ({ className, options, placeholder, onChange, isMulti, ...selectOptions }) => {
   return (
     <Select
-      className={`${className} custom-select`}
-      options={options}
-      placeholder={placeholder}
-      onChange={onChange}
-      isMulti={isMulti}
-      styles={{
+        {...selectOptions}
+        className={`${className} custom-select`}
+        options={options}
+        placeholder={placeholder}
+        onChange={onChange}
+        isMulti={isMulti}
+        styles={{
         indicatorSeparator: (styles, { isFocused }) => {
           return {
             ...styles,
