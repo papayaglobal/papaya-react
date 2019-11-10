@@ -23,11 +23,7 @@ const AttachmentComponent = ({
     <AttachmentIcon className="icon" />
     {displayName && (
       <span className="fileName">
-        {attachments.length > 1
-          ? `${attachments.length} Files`
-          : isExpanded
-          ? attachments.fileName
-          : attachments[0].fileName}
+        {attachments.length > 1 ? `${attachments.length} Files` : attachments[0].name}
       </span>
     )}
   </div>

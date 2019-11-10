@@ -103,22 +103,22 @@ class PaymentRowComponent extends React.Component {
                   )}
                   <div className={`${isMonthly ? "dateWrapper isMonthly" : "dateWrapper"}`} />
                   <div className="amountWrapper">
-                    <span className="type">{attachment.documentType}</span>
+                    <span className="type">{attachment.type}</span>
                   </div>
                   <div className="attachments">
-                    <Attachment attachments={attachment} displayName isExpanded type="link" />
+                    <Attachment attachments={[attachment]} displayName isExpanded type="link" />
                   </div>
                 </div>
                 <div className="rightWrapper">
                   <div className="attachments md">
-                    <Attachment attachments={attachment} />
+                    <Attachment attachments={[attachment]} />
                   </div>
-                  {attachment.note && (
+                  {attachment.title && (
                     <div className="noteWrapper">
                       <span className="note">
-                        {attachment.note.length <= 50
-                          ? attachment.note
-                          : `${attachment.note.substring(0, 50)}...`}
+                        {attachment.title.length <= 50
+                          ? attachment.title
+                          : `${attachment.title.substring(0, 50)}...`}
                       </span>
                     </div>
                   )}
