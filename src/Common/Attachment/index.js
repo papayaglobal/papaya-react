@@ -9,7 +9,7 @@ import { ReactComponent as AttachmentIcon } from "../../assets/icons/attachment.
 const AttachmentComponent = ({
   className,
   children,
-  attachments,
+  attachments = [],
   displayName,
   type,
   isExpanded
