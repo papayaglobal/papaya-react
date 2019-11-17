@@ -1,6 +1,6 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { withKnobs, text, object } from "@storybook/addon-knobs";
+import { withKnobs, text, object, array } from "@storybook/addon-knobs";
 
 import ReportRow from "../Common/ReportRow";
 
@@ -33,17 +33,33 @@ storiesOf("Report Row", module)
     <div className="app attachment" style={{ flexDirection: "column", alignItems: "stretch" }}>
       <ReportRow
         type={text("type", "vacation")}
-        attachments={object("attachments", [
+        attachments={array("attachments", [
           { fileName: "file1.pdf" },
           { fileName: "file2.pdf" },
           { fileName: "file3.pdf" }
         ])}
-        pendingTooltip="Report Row with multiple attachment"
+        reportStatus={text("reportStatus", "planned")}
+        pendingTooltip={text("pendingTooltip", "Report Row with multiple attachment")}
         dates={text("dates", "10 May 2019")}
         reportedDate={text("reportedDate", "11 May 2019")}
-        actions={actions}
+        actions={array("actions", actions)}
         daysReported={text("daysReported", "1 Day")}
       />
       <br />
+
+        <ReportRow
+            type={text("type", "vacation")}
+            attachments={array("attachments", [
+                { fileName: "file1.pdf" },
+                { fileName: "file2.pdf" },
+                { fileName: "file3.pdf" }
+            ])}
+            reportStatus={"history"}
+            pendingTooltip={text("pendingTooltip", "Report Row with multiple attachment")}
+            dates={text("dates", "10 May 2019")}
+            reportedDate={text("reportedDate", "11 May 2019")}
+            actions={array("actions", actions)}
+            daysReported={text("daysReported", "1 Day")}
+        />
     </div>
   ));

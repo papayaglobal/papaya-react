@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import PropTypes from 'prop-types';
 import styled from "styled-components";
 import { compareAsc } from "date-fns";
 
@@ -11,13 +12,13 @@ import media from "../../Constants/mediaQueries";
 import pending from "../../assets/icons/Pending.svg";
 import more from "../../assets/icons/More.svg";
 
-const today = new Date();
 
 const ReportRowComponent = ({
   className,
   children,
+  reportStatus = "planned",
   type,
-  attachments,
+  attachments = [],
   dates,
   pendingTooltip,
   actions,
@@ -41,14 +42,12 @@ const ReportRowComponent = ({
       setSize("normal-size");
     }
   };
-  const leaveDate = new Date(reportedDate);
-  const reportStatus = compareAsc(leaveDate, today) > 0 ? "planned" : "history";
+  // const leaveDate = new Date(reportedDate);
+  // const reportStatus = compareAsc(leaveDate, today) > 0 ? "planned" : "history";
   return (
     <div
       ref={reportRef}
-      className={`${
-        reportedDate ? `${className} ${reportStatus} ${size}` : `${className} ${size}`
-      }`}
+      className={`${className} ${reportStatus} ${size}`}
     >
       <div className="leftWrapper">
         <div className="leaveWrapper">
@@ -95,6 +94,16 @@ const ReportRowComponent = ({
       </div>
     </div>
   );
+};
+ReportRowComponent.propTypes = {
+  reportStatus: PropTypes.string,
+  type: PropTypes.string,
+  attachments: PropTypes.array,
+  dates: PropTypes.string,
+  pendingTooltip: PropTypes.bool,
+  actions: PropTypes.array,
+  reportedDate: PropTypes.string,
+  daysReported: PropTypes.string,
 };
 
 const ReportRow = styled(ReportRowComponent)`
