@@ -35,6 +35,7 @@ class PaymentRowComponent extends React.Component {
             amount,
             selectable,
             selected,
+            payment,
             onSelectClick
         } = this.props;
         const {isExpanded} = this.state;
@@ -50,7 +51,7 @@ class PaymentRowComponent extends React.Component {
                         <div className="leftWrapper">
                             {selectable && (
                                 <div className="selectWrapper">
-                                    <CheckBox checked={selected} onClick={onSelectClick}/>
+                                    <CheckBox checked={selected} onClick={() => onSelectClick({payment})}/>
                                 </div>
                             )}
                             <div className={`${isMonthly ? "dateWrapper isMonthly" : "dateWrapper"}`}>
@@ -102,7 +103,7 @@ class PaymentRowComponent extends React.Component {
                                 <div className="leftWrapper">
                                     {selectable && (
                                         <div className="selectWrapper">
-                                            <CheckBox checked={selected} onClick={onSelectClick}/>
+                                            <CheckBox checked={selected} onClick={() => onSelectClick({payment})}/>
                                         </div>
                                     )}
                                     <div className={`${isMonthly ? "dateWrapper isMonthly" : "dateWrapper"}`}/>
@@ -144,7 +145,7 @@ class PaymentRowComponent extends React.Component {
                     <div className="leftWrapper">
                         {selectable && (
                             <div className="selectWrapper">
-                                <CheckBox checked={selected} onClick={onSelectClick}/>
+                                <CheckBox checked={selected} onClick={() => onSelectClick({payment})}/>
                             </div>
                         )}
                         <div className={`${isMonthly ? "dateWrapper isMonthly" : "dateWrapper"}`}>
