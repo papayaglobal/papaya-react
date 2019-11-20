@@ -37,9 +37,8 @@ const CheckBoxInput = styled.input`
 `;
 
 export const CheckBox = (props) => {
-    console.log("CheckBox.props =>", props);
-    const {className, children, checked, selected, onClick} = props;
-    return (<CheckBoxInput type="checkbox" className={className} checked={checked} onClick={() => onClick()}/>
+    const {className, children, checked, onClick} = props;
+    return (<CheckBoxInput type="checkbox" className={className} checked={checked} onChange={onClick}/>
     )
 };
 
