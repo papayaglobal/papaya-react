@@ -1,14 +1,11 @@
 import styled from "styled-components";
 import React from "react";
+import PropTypes from "prop-types";
 
 import * as Colors from "../../Constants/colors";
 import check from "../../assets/icons/check.svg";
 
-const CheckBoxComponent = ({ className, children, checked }) => (
-  <input type="checkbox" className={className} checked={checked} />
-);
-
-const CheckBox = styled(CheckBoxComponent)`
+const CheckBoxInput = styled.input`
   appearance: none;
   width: 1rem;
   height: 1rem;
@@ -39,4 +36,16 @@ const CheckBox = styled(CheckBoxComponent)`
   }
 `;
 
-export default CheckBox;
+export const CheckBox = (props) => {
+    console.log("CheckBox.props =>", props);
+    const {className, children, checked, selected, onClick} = props;
+    return (<CheckBoxInput type="checkbox" className={className} checked={checked} onClick={() => onClick()}/>
+    )
+};
+
+CheckBox.propTypes = {
+    className: PropTypes.string,
+    children: PropTypes.any,
+    checked: PropTypes.bool,
+    onClick: PropTypes.func,
+};
