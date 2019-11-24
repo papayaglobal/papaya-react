@@ -1,10 +1,11 @@
 {
     "name": "@papayagl/papaya-react",
-    "version": "0.2.6",
+    "version": "0.2.7",
     "main": "dist/index.js",
     "module": "dist/index.es.js",
     "dependencies": {
         "date-fns": "^2.0.0-alpha.27",
+        "lodash": "^4.17.15",
         "react-onclickoutside": "^6.8.0",
         "react-select": "^2.4.2",
         "react-transition-group": "^4.0.0",
