@@ -1,32 +1,33 @@
 import React from "react";
 import styled from "styled-components";
+import {get} from "lodash";
 
 import media from "../../Constants/mediaQueries";
 import * as Color from "../../Constants/colors";
 
-import { ReactComponent as AttachmentIcon } from "../../assets/icons/attachment.svg";
+import {ReactComponent as AttachmentIcon} from "../../assets/icons/attachment.svg";
 
 const AttachmentComponent = ({
-  className,
-  children,
-  attachments = [],
-  displayName,
-  type,
-  isExpanded
-}) => (
-  <div
-    className={className}
-    style={{ backgroundColor: type === "link" ? "transparent" : "rgba(25, 117, 240, 0.05)" }}
-  >
-    {!displayName &&
-      (attachments.length > 1 && <span className="attachmentCount">{attachments.length}</span>)}
-    <AttachmentIcon className="icon" />
-    {displayName && (
-      <span className="fileName">
-        {attachments.length > 1 ? `${attachments.length} Files` : attachments[0].name}
+                                 className,
+                                 children,
+                                 attachments = [],
+                                 displayName,
+                                 type,
+                                 isExpanded
+                             }) => (
+    <div
+        className={className}
+        style={{backgroundColor: type === "link" ? "transparent" : "rgba(25, 117, 240, 0.05)"}}
+    >
+        {!displayName &&
+        (attachments.length > 1 && <span className="attachmentCount">{attachments.length}</span>)}
+        <AttachmentIcon className="icon"/>
+        {displayName && (
+            <span className="fileName">
+        {attachments.length > 1 ? `${attachments.length} Files` : get(attachments, "[0].file.name")}
       </span>
-    )}
-  </div>
+        )}
+    </div>
 );
 
 const Attachment = styled(AttachmentComponent)`

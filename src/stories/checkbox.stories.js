@@ -5,7 +5,7 @@ import {action} from "@storybook/addon-actions";
 
 
 import "./stories.css";
-import {CheckBox} from "Common/Checkbox";
+import {CheckBox} from "../Common/Checkbox";
 
 export const actions = {
     onClick: action("onClick")
