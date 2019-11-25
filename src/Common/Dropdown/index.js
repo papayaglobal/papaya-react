@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {find, get} from "lodash";
+import {find, get, isFunction} from "lodash";
 import styled from "styled-components";
 import onClickOutside from "react-onclickoutside";
 import Button from "../Button";
@@ -12,11 +12,6 @@ class DropdownComponent extends React.Component {
         toggleDisplay: false
     };
 
-    componentDidMount() {
-        const {selectedItemIndex, list} = this.props;
-        this.setState({selectedItem: list[selectedItemIndex || 0].name})
-    }
-
     handleClickOutside = evt => {
         this.setState({toggleDisplay: false});
     };
@@ -26,7 +21,12 @@ class DropdownComponent extends React.Component {
         this.setState({
             toggleDisplay: !this.state.toggleDisplay
         });
-        onSelect(item);
+        if (isFunction(get(item, "action"))) {
+            item.action();
+        } else {
+            isFunction(onSelect) && onSelect(item);
+        }
+
     };
 
     renderListItems = () => {
@@ -83,7 +83,7 @@ DropdownComponent.propTypes = {
     list: PropTypes.arrayOf(PropTypes.any).isRequired,
     icon: PropTypes.string,
     className: PropTypes.string,
-    onSelect: PropTypes.func.isRequired
+    onSelect: PropTypes.func
 };
 
 const Dropdown = styled(onClickOutside(DropdownComponent))`
