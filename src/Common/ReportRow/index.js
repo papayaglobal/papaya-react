@@ -17,6 +17,7 @@ const ReportRowComponent = ({
                                 children,
                                 reportStatus = "planned",
                                 payPeriod,
+                                paddingPayPeriod,
                                 type,
                                 attachments = [],
                                 dates,
@@ -52,7 +53,7 @@ const ReportRowComponent = ({
             <div className="leftWrapper">
                 <div className="leaveWrapper">
                     {payPeriod && (<span className="date payPeriod">{payPeriod}</span>)}
-                    <div className="leaveBorder"/>
+                    <div className={`leaveBorder ${paddingPayPeriod ? "paddingPayPeriod" : ""}`}/>
                     <span className="leaveType">{type === "sick" ? "Sick Leave(s)" : "Vacations"}</span>
                 </div>
                 <div className="dateWrapper">
@@ -164,6 +165,9 @@ const ReportRow = styled(ReportRowComponent)`
     height: 14px;
     background-color: ${props => (props.type === "sick" ? "#E24C84" : "#976FED")};
     border-radius: 2.5px;
+    &.paddingPayPeriod {
+      margin-left: 122px;
+    }
   }
   .leaveWrapper {
     display: flex;
