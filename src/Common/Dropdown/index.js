@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from "prop-types";
+import {find, get} from "lodash";
 import styled from "styled-components";
 import onClickOutside from "react-onclickoutside";
 import Button from "../Button";
@@ -7,8 +9,7 @@ import dropIcon from "../../assets/icons/triangle.svg";
 
 class DropdownComponent extends React.Component {
     state = {
-        toggleDisplay: false,
-        selectedItem: null
+        toggleDisplay: false
     };
 
     componentDidMount() {
@@ -21,26 +22,30 @@ class DropdownComponent extends React.Component {
     };
 
     select = item => {
+        const {onSelect} = this.props;
         this.setState({
-            selectedItem: item.name,
             toggleDisplay: !this.state.toggleDisplay
         });
-        item.action();
+        onSelect(item);
     };
 
     renderListItems = () => {
+
         let items = [];
         for (let i = 0; i < this.props.list.length; i++) {
             let item = this.props.list[i];
-            items.push(<span className="dropdown-item" onClick={this.select.bind(null, item)}
+            items.push(<span className="dropdown-item" onClick={this.select.bind(this, item)}
                              key={i}>{item.name}</span>);
         }
         return items;
     };
 
     render() {
-        const {toggleDisplay, selectedItem} = this.state;
-        const {icon, className} = this.props;
+        const {toggleDisplay} = this.state;
+        const {icon, className, list} = this.props;
+
+        const selectedItem = find(list, item => !!item.selected);
+
         return (
             <div className={className}>
                 <Button
@@ -51,7 +56,7 @@ class DropdownComponent extends React.Component {
                         <img src={icon} alt="Icon Only Button"/>
                     ) : (
                         <React.Fragment>
-                            <span className="btnText" style={{paddingRight: 45}}>{selectedItem}</span>
+                            <span className="btnText" style={{paddingRight: 45}}>{get(selectedItem, "name")}</span>
                             <img src={dropIcon} className="btnIcon" style={{height: 6}} alt="Dropdown Icon"/>
                         </React.Fragment>
                     )}
@@ -73,6 +78,13 @@ class DropdownComponent extends React.Component {
         );
     }
 }
+
+DropdownComponent.propTypes = {
+    list: PropTypes.arrayOf(PropTypes.any).isRequired,
+    icon: PropTypes.string,
+    className: PropTypes.string,
+    onSelect: PropTypes.func.isRequired
+};
 
 const Dropdown = styled(onClickOutside(DropdownComponent))`
   position: relative;

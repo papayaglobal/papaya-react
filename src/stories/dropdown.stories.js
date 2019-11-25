@@ -7,18 +7,18 @@ import bars from "../assets/icons/bars.svg";
 
 import "./stories.css";
 
-const colours = [
+let colors = [
     {
         name: "By Month",
-        action: () => alert("Selected By Month")
+        selected: true
     },
     {
         name: "By Year",
-        action: () => alert("Selected By Year")
+        selected: false
     },
     {
         name: "By Day",
-        action: () => alert("Selected By Day")
+        selected: false
     }
 ];
 
@@ -26,16 +26,28 @@ storiesOf("Dropdown", module)
     .addDecorator(withKnobs)
     .add("Default", () => (
         <div className="app spinner">
-            <Dropdown list={colours}/>
+            <Dropdown list={colors} onSelect={() => {
+            }}/>
         </div>
     ))
     .add("Icon Only", () => (
         <div className="app spinner">
-            <Dropdown list={colours} icon={bars}/>
+            <Dropdown list={colors} icon={bars} onSelect={() => {
+            }}/>
         </div>
     ))
     .add("With Selected Item", () => (
         <div className="app spinner">
-            <Dropdown list={colours} selectedItemIndex={1}/>
+            <Dropdown list={colors} onSelect={(item) => {
+                colors = colors.map(c => {
+                    if (c.name === item.name) {
+                        c.selected = true;
+                        return c;
+                    } else {
+                        c.selected = false;
+                        return c;
+                    }
+                })
+            }}/>
         </div>
     ));
