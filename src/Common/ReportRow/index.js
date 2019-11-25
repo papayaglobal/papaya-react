@@ -1,7 +1,6 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import PropTypes from 'prop-types';
 import styled from "styled-components";
-import { compareAsc } from "date-fns";
 
 import ToolTip from "../Tooltip";
 import Attachment from "../Attachment";
@@ -14,96 +13,98 @@ import more from "../../assets/icons/More.svg";
 
 
 const ReportRowComponent = ({
-  className,
-  children,
-  reportStatus = "planned",
-  type,
-  attachments = [],
-  dates,
-  pendingTooltip,
-  actions,
-  reportedDate,
-  daysReported
-}) => {
-  const [size, setSize] = useState("normal-size");
-  const reportRef = useRef(null);
-  useEffect(() => {
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
+                                className,
+                                children,
+                                reportStatus = "planned",
+                                payPeriod,
+                                type,
+                                attachments = [],
+                                dates,
+                                pendingTooltip,
+                                actions,
+                                reportedDate,
+                                daysReported
+                            }) => {
+    const [size, setSize] = useState("normal-size");
+    const reportRef = useRef(null);
+    useEffect(() => {
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    });
+    const handleResize = () => {
+        const width = reportRef.current.getBoundingClientRect().width;
+        if (width < 600) {
+            setSize("small-size");
+        } else {
+            setSize("normal-size");
+        }
     };
-  });
-  const handleResize = () => {
-    const width = reportRef.current.getBoundingClientRect().width;
-    if (width < 600) {
-      setSize("small-size");
-    } else {
-      setSize("normal-size");
-    }
-  };
-  // const leaveDate = new Date(reportedDate);
-  // const reportStatus = compareAsc(leaveDate, today) > 0 ? "planned" : "history";
-  return (
-    <div
-      ref={reportRef}
-      className={`${className} ${reportStatus} ${size}`}
-    >
-      <div className="leftWrapper">
-        <div className="leaveWrapper">
-          <div className="leaveBorder" />
-          <span className="leaveType">{type === "sick" ? "Sick Leave(s)" : "Vacations"}</span>
-        </div>
-        <div className="dateWrapper">
-          <span className="date">{dates}</span>
-          {daysReported && (
-            <div className="daysReported">
-              <span className="date">{daysReported}</span>
+    // const leaveDate = new Date(reportedDate);
+    // const reportStatus = compareAsc(leaveDate, today) > 0 ? "planned" : "history";
+    return (
+        <div
+            ref={reportRef}
+            className={`${className} ${reportStatus} ${size}`}
+        >
+            <div className="leftWrapper">
+                <div className="leaveWrapper">
+                    {payPeriod && (<span className="date payPeriod">{payPeriod}</span>)}
+                    <div className="leaveBorder"/>
+                    <span className="leaveType">{type === "sick" ? "Sick Leave(s)" : "Vacations"}</span>
+                </div>
+                <div className="dateWrapper">
+                    <span className="date">{dates}</span>
+                    {daysReported && (
+                        <div className="daysReported">
+                            <span className="date">{daysReported}</span>
+                        </div>
+                    )}
+                </div>
             </div>
-          )}
-        </div>
-      </div>
-      <div className="rightWrapper">
-        {attachments &&
-          (attachments.length > 0 && (
-            <div className="attachments">
-              <Attachment attachments={attachments} />
+            <div className="rightWrapper">
+                {attachments &&
+                (attachments.length > 0 && (
+                    <div className="attachments">
+                        <Attachment attachments={attachments}/>
+                    </div>
+                ))}
+                {reportedDate && (
+                    <div className="reportedDateWrapper">
+                        <span className="date">{reportedDate}</span>
+                    </div>
+                )}
+                {reportStatus === "planned" && (
+                    <div className="timeWrapper">
+                        {pendingTooltip ? (
+                            <ToolTip position="top" message={pendingTooltip}>
+                                <img src={pending} alt="Pending Icon" className="icon"/>
+                            </ToolTip>
+                        ) : (
+                            <img src={pending} alt="Pending Icon" className="icon"/>
+                        )}
+                    </div>
+                )}
+                {actions && (
+                    <div className="moreWrapper">
+                        <Dropdown list={actions} icon={more}/>
+                    </div>
+                )}
             </div>
-          ))}
-        {reportedDate && (
-          <div className="reportedDateWrapper">
-            <span className="date">{reportedDate}</span>
-          </div>
-        )}
-        {reportStatus === "planned" && (
-          <div className="timeWrapper">
-            {pendingTooltip ? (
-              <ToolTip position="top" message={pendingTooltip}>
-                <img src={pending} alt="Pending Icon" className="icon" />
-              </ToolTip>
-            ) : (
-              <img src={pending} alt="Pending Icon" className="icon" />
-            )}
-          </div>
-        )}
-        {actions && (
-          <div className="moreWrapper">
-            <Dropdown list={actions} icon={more} />
-          </div>
-        )}
-      </div>
-    </div>
-  );
+        </div>
+    );
 };
 ReportRowComponent.propTypes = {
-  reportStatus: PropTypes.string,
-  type: PropTypes.string,
-  attachments: PropTypes.array,
-  dates: PropTypes.string,
-  pendingTooltip: PropTypes.bool,
-  actions: PropTypes.array,
-  reportedDate: PropTypes.string,
-  daysReported: PropTypes.string,
+    reportStatus: PropTypes.string,
+    type: PropTypes.string,
+    attachments: PropTypes.array,
+    dates: PropTypes.string,
+    pendingTooltip: PropTypes.bool,
+    actions: PropTypes.array,
+    reportedDate: PropTypes.string,
+    daysReported: PropTypes.string,
 };
 
 const ReportRow = styled(ReportRowComponent)`
@@ -205,6 +206,11 @@ const ReportRow = styled(ReportRowComponent)`
     font-size: 0.9rem;
     color: #343949;
     font-weight: 600;
+    &.payPeriod {
+      font-weight: normal;
+      padding-right: 50px;
+      color: #797c87;
+    }
   }
   &.small-size .reportedDateWrapper, &.small-size .daysReported, &.small-size .timeWrapper, &.small-size .attachments .attachmentCount {
     display: none;
