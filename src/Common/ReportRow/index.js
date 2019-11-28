@@ -13,13 +13,13 @@ import more from "../../assets/icons/More.svg";
 
 const leaveTypes = {
     sick: "Sick Leave(s)",
-    vacation: "Vacations",
+    leave: "Vacations",
     unpaid: "Unpaid"
 };
 
 const leaveColors = {
     sick: "#E24C84",
-    vacation: "#976FED",
+    leave: "#976FED",
     unpaid: "#48C4D3"
 };
 

@@ -33,7 +33,7 @@ storiesOf("Report Row", module)
         <>
             <div className="app attachment">
                 <ReportRow
-                    type={text("type", "vacation")}
+                    type={text("type", "leave")}
                     attachments={array("attachments", [
                         {fileName: "file1.pdf"},
                         {fileName: "file2.pdf"},
@@ -49,7 +49,7 @@ storiesOf("Report Row", module)
             </div>
             <div className="app attachment">
                 <ReportRow
-                    type={text("type", "vacation")}
+                    type={text("type", "leave")}
                     attachments={array("attachments", [
                         {fileName: "file1.pdf"},
                         {fileName: "file2.pdf"},
@@ -82,7 +82,7 @@ storiesOf("Report Row", module)
             </div>
             <div className="app attachment">
                 <ReportRow
-                    type={text("type", "vacation")}
+                    type={text("type", "leave")}
                     attachments={array("attachments", [
                         {fileName: "file1.pdf"},
                         {fileName: "file2.pdf"},
