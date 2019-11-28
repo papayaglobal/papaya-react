@@ -1,278 +1,294 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import styled from "styled-components";
-import { CSSTransition } from "react-transition-group";
+import {CSSTransition} from "react-transition-group";
 import {
-  format,
-  startOfWeek,
-  startOfMonth,
-  endOfMonth,
-  endOfWeek,
-  isSameMonth,
-  isSameDay,
-  addDays,
-  addMonths,
-  subMonths,
-  toDate,
-  isBefore,
-  isAfter
+    addDays,
+    addMonths,
+    endOfMonth,
+    endOfWeek,
+    format,
+    isAfter,
+    isBefore,
+    isSameDay,
+    isSameMonth,
+    startOfMonth,
+    startOfWeek,
+    subMonths,
+    toDate
 } from "date-fns";
 
 import prevIcon from "../../assets/icons/prev-circle.svg";
 import nextIcon from "../../assets/icons/next-circle.svg";
 
 class CalendarComponent extends React.Component {
-  state = {
-    currentMonth: new Date(),
-    previousMonth: null,
-    nextMonth: null,
-    selectedDate: new Date(),
-    animate: false,
-    sickLeave: [],
-    vacations: [],
-    direction: ""
-  };
-
-  componentDidMount() {
-    this.changeMonth();
-  }
-
-  changeMonth = () => {
-    const { currentMonth } = this.state;
-    const previousMonth = subMonths(currentMonth, 1);
-    const nextMonth = addMonths(currentMonth, 1);
-
-    this.setState({ previousMonth, nextMonth });
-    setTimeout(() => {
-      this.setState({
+    state = {
+        currentMonth: new Date(),
+        previousMonth: null,
+        nextMonth: null,
+        selectedDate: new Date(),
+        animate: false,
+        sickLeave: [],
+        vacations: [],
         direction: ""
-      });
-    }, 300);
-  };
+    };
 
-  renderHeading = () => {
-    const { currentMonth, animate, direction } = this.state;
-    const dateFormat = "MMMM, yyyy";
-    return (
-      <div className="calendar-header">
-        <CSSTransition
-          in={animate}
-          timeout={200}
-          classNames={{
-            enter: `${direction === "ltr" ? "slideinltr-enter" : "slideinrtl-enter"}`,
-            enterActive: `${
-              direction === "ltr" ? "slideinltr-enter-active" : "slideinrtl-enter-active"
-            }`
-          }}
-          onEntered={() => this.setState({ animate: false })}
-        >
-          <div className="header-date">
-            <span className="current-month">{format(currentMonth, dateFormat)}</span>
-          </div>
-        </CSSTransition>
-        <div className="prev-next-icon">
-          <img src={prevIcon} alt="Previous" onClick={() => this.previousMonth()} />
-          <img src={nextIcon} alt="Next" onClick={() => this.nextMonth()} />
-        </div>
-      </div>
-    );
-  };
-
-  renderBody = () => {
-    const {weekStartsOn} = this.props;
-    const days = weekStartsOn === "sunday" ? ["S", "M", "T", "W", "T", "F", "S"] : ["M", "T", "W", "T", "F", "S", "S"];
-    const d = [];
-    for (let i in days) {
-      d.push(
-        <div className="number" key={i}>
-          <div className="days">{days[i]}</div>
-        </div>
-      );
+    componentDidMount() {
+        this.changeMonth();
     }
-    return <div className="days-wrapper">{d}</div>;
-  };
 
-  renderCells = ({month}) => {
-    const {weekStartsOn: startWeekConfig} = this.props;
-    const weekStartsOn = startWeekConfig === "sunday" ? 0 : 1;
+    changeMonth = () => {
+        const {currentMonth} = this.state;
+        const previousMonth = subMonths(currentMonth, 1);
+        const nextMonth = addMonths(currentMonth, 1);
 
-    const monthStart = startOfMonth(month);
-    const monthEnd = endOfMonth(monthStart);
-    const startDate = startOfWeek(monthStart, { weekStartsOn });
-    const endDate = endOfWeek(monthEnd, { weekStartsOn });
-    const dateFormat = "d";
-    const rows = [];
+        this.setState({previousMonth, nextMonth});
+        setTimeout(() => {
+            this.setState({
+                direction: ""
+            });
+        }, 300);
+    };
 
-    let days = [];
-    let day = startDate;
-    let formattedDate = "";
-
-    while (day <= endDate) {
-      for (let i = 0; i < 7; i++) {
-        formattedDate = format(day, dateFormat);
-        const cloneDay = day;
-        days.push(
-          <div
-            className={`number ${this.getDayStatus({day, monthStart})}`}
-            key={day}
-            onClick={() => this.props.onDateClick(toDate(cloneDay))}
-          >
-            <div className="days">{formattedDate}</div>
-          </div>
+    renderHeading = () => {
+        const {currentMonth, animate, direction} = this.state;
+        const dateFormat = "MMMM, yyyy";
+        return (
+            <div className="calendar-header">
+                <CSSTransition
+                    in={animate}
+                    timeout={200}
+                    classNames={{
+                        enter: `${direction === "ltr" ? "slideinltr-enter" : "slideinrtl-enter"}`,
+                        enterActive: `${
+                            direction === "ltr" ? "slideinltr-enter-active" : "slideinrtl-enter-active"
+                        }`
+                    }}
+                    onEntered={() => this.setState({animate: false})}
+                >
+                    <div className="header-date">
+                        <span className="current-month">{format(currentMonth, dateFormat)}</span>
+                    </div>
+                </CSSTransition>
+                <div className="prev-next-icon">
+                    <img src={prevIcon} alt="Previous" onClick={() => this.previousMonth()}/>
+                    <img src={nextIcon} alt="Next" onClick={() => this.nextMonth()}/>
+                </div>
+            </div>
         );
-        day = addDays(day, 1);
-      }
-      rows.push(<div className="row-wrapper" key={day}> {days} </div>);
-      days = [];
-    }
-    return rows;
-  };
+    };
 
-  getDayStatus = ({day, monthStart}) => {
-    const isCurrentPeriod = this.isCurrentPeriod({day});
-    const isSickLeave = this.isSickLeave({day});
-    const isVacationLeave = this.isVacationLeave({day});
-
-    const isDayBelongsToMonth = isSameMonth(day, monthStart);
-
-    // if ( !isCurrentPeriod) {
-    //   return "disabled";
-    // }
-
-    if (!!isSickLeave) {
-      return `${isDayBelongsToMonth ? "" : "disabled"} ${isSickLeave}`;
-    }
-
-    if (!!isVacationLeave) {
-      return `${isDayBelongsToMonth ? "" : "disabled"} ${isVacationLeave}`;
-    }
-
-    return `${isDayBelongsToMonth ? "" : "disabled"}`;
-  };
-
-  isCurrentPeriod = ({day}) => {
-    const {currentPeriod: {start, end}} = this.props;
-    const startDate = new Date(start);
-    const endDate = new Date(end);
-    return (isAfter(day, startDate) || isSameDay(day, startDate)) && (isBefore(day, endDate) || isSameDay(day, endDate))
-  };
-
-  isSickLeave = ({day}) => {
-    const {sickLeaves, currentPeriod: {start, end}} = this.props;
-
-    const periodStartDay = new Date(start);
-    const periodEndDay = new Date(end);
-
-    for (let i in sickLeaves) {
-      const currentDay = new Date(sickLeaves[i]);
-
-      if (isSameDay(day, currentDay)) {
-        // if (isSameDay(currentDay, new Date())) {
-        //   return "sick planned";
-        // } else
-        if ( this.isCurrentPeriod({day})) {
-          return "sick currentPeriod";
-        } else if (isBefore(currentDay, periodEndDay) || isSameDay(currentDay, periodEndDay)) {
-          return "sick oldPeriod";
-        } else if (isAfter(currentDay, periodEndDay)) {
-          return "sick futurePeriod";
-        } else {
-          return "";
+    renderBody = () => {
+        const {weekStartsOn} = this.props;
+        const days = weekStartsOn === "sunday" ? ["S", "M", "T", "W", "T", "F", "S"] : ["M", "T", "W", "T", "F", "S", "S"];
+        const d = [];
+        for (let i in days) {
+            d.push(
+                <div className="number" key={i}>
+                    <div className="days">{days[i]}</div>
+                </div>
+            );
         }
-      }
-    }
-  };
+        return <div className="days-wrapper">{d}</div>;
+    };
 
-  isVacationLeave = ({day}) => {
-    const {vacationLeaves, currentPeriod: {start, end}} = this.props;
+    renderCells = ({month}) => {
+        const {weekStartsOn: startWeekConfig} = this.props;
+        const weekStartsOn = startWeekConfig === "sunday" ? 0 : 1;
 
-    const periodStartDay = new Date(start);
-    const periodEndDay = new Date(end);
+        const monthStart = startOfMonth(month);
+        const monthEnd = endOfMonth(monthStart);
+        const startDate = startOfWeek(monthStart, {weekStartsOn});
+        const endDate = endOfWeek(monthEnd, {weekStartsOn});
+        const dateFormat = "d";
+        const rows = [];
 
-    for (let i in vacationLeaves) {
-      const currentDay = new Date(vacationLeaves[i]);
+        let days = [];
+        let day = startDate;
+        let formattedDate = "";
 
-      if (isSameDay(day, currentDay)) {
-        // if (isSameDay(currentDay, new Date())) {
-        //   return "vacation planned";
-        // } else
-        if ( this.isCurrentPeriod({day})) {
-          return "vacation currentPeriod";
-        } else if (isBefore(currentDay, periodEndDay) || isSameDay(currentDay, periodEndDay)) {
-          return "vacation oldPeriod";
-        } else if (isAfter(currentDay, periodEndDay)) {
-          return "vacation futurePeriod";
-        } else {
-          return "";
-        }
-      }
-    }
-  };
-
-  onDateClick = day => {
-    console.log("Clicked: ", day);
-  };
-
-  nextMonth = () => {
-    this.setState({
-      currentMonth: addMonths(this.state.currentMonth, 1),
-      animate: true,
-      direction: "ltr"
-    });
-    this.changeMonth();
-  };
-
-  previousMonth = () => {
-    this.setState({
-      currentMonth: subMonths(this.state.currentMonth, 1),
-      animate: true,
-      direction: "rtl"
-    });
-    this.changeMonth();
-  };
-
-  render() {
-    const { direction, previousMonth, currentMonth, nextMonth } = this.state;
-    const { className, flat } = this.props;
-    return (
-      <div
-        className={className}
-        style={{ boxShadow: flat ? "none" : "0 2px 10px 0 rgba(0, 0, 0, 0.1)" }}
-      >
-        {this.renderHeading()}
-
-        <div className="calendar-body">
-          {this.renderBody()}
-          <div
-            className={
-              direction === "ltr"
-                ? "monthsWrapper nxt"
-                : direction === "rtl"
-                ? "monthsWrapper prev"
-                : "monthsWrapper"
+        while (day <= endDate) {
+            for (let i = 0; i < 7; i++) {
+                formattedDate = format(day, dateFormat);
+                const cloneDay = day;
+                days.push(
+                    <div
+                        className={`number ${this.getDayStatus({day, monthStart})}`}
+                        key={day}
+                        onClick={() => this.props.onDateClick(toDate(cloneDay))}
+                    >
+                        <div className="days">{formattedDate}</div>
+                    </div>
+                );
+                day = addDays(day, 1);
             }
-          >
-            <div className="rows-wrapper previous">{this.renderCells({month: previousMonth})}</div>
-            <div className="rows-wrapper">{this.renderCells({month: currentMonth})}</div>
-            <div className="rows-wrapper next">{this.renderCells({month: nextMonth})}</div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+            rows.push(<div className="row-wrapper" key={day}> {days} </div>);
+            days = [];
+        }
+        return rows;
+    };
+
+    getDayStatus = ({day, monthStart}) => {
+        const isCurrentPeriod = this.isCurrentPeriod({day});
+        const isSickLeave = this.isSickLeave({day});
+        const isVacationLeave = this.isVacationLeave({day});
+        const isUnpaidLeave = this.isUnpaidLeave({day});
+
+        const isDayBelongsToMonth = isSameMonth(day, monthStart);
+
+        if (!!isSickLeave) {
+            return `${isDayBelongsToMonth ? "" : "disabled"} ${isSickLeave}`;
+        }
+
+        if (!!isUnpaidLeave) {
+            return `${isDayBelongsToMonth ? "" : "disabled"} ${isUnpaidLeave}`;
+        }
+
+        if (!!isVacationLeave) {
+            return `${isDayBelongsToMonth ? "" : "disabled"} ${isVacationLeave}`;
+        }
+
+        return `${isDayBelongsToMonth ? "" : "disabled"}`;
+    };
+
+    isCurrentPeriod = ({day}) => {
+        const {currentPeriod: {start, end}} = this.props;
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        return (isAfter(day, startDate) || isSameDay(day, startDate)) && (isBefore(day, endDate) || isSameDay(day, endDate))
+    };
+
+    isSickLeave = ({day}) => {
+        const {sickLeaves, currentPeriod: {start, end}} = this.props;
+
+        const periodEndDay = new Date(end);
+
+        for (let i in sickLeaves) {
+            const currentDay = new Date(sickLeaves[i]);
+
+            if (isSameDay(day, currentDay)) {
+                if (this.isCurrentPeriod({day})) {
+                    return "sick currentPeriod";
+                } else if (isBefore(currentDay, periodEndDay) || isSameDay(currentDay, periodEndDay)) {
+                    return "sick oldPeriod";
+                } else if (isAfter(currentDay, periodEndDay)) {
+                    return "sick futurePeriod";
+                } else {
+                    return "";
+                }
+            }
+        }
+    };
+
+    isVacationLeave = ({day}) => {
+        const {vacationLeaves, currentPeriod: {start, end}} = this.props;
+
+        const periodEndDay = new Date(end);
+
+        for (let i in vacationLeaves) {
+            const currentDay = new Date(vacationLeaves[i]);
+
+            if (isSameDay(day, currentDay)) {
+                if (this.isCurrentPeriod({day})) {
+                    return "vacation currentPeriod";
+                } else if (isBefore(currentDay, periodEndDay) || isSameDay(currentDay, periodEndDay)) {
+                    return "vacation oldPeriod";
+                } else if (isAfter(currentDay, periodEndDay)) {
+                    return "vacation futurePeriod";
+                } else {
+                    return "";
+                }
+            }
+        }
+    };
+
+    isUnpaidLeave = ({day}) => {
+        const {unpaidLeaves, currentPeriod: {start, end}} = this.props;
+
+        const periodEndDay = new Date(end);
+
+        for (let i in unpaidLeaves) {
+            const currentDay = new Date(unpaidLeaves[i]);
+
+            if (isSameDay(day, currentDay)) {
+                if (this.isCurrentPeriod({day})) {
+                    return "unpaid currentPeriod";
+                } else if (isBefore(currentDay, periodEndDay) || isSameDay(currentDay, periodEndDay)) {
+                    return "unpaid oldPeriod";
+                } else if (isAfter(currentDay, periodEndDay)) {
+                    return "unpaid futurePeriod";
+                } else {
+                    return "";
+                }
+            }
+        }
+    };
+
+    onDateClick = day => {
+        console.log("Clicked: ", day);
+    };
+
+    nextMonth = () => {
+        this.setState({
+            currentMonth: addMonths(this.state.currentMonth, 1),
+            animate: true,
+            direction: "ltr"
+        });
+        this.changeMonth();
+    };
+
+    previousMonth = () => {
+        this.setState({
+            currentMonth: subMonths(this.state.currentMonth, 1),
+            animate: true,
+            direction: "rtl"
+        });
+        this.changeMonth();
+    };
+
+    render() {
+        const {direction, previousMonth, currentMonth, nextMonth} = this.state;
+        const {className, flat} = this.props;
+        return (
+            <div
+                className={className}
+                style={{boxShadow: flat ? "none" : "0 2px 10px 0 rgba(0, 0, 0, 0.1)"}}
+            >
+                {this.renderHeading()}
+
+                <div className="calendar-body">
+                    {this.renderBody()}
+                    <div
+                        className={
+                            direction === "ltr"
+                                ? "monthsWrapper nxt"
+                                : direction === "rtl"
+                                ? "monthsWrapper prev"
+                                : "monthsWrapper"
+                        }
+                    >
+                        <div className="rows-wrapper previous">{this.renderCells({month: previousMonth})}</div>
+                        <div className="rows-wrapper">{this.renderCells({month: currentMonth})}</div>
+                        <div className="rows-wrapper next">{this.renderCells({month: nextMonth})}</div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 }
 
 CalendarComponent.propTypes = {
-  vacationLeaves: PropTypes.array,
-  sickLeaves: PropTypes.array,
-  weekStartsOn: PropTypes.string,
-  currentPeriod: PropTypes.shape({
-    start: PropTypes.string,
-    end: PropTypes.string
-  }),
+    vacationLeaves: PropTypes.array,
+    sickLeaves: PropTypes.array,
+    unpaidLeaves: PropTypes.array,
+    weekStartsOn: PropTypes.string,
+    currentPeriod: PropTypes.shape({
+        start: PropTypes.string,
+        end: PropTypes.string
+    }),
 };
 CalendarComponent.defaultProps = {
-  weekStartsOn: 'sunday'
+    weekStartsOn: 'sunday'
 };
 
 const Calendar = styled(CalendarComponent)`
@@ -442,18 +458,27 @@ const Calendar = styled(CalendarComponent)`
     border: 1px solid #976fed;
     border-radius: 24px;
     position: relative;
-    /* z-index: 10; */
   }
   
   .number.vacation.currentPeriod {
     background-color: #976fed;
     border-radius: 24px;
     position: relative;
-    /* z-index: 10; */
+  }
+
+  .number.unpaid.oldPeriod {
+    border: 1px solid #48C4D3;
+    border-radius: 24px;
+    position: relative;
+  }
+      
+  .number.unpaid.currentPeriod {
+    background-color: #48C4D3;
+    border-radius: 24px;
+    position: relative;
   }
   .number.vacation.currentPeriod .days {
     color: #ffffff;
-    /* margin-right: 15px; */
   }
   .number.vacation.currentPeriod + .number.vacation.currentPeriod:before {
     content: "";
@@ -475,6 +500,39 @@ const Calendar = styled(CalendarComponent)`
     color: #ffffff;
   }
   .number.vacation.futurePeriod + .number.vacation.futurePeriod:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    background: inherit;
+    top: 0;
+    bottom: 0;
+    left: -95%;
+    right: 50%;
+  }
+  
+  .number.unpaid.currentPeriod .days {
+    color: #ffffff;
+  }
+  .number.unpaid.currentPeriod + .number.unpaid.currentPeriod:before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    background: inherit;
+    top: 0;
+    bottom: 0;
+    left: -95%;
+    right: 50%;
+  }
+  
+  .number.unpaid.futurePeriod {
+    background-color: #7EECF1;
+    border-radius: 24px;
+    position: relative;
+  }
+  .number.unpaid.futurePeriod .days {
+    color: #ffffff;
+  }
+  .number.unpaid.futurePeriod + .number.unpaid.futurePeriod:before {
     content: "";
     position: absolute;
     z-index: -1;
