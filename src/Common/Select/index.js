@@ -22,14 +22,18 @@ const SelectComponent = ({className, options, placeholder, onChange, isMulti, ..
                     return {
                         ...styles,
                         backgroundColor: "#ffffff",
-                        // boxShadow: "0 1px 5px 0 rgba(0,0,0,0.10)",
                         padding: "0",
                         border: 0,
                         borderRadius: "4px",
-                        // height: "",
                         borderBottomLeftRadius: isFocused ? 0 : 4,
                         borderBottomRightRadius: isFocused ? 0 : 4
                     };
+                },
+                valueContainer: (styles) => {
+                    return {
+                        ...styles,
+                        padding: "2px 3px",
+                    }
                 },
                 control: (styles, {isFocused}) => {
                     return {
@@ -58,7 +62,8 @@ const SelectComponent = ({className, options, placeholder, onChange, isMulti, ..
                     return {
                         ...styles,
                         paddingTop: 0,
-                        paddinRight: 25
+                        // marginRight: 25,
+                        // marginLeft: 5
                     };
                 },
                 option: (styles, {isFocused}) => {
@@ -66,10 +71,10 @@ const SelectComponent = ({className, options, placeholder, onChange, isMulti, ..
                         ...styles,
                         backgroundColor: isFocused ? "#F7F8FB" : "#ffffff",
                         borderColor: "transparent",
-                        fontFamily: "OpenSans",
+                        fontFamily: "Open Sans",
                         color: "#212529",
                         fontSize: 16,
-                        paddingLeft: 25,
+                        paddingLeft: 8,
                         paddingRight: 25,
                         letterSpacing: 0
                     };
@@ -91,9 +96,9 @@ const SelectComponent = ({className, options, placeholder, onChange, isMulti, ..
                 placeholder: (styles, {isFocused}) => {
                     return {
                         ...styles,
-                        fontFamily: "OpenSans",
+                        fontFamily: "Open Sans",
                         fontSize: 16,
-                        padding: "0 15px",
+                        padding: "0 3px",
                         color: "#B5B7BD",
                         lineHeight: 24,
                         letterSpacing: 0

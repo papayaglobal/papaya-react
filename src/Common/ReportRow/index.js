@@ -121,7 +121,7 @@ const ReportRow = styled(ReportRowComponent)`
   box-shadow: none;
   :hover {
     cursor: pointer;
-    box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   }
   &.planned {
     box-shadow: none;
@@ -129,7 +129,7 @@ const ReportRow = styled(ReportRowComponent)`
   }
   &.planned:hover {
     cursor: pointer;
-    box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   }
   &.history {
     box-shadow: none;
@@ -137,7 +137,7 @@ const ReportRow = styled(ReportRowComponent)`
   }
   &.history:hover {
     cursor: pointer;
-    box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   }
 
   & :hover {
