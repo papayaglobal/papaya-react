@@ -11,6 +11,17 @@ import media from "../../Constants/mediaQueries";
 import pending from "../../assets/icons/Pending.svg";
 import more from "../../assets/icons/More.svg";
 
+const leaveTypes = {
+    sick: "Sick Leave(s)",
+    vacation: "Vacations",
+    unpaid: "Unpaid"
+};
+
+const leaveColors = {
+    sick: "#E24C84",
+    vacation: "#976FED",
+    unpaid: "#48C4D3"
+};
 
 const ReportRowComponent = ({
                                 className,
@@ -43,8 +54,7 @@ const ReportRowComponent = ({
             setSize("normal-size");
         }
     };
-    // const leaveDate = new Date(reportedDate);
-    // const reportStatus = compareAsc(leaveDate, today) > 0 ? "planned" : "history";
+
     return (
         <div
             ref={reportRef}
@@ -54,7 +64,7 @@ const ReportRowComponent = ({
                 <div className="leaveWrapper">
                     {payPeriod && (<span className="date payPeriod">{payPeriod}</span>)}
                     <div className={`leaveBorder ${paddingPayPeriod ? "paddingPayPeriod" : ""}`}/>
-                    <span className="leaveType">{type === "sick" ? "Sick Leave(s)" : "Vacations"}</span>
+                    <span className="leaveType">{leaveTypes[type]}</span>
                 </div>
                 <div className="dateWrapper">
                     <span className="date">{dates}</span>
@@ -163,7 +173,7 @@ const ReportRow = styled(ReportRowComponent)`
   .leaveBorder {
     width: 3px;
     height: 14px;
-    background-color: ${props => (props.type === "sick" ? "#E24C84" : "#976FED")};
+    background-color: ${props => leaveColors[props.type]};
     border-radius: 2.5px;
     &.paddingPayPeriod {
       margin-left: 122px;
