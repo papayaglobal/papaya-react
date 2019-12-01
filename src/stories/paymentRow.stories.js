@@ -388,6 +388,7 @@ storiesOf("Payment Row", module)
                 dates={text("dates", "10 May 2019")}
                 reportedDate={text("reportedDate", "11 May 2019")}
                 actions={[]}
+                hasComment={true}
                 daysReported={text("daysReported", "1 Day")}
                 isNew={boolean("isNew", false)}
                 selectable={boolean("selectable", true)}

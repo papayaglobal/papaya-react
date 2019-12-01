@@ -7,6 +7,7 @@ import Label from "../Label";
 import styled from "styled-components";
 import more from "../../assets/icons/More.svg";
 import expand from "../../assets/icons/Expand.svg";
+import comment from "../../assets/icons/Inbox.svg";
 import {CheckBox} from "../../Common/Checkbox";
 import media from "../../Constants/mediaQueries";
 
@@ -54,6 +55,7 @@ class PaymentRowComponent extends React.Component {
             actions,
             reportedDate,
             isNew,
+            hasComment,
             isMonthly,
             amount,
             selectable,
@@ -99,6 +101,11 @@ class PaymentRowComponent extends React.Component {
                             {isNew && (
                                 <div className="labelWrapper">
                                     <Label title="New"/>
+                                </div>
+                            )}
+                            {hasComment && (
+                                <div className="labelWrapper">
+                                    <img src={comment} alt="comment"/>
                                 </div>
                             )}
                             {attachments && (attachments.length > 0 && (
@@ -219,6 +226,11 @@ class PaymentRowComponent extends React.Component {
                                 <Label title="New"/>
                             </div>
                         )}
+                        {hasComment && (
+                            <div className="labelWrapper">
+                                <img src={comment} alt="comment"/>
+                            </div>
+                        )}
                         {attachments && (attachments.length > 0 && (
                             <div className="attachments md">
                                 <Attachment attachments={attachments}
@@ -254,6 +266,7 @@ PaymentRowComponent.propTypes = {
     actions: PropTypes.array,
     reportedDate: PropTypes.string,
     isNew: PropTypes.bool,
+    hasComment: PropTypes.bool,
     isMonthly: PropTypes.bool,
     amount: PropTypes.string,
     selectable: PropTypes.bool,
