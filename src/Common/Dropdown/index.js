@@ -16,7 +16,8 @@ class DropdownComponent extends React.Component {
         this.setState({toggleDisplay: false});
     };
 
-    select = item => {
+    select = ({e, item}) => {
+        e.stopPropagation();
         const {onSelect} = this.props;
         this.setState({
             toggleDisplay: !this.state.toggleDisplay
@@ -26,18 +27,22 @@ class DropdownComponent extends React.Component {
         } else {
             isFunction(onSelect) && onSelect(item);
         }
-
     };
 
     renderListItems = () => {
-
         let items = [];
         for (let i = 0; i < this.props.list.length; i++) {
             let item = this.props.list[i];
-            items.push(<span className="dropdown-item" onClick={this.select.bind(this, item)}
+            items.push(<span className="dropdown-item" onClick={(e) => this.select({e, item})}
                              key={i}>{item.name}</span>);
         }
         return items;
+    };
+
+    onButtonClicked = ({e}) => {
+        e.stopPropagation();
+        const {toggleDisplay} = this.state;
+        this.setState({toggleDisplay: !toggleDisplay})
     };
 
     render() {
@@ -46,11 +51,10 @@ class DropdownComponent extends React.Component {
 
         const selectedItem = find(list, item => !!item.selected);
 
-        return (
-            <div className={className}>
+        return list.length > 0 ? (<div className={className}>
                 <Button
                     style={{backgroundColor: "#ebebec", color: "#343949", fontSize: "1rem", height: 36}}
-                    onClick={() => this.setState({toggleDisplay: !toggleDisplay})}
+                    onClick={(e) => this.onButtonClicked({e})}
                 >
                     {icon ? (
                         <img src={icon} alt="Icon Only Button"/>
@@ -75,7 +79,7 @@ class DropdownComponent extends React.Component {
                     {this.renderListItems()}
                 </div>
             </div>
-        );
+        ) : <StyledEmptyButton/>;
     }
 }
 
@@ -85,6 +89,10 @@ DropdownComponent.propTypes = {
     className: PropTypes.string,
     onSelect: PropTypes.func
 };
+
+const StyledEmptyButton = styled.div`
+  width: 20px;
+`;
 
 const Dropdown = styled(onClickOutside(DropdownComponent))`
   position: relative;

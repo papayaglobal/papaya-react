@@ -131,6 +131,28 @@ storiesOf("Payment Row", module)
                 <PaymentRow
                     attachments={object("attachments", [
                         {
+                            "type": "PAYSLIP",
+                            "status": null,
+                            "file": {
+                                "name": "guy_resume.pdf",
+                                "directUrl": "http://customer-1.dev.papayaglobal.com:8080/api/v1/file/101/link?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQ3LCJrZXkiOiIxMDEiLCJpYXQiOjE1NzQ1ODkzMTcsImV4cCI6MTU3NTE5NDExN30.PIck31UCEe1rxtM2t1plPff49RvNXKteOVa6ZYoQlaA",
+                            }
+                        }])}
+                    amount={text("amount", "7,705.58")}
+                    pendingTooltip="Report Row with multiple attachment"
+                    dates={text("dates", "10 May 2019")}
+                    reportedDate={text("reportedDate", "11 May 2019")}
+                    actions={[]}
+                    daysReported={text("daysReported", "1 Day")}
+                    isNew={boolean("isNew", false)}
+                    selectable={boolean("selectable", true)}
+                    selected={false}
+                />
+            </div>
+            <div className="app attachment">
+                <PaymentRow
+                    attachments={object("attachments", [
+                        {
                             "id": "34",
                             "paymentId": "1926",
                             "fileId": "101",
@@ -347,4 +369,33 @@ storiesOf("Payment Row", module)
                 onAttachmentClicked={({attachment}) => alert("onAttachmentClicked: " + attachment.file.name)}
             />
         </div>
-    });
+    })
+    .add("payment row - no actions list", () => {
+        let selectable = boolean("selectable", selectPaymentRow);
+        return <div className="app attachment">
+            <PaymentRow
+                attachments={object("attachments", [
+                    {
+                        "type": "PAYSLIP",
+                        "status": null,
+                        "file": {
+                            "name": "guy_resume.pdf",
+                            "directUrl": "http://customer-1.dev.papayaglobal.com:8080/api/v1/file/101/link?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQ3LCJrZXkiOiIxMDEiLCJpYXQiOjE1NzQ1ODkzMTcsImV4cCI6MTU3NTE5NDExN30.PIck31UCEe1rxtM2t1plPff49RvNXKteOVa6ZYoQlaA",
+                        }
+                    }])}
+                amount={text("amount", "7,705.58")}
+                pendingTooltip="Report Row with multiple attachment"
+                dates={text("dates", "10 May 2019")}
+                reportedDate={text("reportedDate", "11 May 2019")}
+                actions={[]}
+                daysReported={text("daysReported", "1 Day")}
+                isNew={boolean("isNew", false)}
+                selectable={boolean("selectable", true)}
+                selected={selectable}
+                onSelectClick={({payment}) => alert("PaymentRow checkbox clicked")}
+                onClick={() => alert("PaymentRow clicked")}
+                onAttachmentClicked={({attachment}) => alert("onAttachmentClicked " + attachment.file.name)}
+            />
+        </div>
+    })
+;
