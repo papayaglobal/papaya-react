@@ -106,6 +106,7 @@ storiesOf("Report Row", module)
                     reportedDate={text("reportedDate", "11 May 2019")}
                     actions={array("actions", actions)}
                     daysReported={text("daysReported", "1 Day")}
+                    onClick={() => alert("clicked ReportRow")}
                 />
             </div>
         </>

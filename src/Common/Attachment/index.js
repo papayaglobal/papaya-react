@@ -13,22 +13,26 @@ const AttachmentComponent = ({
                                  attachments = [],
                                  displayName,
                                  type,
-                                 isExpanded
-                             }) => (
-    <div
-        className={className}
-        style={{backgroundColor: type === "link" ? "transparent" : "rgba(25, 117, 240, 0.05)"}}
-    >
-        {!displayName &&
-        (attachments.length > 1 && <span className="attachmentCount">{attachments.length}</span>)}
-        <AttachmentIcon className="icon"/>
-        {displayName && (
-            <span className="fileName">
+                                 isExpanded,
+                                 onClick
+                             }) => {
+    return (
+        <div
+            className={className}
+            style={{backgroundColor: type === "link" ? "transparent" : "rgba(25, 117, 240, 0.05)"}}
+            onClick={onClick}
+        >
+            {!displayName &&
+            (attachments.length > 1 && <span className="attachmentCount">{attachments.length}</span>)}
+            <AttachmentIcon className="icon"/>
+            {displayName && (
+                <span className="fileName">
         {attachments.length > 1 ? `${attachments.length} Files` : get(attachments, "[0].file.name")}
       </span>
-        )}
-    </div>
-);
+            )}
+        </div>
+    )
+};
 
 const Attachment = styled(AttachmentComponent)`
   display: flex;

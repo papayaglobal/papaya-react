@@ -1,31 +1,54 @@
 import React from "react";
-import styled from "styled-components";
-
+import PropTypes from 'prop-types';
+import {isFunction} from "lodash";
 import Attachment from "../Attachment";
 import Dropdown from "../Dropdown";
 import Label from "../Label";
-
-import media from "../../Constants/mediaQueries";
-
+import styled from "styled-components";
 import more from "../../assets/icons/More.svg";
 import expand from "../../assets/icons/Expand.svg";
-import PropTypes from "prop-types";
 import {CheckBox} from "../../Common/Checkbox";
+import media from "../../Constants/mediaQueries";
 
 class PaymentRowComponent extends React.Component {
     state = {
         isExpanded: false
     };
-    toggleCollapse = () => {
+
+    toggleCollapse = (e) => {
+        e.stopPropagation();
         this.setState({
             isExpanded: !this.state.isExpanded
         });
     };
 
+    onSelectClicked = ({e, payment}) => {
+        const {onSelectClick} = this.props;
+        e.preventDefault();
+        e.stopPropagation();
+
+        isFunction(onSelectClick) && onSelectClick({payment});
+    };
+
+    onSelectAttachmentClicked = ({e, payment, attachment}) => {
+        const {onSelectAttachmentClicked} = this.props;
+        e.preventDefault();
+        e.stopPropagation();
+
+        isFunction(onSelectAttachmentClicked) && onSelectAttachmentClicked({payment, attachment});
+    };
+
+    onAttachmentClicked = ({e, payment, attachment}) => {
+        const {onAttachmentClicked} = this.props;
+        e.preventDefault();
+        e.stopPropagation();
+
+        isFunction(onAttachmentClicked) && onAttachmentClicked({payment, attachment});
+    };
+
     render() {
         const {
             className,
-            children,
             attachments = [],
             dates,
             actions,
@@ -36,22 +59,22 @@ class PaymentRowComponent extends React.Component {
             selectable,
             selected,
             payment,
-            onSelectClick
+            onClick
         } = this.props;
         const {isExpanded} = this.state;
         if (attachments.length > 1) {
             return (
-                <div className={`${className}`}>
+                <div className={`${className}`} onClick={onClick}>
                     <div
                         id="parentRow"
                         className={`wrapper multipleAttachments ${isExpanded && "isExpanded"}`}
                         style={{border: isNew ? "1px solid #2ED6BC" : "none"}}
-                        onClick={() => this.toggleCollapse()}
+                        onClick={(e) => this.toggleCollapse(e)}
                     >
                         <div className="leftWrapper">
                             {selectable && (
                                 <div className="selectWrapper">
-                                    <CheckBox checked={selected} onClick={() => onSelectClick({payment})}/>
+                                    <CheckBox checked={selected} onClick={(e) => this.onSelectClicked({e, payment})}/>
                                 </div>
                             )}
                             <div className={`${isMonthly ? "dateWrapper isMonthly" : "dateWrapper"}`}>
@@ -65,7 +88,9 @@ class PaymentRowComponent extends React.Component {
                             {attachments &&
                             (attachments.length > 0 && (
                                 <div className="attachments">
-                                    <Attachment attachments={attachments} displayName type="link"/>
+                                    <Attachment
+                                        attachments={attachments}
+                                        displayName type="link"/>
                                     {attachments.length > 1 && <img src={expand} alt="Expand More"/>}
                                 </div>
                             ))}
@@ -76,8 +101,7 @@ class PaymentRowComponent extends React.Component {
                                     <Label title="New"/>
                                 </div>
                             )}
-                            {attachments &&
-                            (attachments.length > 0 && (
+                            {attachments && (attachments.length > 0 && (
                                 <div className="attachments md">
                                     <Attachment attachments={attachments}/>
                                 </div>
@@ -99,11 +123,16 @@ class PaymentRowComponent extends React.Component {
                         style={{border: isNew ? "1px solid #2ED6BC" : "none"}}
                     >
                         {attachments.map((attachment, i) => (
-                            <div key={i} className="subComponentRow">
+                            <div key={i} className="subComponentRow" onClick={(evt) => evt.stopPropagation()}>
                                 <div className="leftWrapper">
                                     {selectable && (
                                         <div className="selectWrapper">
-                                            <CheckBox checked={selected} onClick={() => onSelectClick({payment})}/>
+                                            <CheckBox checked={selected}
+                                                      onClick={(e) => this.onSelectAttachmentClicked({
+                                                          e,
+                                                          payment,
+                                                          attachment
+                                                      })}/>
                                         </div>
                                     )}
                                     <div className={`${isMonthly ? "dateWrapper isMonthly" : "dateWrapper"}`}/>
@@ -111,12 +140,27 @@ class PaymentRowComponent extends React.Component {
                                         <span className="type">{attachment.type}</span>
                                     </div>
                                     <div className="attachments">
-                                        <Attachment attachments={[attachment]} displayName isExpanded type="link"/>
+                                        <Attachment
+                                            onClick={(e) => this.onAttachmentClicked({
+                                                e,
+                                                payment,
+                                                attachment
+                                            })}
+                                            attachments={[attachment]}
+                                            displayName isExpanded type="link"/>
                                     </div>
                                 </div>
+
                                 <div className="rightWrapper">
                                     <div className="attachments md">
-                                        <Attachment attachments={[attachment]}/>
+                                        <Attachment
+                                            onClick={(e) => this.onAttachmentClicked({
+                                                e,
+                                                payment,
+                                                attachment
+                                            })}
+                                            attachments={[attachment]}
+                                        />
                                     </div>
                                     {attachment.title && (
                                         <div className="noteWrapper">
@@ -141,11 +185,12 @@ class PaymentRowComponent extends React.Component {
                 <div
                     className={`${className} singleAttachment`}
                     style={{border: isNew ? "1px solid #2ED6BC" : "none"}}
+                    onClick={onClick}
                 >
                     <div className="leftWrapper">
                         {selectable && (
                             <div className="selectWrapper">
-                                <CheckBox checked={selected} onClick={() => onSelectClick({payment})}/>
+                                <CheckBox checked={selected} onClick={(e) => this.onSelectClicked({e, payment})}/>
                             </div>
                         )}
                         <div className={`${isMonthly ? "dateWrapper isMonthly" : "dateWrapper"}`}>
@@ -156,10 +201,15 @@ class PaymentRowComponent extends React.Component {
                                 <span className="amount">{`$${amount}`}</span>
                             </div>
                         )}
-                        {attachments &&
-                        (attachments.length > 0 && (
+                        {attachments && (attachments.length > 0 && (
                             <div className="attachments">
-                                <Attachment attachments={attachments} displayName type="link"/>
+                                <Attachment attachments={attachments}
+                                            onClick={attachments.length === 1 ? (e) => this.onAttachmentClicked({
+                                                e,
+                                                payment,
+                                                attachment: attachments[0]
+                                            }) : null}
+                                            displayName type="link"/>
                             </div>
                         ))}
                     </div>
@@ -169,10 +219,14 @@ class PaymentRowComponent extends React.Component {
                                 <Label title="New"/>
                             </div>
                         )}
-                        {attachments &&
-                        (attachments.length > 0 && (
+                        {attachments && (attachments.length > 0 && (
                             <div className="attachments md">
-                                <Attachment attachments={attachments}/>
+                                <Attachment attachments={attachments}
+                                            onClick={attachments.length === 1 ? (e) => this.onAttachmentClicked({
+                                                e,
+                                                payment,
+                                                attachment: attachments[0]
+                                            }) : null}/>
                             </div>
                         ))}
                         {reportedDate && (
@@ -205,6 +259,8 @@ PaymentRowComponent.propTypes = {
     selectable: PropTypes.bool,
     selected: PropTypes.bool,
     onSelectClick: PropTypes.func,
+    onSelectAttachmentClicked: PropTypes.func,
+    onAttachmentClicked: PropTypes.func,
 };
 
 const PaymentRow = styled(PaymentRowComponent)`

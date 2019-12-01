@@ -35,7 +35,8 @@ const ReportRowComponent = ({
                                 pendingTooltip,
                                 actions,
                                 reportedDate,
-                                daysReported
+                                daysReported,
+                                onClick
                             }) => {
     const [size, setSize] = useState("normal-size");
     const reportRef = useRef(null);
@@ -59,6 +60,7 @@ const ReportRowComponent = ({
         <div
             ref={reportRef}
             className={`${className} ${reportStatus} ${size}`}
+            onClick={onClick}
         >
             <div className="leftWrapper">
                 <div className="leaveWrapper">
@@ -116,6 +118,7 @@ ReportRowComponent.propTypes = {
     actions: PropTypes.array,
     reportedDate: PropTypes.string,
     daysReported: PropTypes.string,
+    onClick: PropTypes.func
 };
 
 const ReportRow = styled(ReportRowComponent)`
