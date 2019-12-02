@@ -7,7 +7,7 @@ import Label from "../Label";
 import styled from "styled-components";
 import more from "../../assets/icons/More.svg";
 import expand from "../../assets/icons/Expand.svg";
-import comment from "../../assets/icons/Inbox.svg";
+import comment from "../../assets/icons/Comment.svg";
 import {CheckBox} from "../../Common/Checkbox";
 import media from "../../Constants/mediaQueries";
 
