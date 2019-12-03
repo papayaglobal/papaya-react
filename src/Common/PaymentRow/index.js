@@ -84,7 +84,7 @@ class PaymentRowComponent extends React.Component {
                             </div>
                             {amount && (
                                 <div className="amountWrapper">
-                                    <span className="amount">{`$${amount}`}</span>
+                                    <span className="amount">{`${amount}`}</span>
                                 </div>
                             )}
                             {attachments &&
@@ -205,7 +205,7 @@ class PaymentRowComponent extends React.Component {
                         </div>
                         {amount && (
                             <div className="amountWrapper">
-                                <span className="amount">{`$${amount}`}</span>
+                                <span className="amount">{`${amount}`}</span>
                             </div>
                         )}
                         {attachments && (attachments.length > 0 && (
