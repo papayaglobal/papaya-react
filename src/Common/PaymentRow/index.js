@@ -25,7 +25,7 @@ class PaymentRowComponent extends React.Component {
 
     onSelectClicked = ({e, payment}) => {
         const {onSelectClick} = this.props;
-        e.preventDefault();
+        console.log("onSelectClicked =>");
         e.stopPropagation();
 
         isFunction(onSelectClick) && onSelectClick({payment});
@@ -33,7 +33,6 @@ class PaymentRowComponent extends React.Component {
 
     onSelectAttachmentClicked = ({e, payment, attachment}) => {
         const {onSelectAttachmentClicked} = this.props;
-        e.preventDefault();
         e.stopPropagation();
 
         isFunction(onSelectAttachmentClicked) && onSelectAttachmentClicked({payment, attachment});
@@ -41,7 +40,6 @@ class PaymentRowComponent extends React.Component {
 
     onAttachmentClicked = ({e, payment, attachment}) => {
         const {onAttachmentClicked} = this.props;
-        e.preventDefault();
         e.stopPropagation();
 
         isFunction(onAttachmentClicked) && onAttachmentClicked({payment, attachment});

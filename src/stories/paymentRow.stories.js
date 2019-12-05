@@ -255,7 +255,6 @@ storiesOf("Payment Row", module)
         </>
     ))
     .add("working checkbox", () => {
-        let selectable = boolean("selectable", selectPaymentRow);
         return <div className="app attachment">
             <PaymentRow
                 attachments={object("attachments", [
@@ -291,7 +290,7 @@ storiesOf("Payment Row", module)
                 daysReported={text("daysReported", "1 Day")}
                 isNew={boolean("isNew", false)}
                 selectable={boolean("selectable", true)}
-                selected={selectable}
+                selected={boolean("selected", true)}
                 onSelectClick={({payment}) => alert("PaymentRow checkbox clicked")}
                 onClick={() => alert("PaymentRow clicked")}
                 onAttachmentClicked={({attachment}) => alert("onAttachmentClicked " + attachment.file.name)}
