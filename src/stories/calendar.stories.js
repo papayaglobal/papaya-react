@@ -1,6 +1,6 @@
 import React from "react";
 import {storiesOf} from "@storybook/react";
-import {array, boolean, object, text, withKnobs} from "@storybook/addon-knobs";
+import {object, text, withKnobs} from "@storybook/addon-knobs";
 
 import Calendar from "../Common/Calendar";
 
@@ -8,37 +8,6 @@ import "./stories.css";
 
 storiesOf("Calendar", module)
     .addDecorator(withKnobs)
-    .add("Default", () => (
-        <div className="app calendar">
-            <Calendar flat={boolean("flat", true)}/>
-        </div>
-    ))
-    .add("With Vacation Leaves", () => (
-        <div className="app calendar">
-            <Calendar
-                vacationLeaves={array("vacationLeaves", [
-                    "2019/04/03",
-                    "2019/04/12",
-                    "2019/04/26",
-                    "2019/04/27",
-                    "2019/04/28"
-                ])}
-            />
-        </div>
-    ))
-    .add("With Sick Leaves", () => (
-        <div className="app calendar">
-            <Calendar
-                sickLeaves={array("sickLeaves", [
-                    "2019/04/03",
-                    "2019/04/12",
-                    "2019/04/26",
-                    "2019/04/27",
-                    "2019/04/28"
-                ])}
-            />
-        </div>
-    ))
     .add("Calendar - new Props (Unpaid / Sick / Leave )", () => (
         <div className="app calendar">
             <Calendar
