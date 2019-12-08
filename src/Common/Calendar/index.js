@@ -1,17 +1,15 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import styled from "styled-components";
+import {find, get} from "lodash";
 import {CSSTransition} from "react-transition-group";
+import * as moment from "moment";
 import {
     addDays,
     addMonths,
     endOfMonth,
     endOfWeek,
     format,
-    isAfter,
-    isBefore,
-    isSameDay,
-    isSameMonth,
     startOfMonth,
     startOfWeek,
     subMonths,
@@ -28,8 +26,6 @@ class CalendarComponent extends React.Component {
         nextMonth: null,
         selectedDate: new Date(),
         animate: false,
-        sickLeave: [],
-        vacations: [],
         direction: ""
     };
 
@@ -128,104 +124,89 @@ class CalendarComponent extends React.Component {
         return rows;
     };
 
-    getDayStatus = ({day, monthStart}) => {
-        const isCurrentPeriod = this.isCurrentPeriod({day});
-        const isSickLeave = this.isSickLeave({day});
-        const isVacationLeave = this.isVacationLeave({day});
-        const isUnpaidLeave = this.isUnpaidLeave({day});
+    getDayStatus = ({day}) => {
+        const {ptoItems = []} = this.props;
+        const cleanDate = moment(day).format("YYYY-MM-DD");
 
-        const isDayBelongsToMonth = isSameMonth(day, monthStart);
-
-        if (!!isSickLeave) {
-            return `${isDayBelongsToMonth ? "" : "disabled"} ${isSickLeave}`;
-        }
-
-        if (!!isUnpaidLeave) {
-            return `${isDayBelongsToMonth ? "" : "disabled"} ${isUnpaidLeave}`;
-        }
-
-        if (!!isVacationLeave) {
-            return `${isDayBelongsToMonth ? "" : "disabled"} ${isVacationLeave}`;
-        }
-
-        return `${isDayBelongsToMonth ? "" : "disabled"}`;
-    };
-
-    isCurrentPeriod = ({day}) => {
-        const {currentPeriod: {start, end}} = this.props;
-        const startDate = new Date(start);
-        const endDate = new Date(end);
-        return (isAfter(day, startDate) || isSameDay(day, startDate)) && (isBefore(day, endDate) || isSameDay(day, endDate))
-    };
-
-    isSickLeave = ({day}) => {
-        const {sickLeaves, currentPeriod: {start, end}} = this.props;
-
-        const periodEndDay = new Date(end);
-
-        for (let i in sickLeaves) {
-            const currentDay = new Date(sickLeaves[i]);
-
-            if (isSameDay(day, currentDay)) {
-                if (this.isCurrentPeriod({day})) {
-                    return "sick currentPeriod";
-                } else if (isBefore(currentDay, periodEndDay) || isSameDay(currentDay, periodEndDay)) {
-                    return "sick oldPeriod";
-                } else if (isAfter(currentDay, periodEndDay)) {
-                    return "sick futurePeriod";
-                } else {
-                    return "";
-                }
+        const ptoItem = find(ptoItems, (pto) => {
+            if (pto.dateDisplayType === "SINGLE_DAY") {
+                return cleanDate === get(pto, "start");
+            } else {
+                return moment(cleanDate).isBetween(moment(get(pto, "start")), moment(get(pto, "end")), undefined, "[]");
             }
+        });
+
+        switch (get(ptoItem, "type")) {
+            case "sick":
+                return this.getSickLeaveClasses({ptoItem, day});
+            case "leave":
+                return this.getVacationLeaveClasses({ptoItem, day});
+            case "unpaid":
+                return this.getUnpaidLeaveClasses({ptoItem, day});
+            default:
+                return ""
         }
     };
 
-    isVacationLeave = ({day}) => {
-        const {vacationLeaves, currentPeriod: {start, end}} = this.props;
+    getSickLeaveClasses = ({day, ptoItem}) => {
+        const {currentPeriod, nextPeriod} = this.props;
+        const currentPeriodId = +get(currentPeriod, "id");
+        const nextPeriodId = +get(nextPeriod, "id");
+        const periodEnd = moment(get(currentPeriod, "endedAt"));
+        const ptoPeriod = +get(ptoItem, "workerReport.paymentPeriodId");
 
-        const periodEndDay = new Date(end);
-
-        for (let i in vacationLeaves) {
-            const currentDay = new Date(vacationLeaves[i]);
-
-            if (isSameDay(day, currentDay)) {
-                if (this.isCurrentPeriod({day})) {
-                    return "vacation currentPeriod";
-                } else if (isBefore(currentDay, periodEndDay) || isSameDay(currentDay, periodEndDay)) {
-                    return "vacation oldPeriod";
-                } else if (isAfter(currentDay, periodEndDay)) {
-                    return "vacation futurePeriod";
-                } else {
-                    return "";
-                }
-            }
+        if (currentPeriodId === ptoPeriod) {
+            return "sick currentPeriod";
+        } else if (ptoPeriod === nextPeriodId) {
+            return "sick futurePeriod";
+        } else if (moment(day).isBefore(periodEnd)) {
+            return "sick oldPeriod";
+        } else if (moment(day).isAfter(periodEnd)) {
+            return "sick futurePeriod";
+        } else {
+            return "";
         }
     };
 
-    isUnpaidLeave = ({day}) => {
-        const {unpaidLeaves, currentPeriod: {start, end}} = this.props;
+    getVacationLeaveClasses = ({day, ptoItem}) => {
+        const {currentPeriod, nextPeriod} = this.props;
+        const currentPeriodId = +get(currentPeriod, "id");
+        const periodEnd = moment(get(currentPeriod, "endedAt"));
+        const nextPeriodId = +get(nextPeriod, "id");
+        const ptoPeriod = +get(ptoItem, "workerReport.paymentPeriodId");
 
-        const periodEndDay = new Date(end);
-
-        for (let i in unpaidLeaves) {
-            const currentDay = new Date(unpaidLeaves[i]);
-
-            if (isSameDay(day, currentDay)) {
-                if (this.isCurrentPeriod({day})) {
-                    return "unpaid currentPeriod";
-                } else if (isBefore(currentDay, periodEndDay) || isSameDay(currentDay, periodEndDay)) {
-                    return "unpaid oldPeriod";
-                } else if (isAfter(currentDay, periodEndDay)) {
-                    return "unpaid futurePeriod";
-                } else {
-                    return "";
-                }
-            }
+        if (currentPeriodId === ptoPeriod) {
+            return "vacation currentPeriod";
+        } else if (ptoPeriod === nextPeriodId) {
+            return "vacation futurePeriod";
+        } else if (moment(day).isBefore(periodEnd)) {
+            return "vacation oldPeriod";
+        } else if (moment(day).isAfter(periodEnd)) {
+            return "vacation futurePeriod";
+        } else {
+            return "";
         }
+
     };
 
-    onDateClick = day => {
-        console.log("Clicked: ", day);
+    getUnpaidLeaveClasses = ({day, ptoItem}) => {
+        const {currentPeriod, nextPeriod} = this.props;
+        const currentPeriodId = +get(currentPeriod, "id");
+        const nextPeriodId = +get(nextPeriod, "id");
+        const periodEnd = moment(get(currentPeriod, "endedAt"));
+        const ptoPeriod = +get(ptoItem, "workerReport.paymentPeriodId");
+
+        if (currentPeriodId === ptoPeriod) {
+            return "unpaid currentPeriod";
+        } else if (ptoPeriod === nextPeriodId) {
+            return "unpaid futurePeriod";
+        } else if (moment(day).isBefore(periodEnd)) {
+            return "unpaid oldPeriod";
+        } else if (moment(day).isAfter(periodEnd)) {
+            return "unpaid futurePeriod";
+        } else {
+            return "";
+        }
     };
 
     nextMonth = () => {
@@ -278,14 +259,10 @@ class CalendarComponent extends React.Component {
 }
 
 CalendarComponent.propTypes = {
-    vacationLeaves: PropTypes.array,
-    sickLeaves: PropTypes.array,
-    unpaidLeaves: PropTypes.array,
+    ptoItems: PropTypes.array,
     weekStartsOn: PropTypes.string,
-    currentPeriod: PropTypes.shape({
-        start: PropTypes.string,
-        end: PropTypes.string
-    }),
+    currentPeriod: PropTypes.any,
+    nextPeriod: PropTypes.any,
 };
 CalendarComponent.defaultProps = {
     weekStartsOn: 'sunday'
