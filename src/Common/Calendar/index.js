@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from "styled-components";
 import {find, get} from "lodash";
 import {CSSTransition} from "react-transition-group";
-import * as moment from "moment";
+import moment from "moment";
 import {
     addDays,
     addMonths,
