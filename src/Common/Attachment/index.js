@@ -24,7 +24,7 @@ const AttachmentComponent = ({
         >
             {!displayName &&
             (attachments.length > 1 && <span className="attachmentCount">{attachments.length}</span>)}
-            <AttachmentIcon className="icon"/>
+            <AttachmentIcon className="icon" style={{flexShrink: 0}}/>
             {displayName && (
                 <span className="fileName">
         {attachments.length > 1 ? `${attachments.length} Files` : get(attachments, "[0].file.name")}
@@ -39,7 +39,7 @@ const Attachment = styled(AttachmentComponent)`
   justify-content: center;
   align-items: center;
   background: rgba(25, 117, 240, 0.05);
-  height: 34px;
+  min-height: 34px;
   border-radius: 17px;
   padding: 9px;
 
