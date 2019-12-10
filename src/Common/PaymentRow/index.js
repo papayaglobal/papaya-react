@@ -417,7 +417,7 @@ const PaymentRow = styled(PaymentRowComponent)`
   }
   .attachments {
     display: flex;
-    flex: 1;
+    flex: 2;
     justify-content: flex-start;
     align-items: center;
     font-size: 0.9rem;
@@ -463,7 +463,7 @@ const PaymentRow = styled(PaymentRowComponent)`
     .noteWrapper{
       display: none;
     }
-    .attachments, .selectWrapper {
+    .attachments, .selectWrapper {      
       display: none;
     }
     .attachments.md {
