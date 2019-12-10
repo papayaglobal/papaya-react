@@ -28,6 +28,7 @@ storiesOf("Payment Row", module)
     .add("small screen", () => (
         <div className="app attachment" style={{width: "700px"}}>
             <PaymentRow
+                payment={{comment: "My comment"}}
                 attachments={object("attachments", [
                     {
                         file: {
@@ -296,6 +297,7 @@ storiesOf("Payment Row", module)
         let selectable = boolean("selectable", selectPaymentRow);
         return <div className="app attachment">
             <PaymentRow
+                payment={{comment: "My comment"}}
                 attachments={object("attachments", [
                     {
                         "type": "PAYSLIP",

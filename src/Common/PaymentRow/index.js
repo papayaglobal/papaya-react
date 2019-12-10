@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import {isFunction} from "lodash";
+import {get, isFunction} from "lodash";
 import Attachment from "../Attachment";
 import Dropdown from "../Dropdown";
 import Label from "../Label";
@@ -10,6 +10,7 @@ import expand from "../../assets/icons/Expand.svg";
 import comment from "../../assets/icons/Comment.svg";
 import {CheckBox} from "../../Common/Checkbox";
 import media from "../../Constants/mediaQueries";
+import PopOver from "../../Common/PopOver";
 
 class PaymentRowComponent extends React.Component {
     state = {
@@ -101,10 +102,15 @@ class PaymentRowComponent extends React.Component {
                                     <Label title="New"/>
                                 </div>
                             )}
-                            {hasComment && (
-                                <div className="labelWrapper">
-                                    <img src={comment} alt="comment"/>
-                                </div>
+                            {!!get(payment, "comment") && (
+                                <PopOver
+                                    position="top"
+                                    message={get(payment, "comment")}
+                                >
+                                    <div className="labelWrapper">
+                                        <img src={comment} alt="comment"/>
+                                    </div>
+                                </PopOver>
                             )}
                             {attachments && (attachments.length > 0 && (
                                 <div className="attachments md">
@@ -224,10 +230,15 @@ class PaymentRowComponent extends React.Component {
                                 <Label title="New"/>
                             </div>
                         )}
-                        {hasComment && (
-                            <div className="labelWrapper">
-                                <img src={comment} alt="comment"/>
-                            </div>
+                        {!!get(payment, "comment") && (
+                            <PopOver
+                                position="top"
+                                message={get(payment, "comment")}
+                            >
+                                <div className="labelWrapper">
+                                    <img src={comment} alt="comment"/>
+                                </div>
+                            </PopOver>
                         )}
                         {attachments && (attachments.length > 0 && (
                             <div className="attachments md">
