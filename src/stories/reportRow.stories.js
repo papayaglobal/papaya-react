@@ -23,9 +23,12 @@ storiesOf("Report Row", module)
         <div className="app attachment">
             <ReportRow
                 attachments={[{fileName: "file1.pdf"}]}
+                comment={"my Comment"}
                 pendingTooltip="Report Row with single attachment"
                 dates={text("dates", "15-20 April 2019")}
                 actions={actions}
+                onClick={() => alert("report row clicked")}
+                onAttachmentsClicked={() => alert("attachments clicks")}
             />
         </div>
     ))

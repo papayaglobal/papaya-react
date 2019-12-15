@@ -74,7 +74,7 @@ const SelectComponent = ({className, options, placeholder, onChange, isMulti, ..
                         fontFamily: "Open Sans",
                         color: "#212529",
                         fontSize: 16,
-                        paddingLeft: 8,
+                        paddingLeft: 9,
                         paddingRight: 25,
                         letterSpacing: 0
                     };
@@ -89,8 +89,8 @@ const SelectComponent = ({className, options, placeholder, onChange, isMulti, ..
                 singleValue: (styles, {isFocused}) => {
                     return {
                         ...styles,
-                        paddingLeft: 15,
-                        paddingRight: 15
+                        paddingLeft: 3,
+                        paddingRight: 3
                     };
                 },
                 placeholder: (styles, {isFocused}) => {

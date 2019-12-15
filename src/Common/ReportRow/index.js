@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import PropTypes from 'prop-types';
 import styled from "styled-components";
+import {isFunction} from "lodash";
 
 import ToolTip from "../Tooltip";
 import Attachment from "../Attachment";
@@ -10,6 +11,8 @@ import media from "../../Constants/mediaQueries";
 
 import pending from "../../assets/icons/Pending.svg";
 import more from "../../assets/icons/More.svg";
+import commentIcon from "../../assets/icons/Comment.svg";
+import PopOver from "../PopOver";
 
 const leaveTypes = {
     sick: "Sick Leave(s)",
@@ -23,21 +26,23 @@ const leaveColors = {
     unpaid: "#48C4D3"
 };
 
-const ReportRowComponent = ({
-                                className,
-                                children,
-                                reportStatus = "planned",
-                                payPeriod,
-                                paddingPayPeriod,
-                                type,
-                                attachments = [],
-                                dates,
-                                pendingTooltip,
-                                actions,
-                                reportedDate,
-                                daysReported,
-                                onClick
-                            }) => {
+const ReportRowComponent = (props) => {
+    const {
+        className,
+        children,
+        reportStatus = "planned",
+        payPeriod,
+        paddingPayPeriod,
+        type,
+        attachments = [],
+        dates,
+        pendingTooltip,
+        actions,
+        reportedDate,
+        daysReported,
+        comment,
+        onClick
+    } = props;
     const [size, setSize] = useState("normal-size");
     const reportRef = useRef(null);
     useEffect(() => {
@@ -54,6 +59,12 @@ const ReportRowComponent = ({
         } else {
             setSize("normal-size");
         }
+    };
+
+    const onAttachmentsClicked = ({e, attachments}) => {
+        const {onAttachmentsClicked} = props;
+        e.stopPropagation();
+        isFunction(onAttachmentsClicked) && onAttachmentsClicked({attachments});
     };
 
     return (
@@ -78,10 +89,24 @@ const ReportRowComponent = ({
                 </div>
             </div>
             <div className="rightWrapper">
+                {!!comment && (
+                    <PopOver
+                        position="top"
+                        message={comment}
+                    >
+                        <div className="labelWrapper">
+                            <img src={commentIcon} alt="comment"/>
+                        </div>
+                    </PopOver>
+                )}
+
                 {attachments &&
                 (attachments.length > 0 && (
                     <div className="attachments">
-                        <Attachment attachments={attachments}/>
+                        <Attachment attachments={attachments} onClick={(e) => onAttachmentsClicked({
+                            e,
+                            attachments
+                        })}/>
                     </div>
                 ))}
                 {reportedDate && (
@@ -118,7 +143,8 @@ ReportRowComponent.propTypes = {
     actions: PropTypes.array,
     reportedDate: PropTypes.string,
     daysReported: PropTypes.string,
-    onClick: PropTypes.func
+    onClick: PropTypes.func,
+    onAttachmentsClicked: PropTypes.func,
 };
 
 const ReportRow = styled(ReportRowComponent)`
@@ -164,6 +190,9 @@ const ReportRow = styled(ReportRowComponent)`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+  }
+  .labelWrapper {
+    margin: 0 15px;
   }
   .rightWrapper {
     flex: 1;
