@@ -285,7 +285,32 @@ storiesOf("Payment Row", module)
                 daysReported={text("daysReported", "1 Day")}
                 isNew={boolean("isNew", false)}
                 selectable={boolean("selectable", true)}
-                selected={selectable}
+                selected={[]}
+                selectedAttachments={[{
+                    "id": "34",
+                    "paymentId": "1926",
+                    "fileId": "101",
+                    "type": "PAYSLIP",
+                    "status": null,
+                    "isAudited": 0,
+                    "auditedBy": null,
+                    "createdAt": "2019-11-20T09:39:50.000Z",
+                    "updatedAt": "2019-11-20T09:39:50.000Z",
+                    "file": {
+                        "id": "101",
+                        "title": "guy_resume.pdf",
+                        "name": "guy_resume.pdf",
+                        "key": "dev/project/38/worker/368/payment/0455e8b6-907d-4e42-9061-1c099d40309f",
+                        "type": "worker_payment",
+                        "uploadDate": "2019-11-20",
+                        "uploadedByUserId": "1",
+                        "directUrl": "http://customer-1.dev.papayaglobal.com:8080/api/v1/file/101/link?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQ3LCJrZXkiOiIxMDEiLCJpYXQiOjE1NzQ1ODkzMTcsImV4cCI6MTU3NTE5NDExN30.PIck31UCEe1rxtM2t1plPff49RvNXKteOVa6ZYoQlaA",
+                        "createdAt": "2019-11-20T09:39:47.000Z",
+                        "updatedAt": "2019-11-20T09:39:47.000Z",
+                        "__typename": "File"
+                    },
+                    "__typename": "WorkerPaymentDocument"
+                }]}
                 onSelectClick={({payment}) => alert("PaymentRow checkbox clicked")}
                 onClick={() => alert("PaymentRow clicked")}
                 onSelectAttachmentClicked={({attachment}) => alert("onSelectAttachmentClicked: " + attachment.file.name)}

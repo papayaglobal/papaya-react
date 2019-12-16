@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import {get, isFunction} from "lodash";
+import {get, isFunction, find} from "lodash";
 import Attachment from "../Attachment";
 import Dropdown from "../Dropdown";
 import Label from "../Label";
@@ -58,7 +58,7 @@ class PaymentRowComponent extends React.Component {
             amount,
             selectable,
             selected,
-            selectedAttachments,
+            selectedAttachments = [],
             payment,
             onClick
         } = this.props;
@@ -138,7 +138,7 @@ class PaymentRowComponent extends React.Component {
                                 <div className="leftWrapper">
                                     {selectable && (
                                         <div className="selectWrapper">
-                                            <CheckBox checked={selectedAttachments.includes(attachment)}
+                                            <CheckBox checked={!!find(selectedAttachments, sa => +sa.id === +attachment.id)}
                                                       onClick={(e) => this.onSelectAttachmentClicked({
                                                           e,
                                                           payment,
