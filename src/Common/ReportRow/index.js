@@ -340,6 +340,9 @@ const ReportRow = styled(ReportRowComponent)`
       flex: 1;
       margin-right: 20px;
     }
+    .labelWrapper {
+      display: none;
+    }
     .timeWrapper {
       display: none;
     }
