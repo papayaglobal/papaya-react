@@ -54,11 +54,11 @@ class PaymentRowComponent extends React.Component {
             actions,
             reportedDate,
             isNew,
-            hasComment,
             isMonthly,
             amount,
             selectable,
             selected,
+            selectedAttachments,
             payment,
             onClick
         } = this.props;
@@ -138,7 +138,7 @@ class PaymentRowComponent extends React.Component {
                                 <div className="leftWrapper">
                                     {selectable && (
                                         <div className="selectWrapper">
-                                            <CheckBox checked={selected}
+                                            <CheckBox checked={selectedAttachments.includes(attachment)}
                                                       onClick={(e) => this.onSelectAttachmentClicked({
                                                           e,
                                                           payment,
