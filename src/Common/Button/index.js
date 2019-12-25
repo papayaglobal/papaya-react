@@ -78,7 +78,7 @@ const Button = styled.button`
 `;
 Button.propTypes = {
     styleType: PropTypes.string,
-    outline: PropTypes.string,
+    outline: PropTypes.bool,
     size: PropTypes.string,
 };
 export default Button;
