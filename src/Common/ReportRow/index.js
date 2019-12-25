@@ -333,15 +333,15 @@ const ReportRow = styled(ReportRowComponent)`
       flex: 1;
       justify-content: flex-end;
     }
+    .labelWrapper {
+      display: none;
+    }
   `}
   ${media.sm`
     padding: 0 10px;
     .leaveWrapper {
       flex: 1;
       margin-right: 20px;
-    }
-    .labelWrapper {
-      display: none;
     }
     .timeWrapper {
       display: none;
