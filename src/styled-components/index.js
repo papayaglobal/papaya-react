@@ -15,12 +15,12 @@ const StyledArrow = styled.svg`
 `;
 
 export const LeftArrow = (props) => <StyledArrow {...props} width="24px" height="24px" viewBox="0 0 24 24">
-    <g stroke="none" stroke-width="1" fill-rule="evenodd">
+    <g stroke="none" strokeWidth="1" fillRule="evenodd">
         <g id="Calendar---States" transform="translate(-494.000000, -290.000000)">
             <g id="Calendar" transform="translate(218.000000, 289.000000)">
                 <g id="Month-Nav">
                     <g id="Group-5" transform="translate(276.000000, 1.000000)">
-                        <circle class="oval" cx="12" cy="12" r="12"/>
+                        <circle className="oval" cx="12" cy="12" r="12"/>
                         <g transform="translate(11.400000, 12.000000) rotate(90.000000) translate(-11.400000, -12.000000) translate(6.000000, 8.400000)"
                            fill="#C2C3C8">
                             <polygon id="Shape"
@@ -35,14 +35,14 @@ export const LeftArrow = (props) => <StyledArrow {...props} width="24px" height=
 </StyledArrow>;
 
 export const RightArrow = (props) => <StyledArrow {...props} width="24px" height="24px" viewBox="0 0 24 24">
-    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g id="Calendar---States" transform="translate(-528.000000, -290.000000)">
             <g id="Calendar" transform="translate(218.000000, 289.000000)">
                 <g id="Month-Nav">
                     <g id="Arrow/Swipe/Normal"
                        transform="translate(322.000000, 13.000000) rotate(180.000000) translate(-322.000000, -13.000000) translate(310.000000, 1.000000)">
                         <g id="Group-5">
-                            <circle class="oval" cx="12" cy="12" r="12"/>
+                            <circle className="oval" cx="12" cy="12" r="12"/>
                             <g id="Arrow/Simple/Normal"
                                transform="translate(11.400000, 12.000000) rotate(90.000000) translate(-11.400000, -12.000000) translate(6.000000, 8.400000)"
                                fill="#C2C3C8">
