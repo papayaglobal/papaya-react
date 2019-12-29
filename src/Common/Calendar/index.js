@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from 'prop-types';
 import styled from "styled-components";
 import {find, get} from "lodash";
-import {CSSTransition} from "react-transition-group";
 import moment from "moment";
 import {
     addDays,
@@ -15,9 +14,8 @@ import {
     subMonths,
     toDate
 } from "date-fns";
-
-import prevIcon from "../../assets/icons/prev-circle.svg";
-import nextIcon from "../../assets/icons/next-circle.svg";
+import {LeftArrow} from "../../assets/icons/left-arrow";
+import {RightArrow} from "../../assets/icons/right-arrow";
 
 class CalendarComponent extends React.Component {
     state = {
@@ -25,7 +23,6 @@ class CalendarComponent extends React.Component {
         previousMonth: null,
         nextMonth: null,
         selectedDate: new Date(),
-        animate: false,
         direction: ""
     };
 
@@ -47,28 +44,16 @@ class CalendarComponent extends React.Component {
     };
 
     renderHeading = () => {
-        const {currentMonth, animate, direction} = this.state;
+        const {currentMonth} = this.state;
         const dateFormat = "MMMM, yyyy";
         return (
             <div className="calendar-header">
-                <CSSTransition
-                    in={animate}
-                    timeout={200}
-                    classNames={{
-                        enter: `${direction === "ltr" ? "slideinltr-enter" : "slideinrtl-enter"}`,
-                        enterActive: `${
-                            direction === "ltr" ? "slideinltr-enter-active" : "slideinrtl-enter-active"
-                        }`
-                    }}
-                    onEntered={() => this.setState({animate: false})}
-                >
-                    <div className="header-date">
-                        <span className="current-month">{format(currentMonth, dateFormat)}</span>
-                    </div>
-                </CSSTransition>
+                <div className="header-date">
+                    <span className="current-month">{format(currentMonth, dateFormat)}</span>
+                </div>
                 <div className="prev-next-icon">
-                    <img src={prevIcon} alt="Previous" onClick={() => this.previousMonth()}/>
-                    <img src={nextIcon} alt="Next" onClick={() => this.nextMonth()}/>
+                    <LeftArrow alt="Previous" margin={"0 10px 0 0"} onClick={() => this.previousMonth()}/>
+                    <RightArrow alt="Next" onClick={() => this.nextMonth()}/>
                 </div>
             </div>
         );
@@ -113,7 +98,11 @@ class CalendarComponent extends React.Component {
                         key={day}
                         onClick={() => this.props.onDateClick(toDate(cloneDay))}
                     >
-                        <div className="days">{formattedDate}</div>
+                        <div className={`days ${this.isCurrentMonth({
+                            day,
+                            monthStart,
+                            monthEnd
+                        })}`}>{formattedDate}</div>
                     </div>
                 );
                 day = addDays(day, 1);
@@ -122,6 +111,13 @@ class CalendarComponent extends React.Component {
             days = [];
         }
         return rows;
+    };
+
+    isCurrentMonth = ({day, monthStart, monthEnd}) => {
+        if (moment(day).isBetween(moment(monthStart), moment(monthEnd), undefined, "[]")) {
+            return "dayCurrentMonth";
+        }
+        return "dayNotCurrentMonth";
     };
 
     getDayStatus = ({day}) => {
@@ -212,7 +208,6 @@ class CalendarComponent extends React.Component {
     nextMonth = () => {
         this.setState({
             currentMonth: addMonths(this.state.currentMonth, 1),
-            animate: true,
             direction: "ltr"
         });
         this.changeMonth();
@@ -221,7 +216,6 @@ class CalendarComponent extends React.Component {
     previousMonth = () => {
         this.setState({
             currentMonth: subMonths(this.state.currentMonth, 1),
-            animate: true,
             direction: "rtl"
         });
         this.changeMonth();
@@ -383,6 +377,7 @@ const Calendar = styled(CalendarComponent)`
     line-height: 1;
     cursor: pointer;
   }
+  .number .days.dayNotCurrentMonth, 
   .disabled .days {
     color: #d4d5d8;
     cursor: default;
@@ -418,7 +413,7 @@ const Calendar = styled(CalendarComponent)`
     position: relative;
   }
   .number.sick.futurePeriod .days {
-    color: #ffffff;
+    color: #343949;
   }
   .number.sick.futurePeriod + .number.sick.futurePeriod:before {
     content: "";
@@ -474,7 +469,7 @@ const Calendar = styled(CalendarComponent)`
     position: relative;
   }
   .number.vacation.futurePeriod .days {
-    color: #ffffff;
+    color: #343949;
   }
   .number.vacation.futurePeriod + .number.vacation.futurePeriod:before {
     content: "";
@@ -507,7 +502,7 @@ const Calendar = styled(CalendarComponent)`
     position: relative;
   }
   .number.unpaid.futurePeriod .days {
-    color: #ffffff;
+    color: #343949;
   }
   .number.unpaid.futurePeriod + .number.unpaid.futurePeriod:before {
     content: "";
