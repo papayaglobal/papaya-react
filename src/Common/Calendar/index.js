@@ -14,8 +14,7 @@ import {
     subMonths,
     toDate
 } from "date-fns";
-import {LeftArrow} from "../../assets/icons/left-arrow";
-import {RightArrow} from "../../assets/icons/right-arrow";
+import {LeftArrow, RightArrow} from "../../styled-components";
 
 class CalendarComponent extends React.Component {
     state = {
