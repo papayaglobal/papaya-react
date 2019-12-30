@@ -2,11 +2,19 @@ import styled from "styled-components";
 import React from "react";
 
 import * as Colors from "../../Constants/colors";
-import check from "../../assets/icons/check.svg";
 
-const RadioComponent = ({ className, children, checked }) => (
-  <input type="radio" className={className} checked={checked} />
-);
+const RadioComponent = ({className, children, checked, onClick}) => {
+    const onCheckboxClick = (e) => {
+        e.stopPropagation();
+        onClick(e);
+    };
+
+    return <input type="radio" className={className}
+                  onClick={onCheckboxClick}
+                  onChange={() => {
+                  }}
+                  checked={checked}/>
+};
 
 const RadioButton = styled(RadioComponent)`
   appearance: none;
