@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import {get, isFunction, find} from "lodash";
+import {find, get, isFunction} from "lodash";
 import Attachment from "../Attachment";
 import Dropdown from "../Dropdown";
 import Label from "../Label";
@@ -138,12 +138,13 @@ class PaymentRowComponent extends React.Component {
                                 <div className="leftWrapper">
                                     {selectable && (
                                         <div className="selectWrapper">
-                                            <CheckBox checked={!!find(selectedAttachments, sa => +sa.id === +attachment.id)}
-                                                      onClick={(e) => this.onSelectAttachmentClicked({
-                                                          e,
-                                                          payment,
-                                                          attachment
-                                                      })}/>
+                                            <CheckBox
+                                                checked={!!find(selectedAttachments, sa => +sa.id === +attachment.id)}
+                                                onClick={(e) => this.onSelectAttachmentClicked({
+                                                    e,
+                                                    payment,
+                                                    attachment
+                                                })}/>
                                         </div>
                                     )}
                                     <div className={`${isMonthly ? "dateWrapper isMonthly" : "dateWrapper"}`}/>
@@ -416,6 +417,8 @@ const PaymentRow = styled(PaymentRowComponent)`
     font-weight: normal;
     font-style: italic;
     margin: 0 20px;
+    width: 86px;
+    display: inline-block;
   }
   .noteWrapper .note {
     color: #b5b7bd;

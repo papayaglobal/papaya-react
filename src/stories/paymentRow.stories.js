@@ -62,14 +62,14 @@ storiesOf("Payment Row", module)
                                 "directUrl": "http://customer-1.dev.papayaglobal.com:8080/api/v1/file/101/link?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjQ3LCJrZXkiOiIxMDEiLCJpYXQiOjE1NzQ1ODkzMTcsImV4cCI6MTU3NTE5NDExN30.PIck31UCEe1rxtM2t1plPff49RvNXKteOVa6ZYoQlaA",
                             }
                         }])}
-                    amount={text("amount", "7,705.58")}
+                    amount={text("amount", "1,111.00")}
                     pendingTooltip="Report Row with multiple attachment"
-                    dates={text("dates", "10 May 2019")}
-                    reportedDate={text("reportedDate", "11 May 2019")}
+                    dates={"November 1, 2019"}
+                    reportedDate={"Dec 1, 2019"}
                     actions={[]}
                     daysReported={text("daysReported", "1 Day")}
-                    isNew={boolean("isNew", false)}
-                    selectable={boolean("selectable", true)}
+                    isNew={boolean("isNew", true)}
+                    selectable={boolean("selectable", false)}
                     selected={false}
                 />
             </div>
@@ -129,8 +129,8 @@ storiesOf("Payment Row", module)
                     ])}
                     amount={text("amount", "7,705.58")}
                     pendingTooltip="Report Row with multiple attachment"
-                    dates={text("dates", "10 May 2019")}
-                    reportedDate={text("reportedDate", "11 May 2019")}
+                    dates={"November 1, 2019"}
+                    reportedDate={"Dec 24, 2019"}
                     actions={actions}
                     daysReported={text("daysReported", "1 Day")}
                     isNew={boolean("isNew", false)}
@@ -168,8 +168,8 @@ storiesOf("Payment Row", module)
                     ])}
                     amount={text("amount", "7,705.58")}
                     pendingTooltip="Report Row with 1 attachment"
-                    dates={text("dates", "10 May 2019")}
-                    reportedDate={text("reportedDate", "11 May 2019")}
+                    dates={"10 May 2019"}
+                    reportedDate={"11 May 2019"}
                     actions={actions}
                     daysReported={text("daysReported", "1 Day")}
                     isNew={boolean("isNew", false)}
@@ -280,10 +280,10 @@ storiesOf("Payment Row", module)
                 amount={text("amount", "7,705.58")}
                 pendingTooltip="Report Row with multiple attachment"
                 dates={text("dates", "10 May 2019")}
-                reportedDate={text("reportedDate", "11 May 2019")}
+                reportedDate={"11 May 2019"}
                 actions={actions}
                 daysReported={text("daysReported", "1 Day")}
-                isNew={boolean("isNew", false)}
+                isNew={boolean("isNew", true)}
                 selectable={boolean("selectable", true)}
                 selected={[]}
                 selectedAttachments={[{
