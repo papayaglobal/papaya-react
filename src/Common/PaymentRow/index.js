@@ -26,7 +26,6 @@ class PaymentRowComponent extends React.Component {
 
     onSelectClicked = ({e, payment}) => {
         const {onSelectClick} = this.props;
-        console.log("onSelectClicked =>");
         e.stopPropagation();
 
         isFunction(onSelectClick) && onSelectClick({payment});
