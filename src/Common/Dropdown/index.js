@@ -47,13 +47,18 @@ class DropdownComponent extends React.Component {
 
     render() {
         const {toggleDisplay} = this.state;
-        const {icon, className, list} = this.props;
+        const {icon, className, list, buttonBackgroundColor} = this.props;
 
         const selectedItem = find(list, item => !!item.selected);
 
         return list.length > 0 ? (<div className={className}>
                 <Button
-                    style={{backgroundColor: "#ebebec", color: "#343949", fontSize: "1rem", height: 36}}
+                    style={{
+                        backgroundColor: buttonBackgroundColor || "#ebebec",
+                        color: "#343949",
+                        fontSize: "1rem",
+                        height: 36
+                    }}
                     onClick={(e) => this.onButtonClicked({e})}
                 >
                     {icon ? (

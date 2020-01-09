@@ -5,6 +5,7 @@ import {boolean, object, text, withKnobs} from "@storybook/addon-knobs";
 import PaymentRow from "../Common/PaymentRow";
 
 import "./stories.css";
+import {INITIAL_VIEWPORTS} from "@storybook/addon-viewport";
 
 const actions = [
     {
@@ -24,9 +25,10 @@ const actions = [
 let selectPaymentRow = true;
 
 storiesOf("Payment Row", module)
+    .addParameters({viewport: {viewports: INITIAL_VIEWPORTS}})
     .addDecorator(withKnobs)
-    .add("small screen", () => (
-        <div className="app attachment" style={{width: "700px"}}>
+    .add("iphone6", () => (
+        <div className="app attachment">
             <PaymentRow
                 payment={{comment: "My comment"}}
                 attachments={object("attachments", [
@@ -48,7 +50,7 @@ storiesOf("Payment Row", module)
                 selectable={boolean("selectable", false)}
             />
         </div>
-    ))
+    ), {viewport: {defaultViewport: "iphone6"}})
     .add("Real Data", () => (
         <>
             <div className="app attachment">
@@ -177,7 +179,7 @@ storiesOf("Payment Row", module)
                 />
             </div>
         </>
-    ))
+    ), {viewport: {defaultViewport: "responsive"}})
     .add("working checkbox", () => {
         return <div className="app attachment">
             <PaymentRow
@@ -220,7 +222,7 @@ storiesOf("Payment Row", module)
                 onAttachmentClicked={({attachment}) => alert("onAttachmentClicked " + attachment.file.name)}
             />
         </div>
-    })
+    }, {viewport: {defaultViewport: "responsive"}})
     .add("working checkbox with multiple files", () => {
         let selectable = boolean("selectable", selectPaymentRow);
         return <div className="app attachment">
@@ -317,7 +319,7 @@ storiesOf("Payment Row", module)
                 onAttachmentClicked={({attachment}) => alert("onAttachmentClicked: " + attachment.file.name)}
             />
         </div>
-    })
+    }, {viewport: {defaultViewport: "responsive"}})
     .add("payment row - no actions list", () => {
         let selectable = boolean("selectable", selectPaymentRow);
         return <div className="app attachment">
@@ -347,5 +349,5 @@ storiesOf("Payment Row", module)
                 onAttachmentClicked={({attachment}) => alert("onAttachmentClicked " + attachment.file.name)}
             />
         </div>
-    })
+    }, {viewport: {defaultViewport: "responsive"}})
 ;

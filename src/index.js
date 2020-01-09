@@ -23,6 +23,8 @@ import Switch from "./Common/Switch";
 import TextArea from "./Common/TextArea";
 import TextInput from "./Common/TextInput";
 import ToolTip from "./Common/Tooltip";
+import ListItem from "./Common/ListItem";
+import ContractorPaymentRow from "./Common/ContractorPaymentRow";
 import {CheckBox} from "./Common/Checkbox/index";
 
 export {
@@ -44,7 +46,9 @@ export {
     Switch,
     TextArea,
     TextInput,
-    ToolTip
+    ToolTip,
+    ContractorPaymentRow,
+    ListItem
 };
 
 ReactDOM.render(<App/>, document.getElementById("root"));

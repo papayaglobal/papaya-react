@@ -14,7 +14,7 @@ import {
     subMonths,
     toDate
 } from "date-fns";
-import {LeftArrow, RightArrow} from "../../styled-components";
+import {LeftArrow, RightArrow} from "./../../papaya-styled-components";
 
 class CalendarComponent extends React.Component {
     state = {
