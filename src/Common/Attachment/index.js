@@ -44,6 +44,7 @@ const Attachment = styled(AttachmentComponent)`
   min-height: 34px;
   border-radius: 17px;
   padding: 9px;
+  width: fit-content;
 
   .attachmentCount {
     padding: 0 5px;
