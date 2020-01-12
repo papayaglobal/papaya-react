@@ -8,7 +8,9 @@ import {
     StyledAttachmentIcon,
     StyledAttachments,
     StyledDates,
+    StyledExpandedContainer,
     StyledLeftWrapper,
+    StyledPaymentContainer,
     StyledPaymentRow,
     StyledReportedDate,
     StyledRightArrow,
@@ -76,50 +78,57 @@ class ContractorPaymentRowComponent extends Component {
         const {isExpanded} = this.state;
         const {proForma, invoice} = payment || {};
 
-        return <StyledPaymentRow className={className} onClick={this.onPaymentClick}>
-            <StyledLeftWrapper className="leftWrapper">
-                {selectable && <StyledSelectWrapper className="selectWrapper">
-                    <CheckBox checked={selected} onClick={(e) => this.onSelectClicked({e, payment})}/>
-                </StyledSelectWrapper>}
-                <StyledRightArrow alt="Next" isExpanded={isExpanded} onClick={this.toggleCollapse}/>
-                <StyledDates isMonthly={isMonthly}>{dates}</StyledDates>
-                {amount && <StyledAmount className="amountWrapper">{amount}</StyledAmount>}
-                {proForma && <StyledAttachment className="attachments">
-                    <Attachment attachments={[proForma]}
-                                onClick={(e) => this.onAttachmentClicked({
-                                    e,
-                                    payment,
-                                    proForma
-                                })}
-                                displayName
-                                type="proForma"
-                    />
-                </StyledAttachment>
-                }
-            </StyledLeftWrapper>
-            <StyledRightWrapper className="rightWrapper">
-                {proForma && <StyledAttachmentIcon className="attachments">
-                    <AttachmentIcon attachments={[proForma]}
-                                    onClick={(e) => this.onAttachmentClicked({
-                                        e,
-                                        payment,
-                                        proForma
-                                    })}
-                                    type="proForma"
-                    />
-                </StyledAttachmentIcon>
-                }
-                {!!get(payment, "invoice") &&
-                <StyledAttachments className="attachments md">
-                    <AttachmentIcon attachments={[get(payment, "invoice"), get(payment, "invoice")]}/>
-                </StyledAttachments>}
-                {reportedDate &&
-                <StyledReportedDate className="reportedDateWrapper">{reportedDate}</StyledReportedDate>}
-                {actions && <StyledActions className="moreWrapper">
-                    <Dropdown list={actions} icon={more} buttonBackgroundColor={"transparent"}/>
-                </StyledActions>}
-            </StyledRightWrapper>
-        </StyledPaymentRow>;
+        return <StyledPaymentContainer>
+            <StyledPaymentRow className={className} onClick={this.onPaymentClick} isExpanded>
+                <StyledLeftWrapper className="leftWrapper">
+                    {selectable && <StyledSelectWrapper className="selectWrapper">
+                        <CheckBox checked={selected} onClick={(e) => this.onSelectClicked({e, payment})}/>
+                    </StyledSelectWrapper>}
+                    <StyledRightArrow alt="Next" isExpanded={isExpanded} onClick={this.toggleCollapse}/>
+                    <StyledDates isMonthly={isMonthly}>{dates}</StyledDates>
+                    {!isExpanded && <>
+                        {amount && <StyledAmount className="amountWrapper">{amount}</StyledAmount>}
+                        {proForma && <StyledAttachment className="attachments">
+                            <Attachment attachments={[proForma]}
+                                        onClick={(e) => this.onAttachmentClicked({
+                                            e,
+                                            payment,
+                                            proForma
+                                        })}
+                                        displayName
+                                        type="proForma"
+                            />
+                        </StyledAttachment>
+                        }
+                    </>}
+                </StyledLeftWrapper>
+                {!isExpanded && <StyledRightWrapper className="rightWrapper">
+                    {proForma && <StyledAttachmentIcon className="attachments">
+                        <AttachmentIcon attachments={[proForma]}
+                                        onClick={(e) => this.onAttachmentClicked({
+                                            e,
+                                            payment,
+                                            proForma
+                                        })}
+                                        type="proForma"
+                        />
+                    </StyledAttachmentIcon>
+                    }
+                    {!!get(payment, "invoice") &&
+                    <StyledAttachments className="attachments md">
+                        <AttachmentIcon attachments={[get(payment, "invoice"), get(payment, "invoice")]}/>
+                    </StyledAttachments>}
+                    {reportedDate &&
+                    <StyledReportedDate className="reportedDateWrapper">{reportedDate}</StyledReportedDate>}
+                    {actions && <StyledActions className="moreWrapper">
+                        <Dropdown list={actions} icon={more} buttonBackgroundColor={"transparent"}/>
+                    </StyledActions>}
+                </StyledRightWrapper>}
+            </StyledPaymentRow>
+            {isExpanded && <StyledExpandedContainer isExpanded={isExpanded}>
+
+            </StyledExpandedContainer>}
+        </StyledPaymentContainer>;
     }
 }
 

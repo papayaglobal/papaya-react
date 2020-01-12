@@ -3,21 +3,30 @@ import {BLACK, DARK1, WHITE} from "./../../Constants";
 import {RightArrow} from "./../../papaya-styled-components";
 import {sizes} from "./../../Constants/mediaQueries";
 
-export const StyledPaymentRow = styled.div`
+export const StyledPaymentContainer = styled.div`
   display: flex;
   flex: 1;
+  flex-direction: column;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
+  background-color: ${WHITE};  
+  &:hover {
+    box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1);
+  }
+`;
+
+export const StyledPaymentRow = styled.div`
+  display: flex;
+  flex-grow: 1;
+  flex-shrink: 0;
   flex-direction: row;
   height: 46px;
   justify-content: space-between;
   align-items: center;
   padding: 0 15px;
-  border-radius: 4px;
-  background-color: ${WHITE};
-  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 4px;  
   
   &:hover {
-    cursor: pointer;
-    box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1);
+    cursor: pointer;    
   }
 `;
 export const StyledLeftWrapper = styled.div`
@@ -56,7 +65,7 @@ export const StyledDates = styled.div`
   }
   cursor: pointer;  
   margin: 0 5px;  
-  font-size: 0.9rem;
+  font-size: 0.9rem;  
   color: ${({isMonthly}) => isMonthly ? BLACK : DARK1};
   font-weight: ${({isMonthly}) => isMonthly ? "600" : "400"};
 `;
@@ -130,4 +139,11 @@ export const StyledAttachments = styled.div`
   @media (min-width: ${sizes.md}px) {
     display: block;
   }
+`;
+
+export const StyledExpandedContainer = styled.div`
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  height: ${({isExpanded}) => isExpanded ? "300px" : "0px"};  
+  width: 100%;  
+  transition: height 250ms ease-out;
 `;

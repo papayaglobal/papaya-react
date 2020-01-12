@@ -50,7 +50,7 @@ storiesOf("Contractor Payment Row", module)
             />
         </div>
     ), {viewport: {defaultViewport: "iphone6"}})
-    .add("Real Data2", () => (
+    .add("Desktop", () => (
         <>
             <div className="app attachment">
                 <ContractorPaymentRow
