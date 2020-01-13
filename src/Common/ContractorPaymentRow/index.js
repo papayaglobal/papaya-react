@@ -136,7 +136,7 @@ class ContractorPaymentRowComponent extends Component {
                         </div>
                         <div>
                             <div className="attachment-title">Pro Forma Invoice</div>
-                            <Attachment attachments={[proForma]} displayName></Attachment>
+                            <Attachment attachments={[proForma]} displayName type = "proForma" bgColor="rgba(25, 117, 240, 0.05)"></Attachment>
                         </div>
                         <div>
                             <div className="attachment-title">Tax Invoice</div>
