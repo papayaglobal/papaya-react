@@ -13,6 +13,7 @@ const StyledPillsWrapper = styled.div`
   align-items: center;
   border-radius: 20px; 
   padding: 5px 10px;
+  width: fit-content;
 `;
 const StyledTextContainer = styled.div`
   display: flex;
