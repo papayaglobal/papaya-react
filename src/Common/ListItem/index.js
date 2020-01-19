@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import {isFunction} from "lodash";
-import {ReactComponent as CloseIcon} from "../../assets/icons/X.svg";
+import {ReactComponent as ListItemClose} from "../../assets/icons/ListItemClose.svg";
 import {ReactComponent as AttachmentIcon} from "../../assets/icons/attachment.svg";
 import * as Color from "../../Constants/colors";
 
@@ -30,13 +30,13 @@ const StyledTextContainer = styled.div`
     color: #1975f0;
   }
 `;
-const StyledCloseIcon = styled(CloseIcon)`
+const StyledCloseIcon = styled(ListItemClose)`
   margin-left: 10px;
-  width: 10px;
+  .closePath {
+    width: 10px;
+    height: 10px;
+  }  
   cursor: pointer;
-  .xIcon {
-    fill: #B5B7BD;    
-  }
 `;
 const ListItemComponent = (props) => {
     const {className, onClick, name, onCloseClick} = props;
