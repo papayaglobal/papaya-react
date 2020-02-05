@@ -51,11 +51,18 @@ class ContractorPaymentRowComponent extends Component {
         isFunction(onSelectAttachmentClicked) && onSelectAttachmentClicked({payment, attachment});
     };
 
-    onAttachmentClicked = ({e, payment, contractorPaymentRequestProForma}) => {
-        const {onAttachmentClicked} = this.props;
+    onProFormaClicked = ({e, payment, contractorPaymentRequestProForma}) => {
+        const {onProFormaClicked} = this.props;
         e.stopPropagation();
 
-        isFunction(onAttachmentClicked) && onAttachmentClicked({payment, contractorPaymentRequestProForma});
+        isFunction(onProFormaClicked) && onProFormaClicked({payment, contractorPaymentRequestProForma});
+    };
+
+    onInvoiceClicked = ({e, payment, contractorPaymentRequestInvoice}) => {
+        const {onInvoiceClicked} = this.props;
+        e.stopPropagation();
+
+        isFunction(onInvoiceClicked) && onInvoiceClicked({payment, contractorPaymentRequestInvoice});
     };
 
     onPaymentClick = (e) => {
@@ -91,7 +98,7 @@ class ContractorPaymentRowComponent extends Component {
                         {total && <StyledAmount className="amountWrapper">{total}</StyledAmount>}
                         {contractorPaymentRequestProForma && <StyledAttachment className="attachments">
                             <Attachment attachments={[contractorPaymentRequestProForma]}
-                                        onClick={(e) => this.onAttachmentClicked({
+                                        onClick={(e) => this.onProFormaClicked({
                                             e,
                                             payment,
                                             contractorPaymentRequestProForma
@@ -106,7 +113,7 @@ class ContractorPaymentRowComponent extends Component {
                 {!isExpanded && <StyledRightWrapper className="rightWrapper">
                     {contractorPaymentRequestProForma && <StyledAttachmentIcon className="attachments">
                         <AttachmentIcon attachments={[contractorPaymentRequestProForma]}
-                                        onClick={(e) => this.onAttachmentClicked({
+                                        onClick={(e) => this.onProFormaClicked({
                                             e,
                                             payment,
                                             contractorPaymentRequestProForma
@@ -135,12 +142,24 @@ class ContractorPaymentRowComponent extends Component {
                         </div>
                         <div>
                             <div className="attachment-title">Pro Forma Invoice</div>
-                            <Attachment attachments={[contractorPaymentRequestProForma]} displayName type="proForma"
-                                        bgColor="rgba(25, 117, 240, 0.05)"></Attachment>
+                            <Attachment
+                                onClick={(e) => this.onProFormaClicked({
+                                    e,
+                                    payment,
+                                    contractorPaymentRequestProForma
+                                })}
+                                attachments={[contractorPaymentRequestProForma]} displayName type="proForma"
+                                bgColor="rgba(25, 117, 240, 0.05)"/>
                         </div>
                         <div>
                             <div className="attachment-title">Tax Invoice</div>
-                            <Attachment attachments={[contractorPaymentRequestInvoice]} displayName></Attachment>
+                            <Attachment
+                                onClick={(e) => this.onInvoiceClicked({
+                                    e,
+                                    payment,
+                                    contractorPaymentRequestInvoice
+                                })}
+                                attachments={[contractorPaymentRequestInvoice]} displayName/>
                         </div>
                     </div>
                 </StyledExpandedRight>
@@ -163,7 +182,8 @@ ContractorPaymentRowComponent.propTypes = {
     selected: PropTypes.bool,
     onSelectClick: PropTypes.func,
     onSelectAttachmentClicked: PropTypes.func,
-    onAttachmentClicked: PropTypes.func,
+    onProFormaClicked: PropTypes.func,
+    onInvoiceClicked: PropTypes.func,
 };
 
 export default ContractorPaymentRowComponent;
