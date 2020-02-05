@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { BLACK, DARK1, WHITE } from "./../../Constants";
-import { RightArrow } from "./../../papaya-styled-components";
-import { sizes } from "./../../Constants/mediaQueries";
+import {BLACK, DARK1, WHITE} from "./../../Constants";
+import {RightArrow} from "./../../papaya-styled-components";
+import {sizes} from "./../../Constants/mediaQueries";
 
 export const StyledPaymentContainer = styled.div`
   display: flex;
@@ -54,7 +54,7 @@ export const StyledRightArrow = styled(RightArrow)`
   } 
   .right-arrow { fill: ${BLACK} }
   transition: all 0.5s ease;
-  transform: ${({ isExpanded }) => isExpanded ? "rotate(90deg)" : ""};
+  transform: ${({isExpanded}) => isExpanded ? "rotate(90deg)" : ""};
 `;
 
 export const StyledDates = styled.div`
@@ -66,8 +66,8 @@ export const StyledDates = styled.div`
   cursor: pointer;  
   margin: 0 5px;  
   font-size: 0.9rem;  
-  color: ${({ isMonthly }) => isMonthly ? BLACK : DARK1};
-  font-weight: ${({ isMonthly }) => isMonthly ? "600" : "400"};
+  color: ${({isMonthly}) => isMonthly ? BLACK : DARK1};
+  font-weight: ${({isMonthly}) => isMonthly ? "600" : "400"};
 `;
 
 export const StyledAmount = styled.div`
@@ -146,9 +146,9 @@ export const StyledExpandedContainer = styled.div`
   flex-wrap: wrap;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   padding-left: 40px;
-  padding-top: 30px;
-  height: ${({ isExpanded }) => isExpanded ? "300px" : "0px"};  
-  visibility: ${({ isExpanded }) => isExpanded ? "visible" : "hidden"};  
+  padding-top: ${({isExpanded}) => isExpanded ? "30px" : "0"};;
+  height: ${({isExpanded}) => isExpanded ? "300px" : "0px"};  
+  visibility: ${({isExpanded}) => isExpanded ? "visible" : "hidden"};  
   width: 100%;  
   color: #1E0000;
   transition: height 250ms ease-out;
