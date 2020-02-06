@@ -33,6 +33,7 @@ import {ReactComponent as SubmittedProForma} from "../../assets/icons/submitted-
 import {DARK1, STATUSCRITICAL, STATUSOK} from "../../Constants";
 import {ReactComponent as RejectedProForma} from "../../assets/icons/rejected.svg";
 import {ReactComponent as ApprovedProForma} from "../../assets/icons/approved.svg";
+import Button from "../../Common/Button";
 
 
 const PAYMENT_REQUEST_STATUS = {
@@ -56,7 +57,7 @@ const getBackgroundColorByStatus = ({status}) => {
 };
 
 const ContractorExpandedPaymentRow = (props) => {
-    const {payment, onInvoiceClicked, onProFormaClicked} = props || {};
+    const {payment, onInvoiceClicked, onProFormaClicked, onReviseClicked, isLastPaymentRequest} = props || {};
     const {contractorPaymentRequestInvoice, contractorPaymentRequestProForma, createdAt, status, updatedAt, updatedBy, paymentPeriod} = payment || {};
 
     const dateRange = formatDateRange(paymentPeriod);
@@ -117,6 +118,10 @@ const ContractorExpandedPaymentRow = (props) => {
             </Flex>
             <Flex column flex={12}>
                 <StyledSubmittedText><strong>{updatedBy}</strong> rejected your payment request.</StyledSubmittedText>
+
+                {isLastPaymentRequest && <Button style={{width: "220px", margin: "15px 0 0 0"}} size="medium"
+                                                 onClick={() => onReviseClicked({payment})}>Revise Payment
+                    Request</Button>}
             </Flex>
         </Flex>)
     }
@@ -167,7 +172,8 @@ const ContractorPaymentRowExpandedContainer = (props) => {
     const {payments, isExpanded, ...otherProps} = props;
 
     return <StyledExpandedContainer column isExpanded={isExpanded}>
-        {map(payments, (payment, key) => <ContractorExpandedPaymentRow key={key} payment={payment} {...otherProps}/>)}
+        {map(payments, (payment, key) => <ContractorExpandedPaymentRow key={key} payment={payment}
+                                                                       isLastPaymentRequest={payments.length === (key + 1)} {...otherProps}/>)}
     </StyledExpandedContainer>
 };
 
@@ -203,6 +209,13 @@ class ContractorPaymentRow extends Component {
         e && e.stopPropagation();
 
         isFunction(onInvoiceClicked) && onInvoiceClicked({payment, contractorPaymentRequestInvoice});
+    };
+
+    onReviseClicked = ({e, payment}) => {
+        const {onReviseClicked} = this.props;
+        e && e.stopPropagation();
+
+        isFunction(onReviseClicked) && onReviseClicked({payment});
     };
 
     onPaymentClick = (e) => {
@@ -277,6 +290,7 @@ class ContractorPaymentRow extends Component {
 
 
             <ContractorPaymentRowExpandedContainer payments={orderedPayments} isExpanded={isExpanded}
+                                                   onReviseClicked={this.onReviseClicked}
                                                    onInvoiceClicked={this.onInvoiceClicked}
                                                    onProFormaClicked={this.onProFormaClicked}/>
 
@@ -294,6 +308,7 @@ ContractorPaymentRow.propTypes = {
     onSelectClick: PropTypes.func,
     onProFormaClicked: PropTypes.func,
     onInvoiceClicked: PropTypes.func,
+    onReviseClicked: PropTypes.func,
     payments: PropTypes.array
 };
 
