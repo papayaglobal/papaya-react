@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import PropTypes from 'prop-types';
-import {get, isFunction} from "lodash";
+import {get, isFunction, orderBy} from "lodash";
 import {
     StyledActions,
     StyledAmount,
@@ -8,8 +8,6 @@ import {
     StyledAttachmentIcon,
     StyledAttachments,
     StyledDates,
-    StyledExpandedContainer,
-    StyledExpandedRight,
     StyledLeftWrapper,
     StyledPaymentContainer,
     StyledPaymentRow,
@@ -18,12 +16,13 @@ import {
     StyledRightWrapper,
     StyledSelectWrapper
 } from "../ContractorPaymentRow/contractorPaymentRowHelpers";
-import Attachment from "../../Common/Attachment";
+import ListItem from "../../Common/ListItem"
 import {CheckBox} from "../../Common/Checkbox";
 import Dropdown from "../../Common/Dropdown";
 import more from "../../assets/icons/More.svg";
-import SubmittedProForma from "../../assets/icons/submitted-pro-forma.svg"
 import AttachmentIcon from "../../Common/AttachmentIcon";
+import {ContractorPaymentRowExpandedContainer} from "./contractorPaymentRowExpanded";
+import {formatDateRange, monYear} from "../../Constants/date-utils";
 
 class ContractorPaymentRowComponent extends Component {
     state = {
@@ -74,17 +73,20 @@ class ContractorPaymentRowComponent extends Component {
     render() {
         const {
             className,
-            dates,
             actions,
             reportedDate,
-            isMonthly,
             selectable,
             selected,
             selectedAttachments = [],
-            payment
+            payments
         } = this.props;
         const {isExpanded} = this.state;
+        const orderedPayments = orderBy(payments, ["createdAt"], ["asc"]);
+        const payment = get(orderedPayments, `[${orderedPayments.length - 1}]`);
         const {contractorPaymentRequestProForma, contractorPaymentRequestInvoice, total} = payment || {};
+
+        const {startedAt, endedAt} = get(payment, "paymentPeriod") || {};
+        const dateRange = formatDateRange({startedAt, endedAt, format: monYear});
 
         return <StyledPaymentContainer>
             <StyledPaymentRow className={className} onClick={this.onPaymentClick} isExpanded>
@@ -93,18 +95,18 @@ class ContractorPaymentRowComponent extends Component {
                         <CheckBox checked={selected} onClick={(e) => this.onSelectClicked({e, payment})}/>
                     </StyledSelectWrapper>}
                     <StyledRightArrow alt="Next" isExpanded={isExpanded} onClick={this.toggleCollapse}/>
-                    <StyledDates isMonthly={isMonthly}>{dates}</StyledDates>
+                    <StyledDates isMonthly={true}>{dateRange}</StyledDates>
                     {!isExpanded && <>
                         {total && <StyledAmount className="amountWrapper">{total}</StyledAmount>}
                         {contractorPaymentRequestProForma && <StyledAttachment className="attachments">
-                            <Attachment attachments={[contractorPaymentRequestProForma]}
-                                        onClick={(e) => this.onProFormaClicked({
-                                            e,
-                                            payment,
-                                            contractorPaymentRequestProForma
-                                        })}
-                                        displayName
-                                        type="proForma"
+                            <ListItem
+                                hideClose={true}
+                                onClick={(e) => this.onProFormaClicked({
+                                    e,
+                                    payment,
+                                    contractorPaymentRequestProForma
+                                })}
+                                name={get(contractorPaymentRequestProForma, "file.name")}
                             />
                         </StyledAttachment>
                         }
@@ -132,38 +134,10 @@ class ContractorPaymentRowComponent extends Component {
                     </StyledActions>}
                 </StyledRightWrapper>}
             </StyledPaymentRow>
-            <StyledExpandedContainer isExpanded={isExpanded}>
-                <div className="date">{dates}</div>
-                <StyledExpandedRight>
-                    <img src={SubmittedProForma}/>
-                    <div className="right-content">
-                        <div>
-                            <div>You've submitted a payment request for the January 1 - 31, 2019 payment period</div>
-                        </div>
-                        <div>
-                            <div className="attachment-title">Pro Forma Invoice</div>
-                            <Attachment
-                                onClick={(e) => this.onProFormaClicked({
-                                    e,
-                                    payment,
-                                    contractorPaymentRequestProForma
-                                })}
-                                attachments={[contractorPaymentRequestProForma]} displayName type="proForma"
-                                bgColor="rgba(25, 117, 240, 0.05)"/>
-                        </div>
-                        <div>
-                            <div className="attachment-title">Tax Invoice</div>
-                            <Attachment
-                                onClick={(e) => this.onInvoiceClicked({
-                                    e,
-                                    payment,
-                                    contractorPaymentRequestInvoice
-                                })}
-                                attachments={[contractorPaymentRequestInvoice]} displayName/>
-                        </div>
-                    </div>
-                </StyledExpandedRight>
-            </StyledExpandedContainer>
+
+
+            <ContractorPaymentRowExpandedContainer payments={orderedPayments} isExpanded={isExpanded}/>
+
         </StyledPaymentContainer>;
     }
 }
@@ -172,7 +146,6 @@ ContractorPaymentRowComponent.propTypes = {
     className: PropTypes.string,
     children: PropTypes.any,
     attachments: PropTypes.array,
-    dates: PropTypes.string,
     actions: PropTypes.array,
     reportedDate: PropTypes.string,
     hasComment: PropTypes.bool,
@@ -184,6 +157,7 @@ ContractorPaymentRowComponent.propTypes = {
     onSelectAttachmentClicked: PropTypes.func,
     onProFormaClicked: PropTypes.func,
     onInvoiceClicked: PropTypes.func,
+    payments: PropTypes.array
 };
 
 export default ContractorPaymentRowComponent;

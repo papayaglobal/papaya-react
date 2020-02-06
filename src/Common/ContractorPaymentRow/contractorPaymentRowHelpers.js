@@ -1,6 +1,7 @@
 import styled from "styled-components";
-import {BLACK, DARK1, WHITE} from "./../../Constants";
+import {BLACK, DARK1, DARK2, DARK3, WHITE} from "./../../Constants";
 import {RightArrow} from "./../../papaya-styled-components";
+import {Flex} from "./../../papaya-styled-components/flex-components";
 import {sizes} from "./../../Constants/mediaQueries";
 
 export const StyledPaymentContainer = styled.div`
@@ -99,7 +100,7 @@ export const StyledAttachmentIcon = styled.div`
 `;
 
 export const StyledReportedDate = styled.div`
-  color: #b5b7bd;
+  color: ${DARK3};
   font-weight: normal;
   font-style: italic;
   margin: 0 20px;
@@ -141,13 +142,11 @@ export const StyledAttachments = styled.div`
   }
 `;
 
-export const StyledExpandedContainer = styled.div`
-  display: flex;
+export const StyledExpandedContainer = styled(Flex)`
   flex-wrap: wrap;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  padding-left: 40px;
-  padding-top: ${({isExpanded}) => isExpanded ? "30px" : "0"};;
-  height: ${({isExpanded}) => isExpanded ? "300px" : "0px"};  
+  border-top: 1px solid rgba(0, 0, 0, 0.1);  
+  padding: ${({isExpanded}) => isExpanded ? "30px 40px 25px" : "0"};;
+  height: ${({isExpanded}) => isExpanded ? "fit-content" : "0px"};  
   visibility: ${({isExpanded}) => isExpanded ? "visible" : "hidden"};  
   width: 100%;  
   color: #1E0000;
@@ -157,25 +156,34 @@ export const StyledExpandedContainer = styled.div`
   }
 `;
 
+export const CreatedDate = styled.span`  
+  font-family: "Open Sans", sans-serif;
+  font-style: italic;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: ${DARK1};
+`;
 
-export const StyledExpandedRight = styled.div`
-  display: flex;
-  margin-left: 92px;
-  margin-bottom: 25px;
-  img {
-    height: fit-content;
-    margin-right: 28px;
-    margin-right: 28px;
-    position: relative;
-    bottom: 6px;
-  }
-  .attachment-title {
-    font-family: OpenSans-Semibold;
-    color: #797C87;
-  }
-  .right-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-`
+export const CreatedDateTime = styled.span`
+  font-family: "Open Sans", sans-serif;
+  font-style: italic;
+  font-size: 12px;
+  color: ${DARK3};
+`;
+
+export const StyledAttachmentTitle = styled.span`
+  display: inline-block;
+  margin: ${({margin}) => margin};
+  padding: ${({padding}) => padding};
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  color: ${DARK2};
+`;
+
+export const StyledSubmittedText = styled.span`
+  display: inline-block;
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  color: #1E0000;
+  margin-top: 5px;
+`;
