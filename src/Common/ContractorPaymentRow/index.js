@@ -236,9 +236,9 @@ class ContractorPaymentRow extends Component {
                         <CheckBox checked={selected} onClick={(e) => this.onSelectClicked({e, payment})}/>
                     </StyledSelectWrapper>}
                     <StyledRightArrow alt="Next" isExpanded={isExpanded} onClick={this.toggleCollapse}/>
-                    <StyledDates isMonthly={true}>{dateRange}</StyledDates>
+                    <StyledDates className={"date-range"} isMonthly={true}>{dateRange}</StyledDates>
                     {!isExpanded && <>
-                        {total && <StyledAmount className="amountWrapper">{total}</StyledAmount>}
+                        {total && <StyledAmount justifyStart flex={1} className="amountWrapper">{total}</StyledAmount>}
                         {contractorPaymentRequestProForma && <StyledAttachment className="attachments">
                             <ListItem
                                 hideClose={true}

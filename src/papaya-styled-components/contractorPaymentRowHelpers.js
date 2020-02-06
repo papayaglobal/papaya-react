@@ -34,7 +34,7 @@ export const StyledLeftWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex: 2;  
   @media (max-width: ${sizes.md}px) {
     flex: 3;
@@ -58,11 +58,12 @@ export const StyledRightArrow = styled(RightArrow)`
   transform: ${({isExpanded}) => isExpanded ? "rotate(90deg)" : ""};
 `;
 
-export const StyledDates = styled.div`
-  display: flex;
+export const StyledDates = styled(Flex)`
   flex: 1.5;
+  flex-shrink: 0;  
+  flex-basis: auto;
   @media (min-width: ${sizes.md}px) {
-    flex: 1;
+    flex: 2;
   }
   cursor: pointer;  
   margin: 0 5px;  
@@ -71,10 +72,9 @@ export const StyledDates = styled.div`
   font-weight: ${({isMonthly}) => isMonthly ? "600" : "400"};
 `;
 
-export const StyledAmount = styled.div`
-  display: flex;
-  flex: 1;
-  justify-content: flex-start;
+export const StyledAmount = styled(Flex)`
+  flex-shrink: 0;  
+  flex-basis: auto;
   @media (max-width: ${sizes.md}px) {
     flex: 2;
   }
@@ -90,6 +90,8 @@ export const StyledAttachment = styled.div`
   display: none;
   @media (min-width: ${sizes.md}px) {
     display: flex;
+    flex: 10;
+    flex-shrink: 1;
   }
 `;
 export const StyledAttachmentIcon = styled.div`
