@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import {BLACK, DARK1, DARK2, DARK3, WHITE} from "./../../Constants";
-import {RightArrow} from "./../../papaya-styled-components";
-import {Flex} from "./../../papaya-styled-components/flex-components";
-import {sizes} from "./../../Constants/mediaQueries";
+import {BLACK, DARK1, DARK2, DARK3, WHITE} from "../Constants";
+import {RightArrow} from "../papaya-styled-components";
+import {Flex} from "../papaya-styled-components/flex-components";
+import {sizes} from "../Constants/mediaQueries";
 
 export const StyledPaymentContainer = styled.div`
   display: flex;
