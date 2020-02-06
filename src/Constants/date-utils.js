@@ -3,6 +3,7 @@ import _ from "lodash";
 
 export const fullDateResponsive = window.matchMedia("(max-width: 767px)").matches ? "MMM D, YYYY" : "MMMM D, YYYY";
 export const monYear = "MMMM YYYY"; // December 2018
+export const shortFullDate = "MMM D, YYYY";
 
 export const formatDateRange = (props) => {
     const {startedAt, endedAt, format = fullDateResponsive, compact = true} = props || {};

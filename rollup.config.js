@@ -65,6 +65,5 @@ export default {
             }
         })
     ],
-    external: ['react', 'react-dom', 'prop-types', 'styled-components', 'lodash', "moment", "styled-is"],
-    context: () => null
+    external: ['react', 'react-dom', 'prop-types', 'styled-components', 'lodash', "moment", "styled-is"]
 }

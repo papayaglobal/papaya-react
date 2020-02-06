@@ -27,12 +27,13 @@ import {CheckBox} from "../../Common/Checkbox";
 import Dropdown from "../../Common/Dropdown";
 import more from "../../assets/icons/More.svg";
 import AttachmentIcon from "../../Common/AttachmentIcon";
-import {formatDateRange, monYear} from "../../Constants/date-utils";
+import {formatDateRange, monYear, shortFullDate} from "../../Constants/date-utils";
 import {Flex} from "../../papaya-styled-components/flex-components";
 import {ReactComponent as SubmittedProForma} from "../../assets/icons/submitted-pro-forma.svg";
 import {DARK1, STATUSCRITICAL, STATUSOK} from "../../Constants";
 import {ReactComponent as RejectedProForma} from "../../assets/icons/rejected.svg";
 import {ReactComponent as ApprovedProForma} from "../../assets/icons/approved.svg";
+
 
 const PAYMENT_REQUEST_STATUS = {
     NOT_SUBMITTED: "not_submitted",
@@ -55,7 +56,7 @@ const getBackgroundColorByStatus = ({status}) => {
 };
 
 const ContractorExpandedPaymentRow = (props) => {
-    const {payment} = props || {};
+    const {payment, onInvoiceClicked, onProFormaClicked} = props || {};
     const {contractorPaymentRequestInvoice, contractorPaymentRequestProForma, createdAt, status, updatedAt, updatedBy, paymentPeriod} = payment || {};
 
     const dateRange = formatDateRange(paymentPeriod);
@@ -80,8 +81,7 @@ const ContractorExpandedPaymentRow = (props) => {
 
             <ListItem
                 hideClose={true}
-                onClick={(e) => this.onProFormaClicked({
-                    e,
+                onClick={() => onProFormaClicked({
                     payment,
                     contractorPaymentRequestProForma
                 })}
@@ -92,8 +92,7 @@ const ContractorExpandedPaymentRow = (props) => {
             <StyledAttachmentTitle margin={"25px 0 5px 0 "}>Tax Invoice</StyledAttachmentTitle>
             <ListItem
                 hideClose={true}
-                onClick={(e) => this.onInvoiceClicked({
-                    e,
+                onClick={() => onInvoiceClicked({
                     payment,
                     contractorPaymentRequestInvoice
                 })}
@@ -139,8 +138,7 @@ const ContractorExpandedPaymentRow = (props) => {
                 <StyledAttachmentTitle margin={"25px 0 5px 0 "}>Pro Forma Invoice</StyledAttachmentTitle>
                 <ListItem
                     hideClose={true}
-                    onClick={(e) => this.onProFormaClicked({
-                        e,
+                    onClick={() => onProFormaClicked({
                         payment,
                         contractorPaymentRequestProForma
                     })}
@@ -151,8 +149,7 @@ const ContractorExpandedPaymentRow = (props) => {
                 <StyledAttachmentTitle margin={"25px 0 5px 0 "}>Tax Invoice</StyledAttachmentTitle>
                 <ListItem
                     hideClose={true}
-                    onClick={(e) => this.onInvoiceClicked({
-                        e,
+                    onClick={() => onInvoiceClicked({
                         payment,
                         contractorPaymentRequestInvoice
                     })}
@@ -167,10 +164,10 @@ const ContractorExpandedPaymentRow = (props) => {
 };
 
 const ContractorPaymentRowExpandedContainer = (props) => {
-    const {payments, isExpanded} = props;
+    const {payments, isExpanded, ...otherProps} = props;
 
     return <StyledExpandedContainer column isExpanded={isExpanded}>
-        {map(payments, (payment, key) => <ContractorExpandedPaymentRow key={key} payment={payment}/>)}
+        {map(payments, (payment, key) => <ContractorExpandedPaymentRow key={key} payment={payment} {...otherProps}/>)}
     </StyledExpandedContainer>
 };
 
@@ -194,23 +191,16 @@ class ContractorPaymentRow extends Component {
         isFunction(onSelectClick) && onSelectClick({payment});
     };
 
-    onSelectAttachmentClicked = ({e, payment, attachment}) => {
-        const {onSelectAttachmentClicked} = this.props;
-        e.stopPropagation();
-
-        isFunction(onSelectAttachmentClicked) && onSelectAttachmentClicked({payment, attachment});
-    };
-
     onProFormaClicked = ({e, payment, contractorPaymentRequestProForma}) => {
         const {onProFormaClicked} = this.props;
-        e.stopPropagation();
+        e && e.stopPropagation();
 
         isFunction(onProFormaClicked) && onProFormaClicked({payment, contractorPaymentRequestProForma});
     };
 
     onInvoiceClicked = ({e, payment, contractorPaymentRequestInvoice}) => {
         const {onInvoiceClicked} = this.props;
-        e.stopPropagation();
+        e && e.stopPropagation();
 
         isFunction(onInvoiceClicked) && onInvoiceClicked({payment, contractorPaymentRequestInvoice});
     };
@@ -225,7 +215,6 @@ class ContractorPaymentRow extends Component {
         const {
             className,
             actions,
-            reportedDate,
             selectable,
             selected,
             selectedAttachments = [],
@@ -234,10 +223,11 @@ class ContractorPaymentRow extends Component {
         const {isExpanded} = this.state;
         const orderedPayments = orderBy(payments, ["createdAt"], ["asc"]);
         const payment = get(orderedPayments, `[${orderedPayments.length - 1}]`);
-        const {contractorPaymentRequestProForma, contractorPaymentRequestInvoice, total} = payment || {};
+        const {contractorPaymentRequestProForma, contractorPaymentRequestInvoice, total, createdAt} = payment || {};
 
         const {startedAt, endedAt} = get(payment, "paymentPeriod") || {};
         const dateRange = formatDateRange({startedAt, endedAt, format: monYear});
+        const createdAtAsText = moment(createdAt).format(shortFullDate);
 
         return <StyledPaymentContainer>
             <StyledPaymentRow className={className} onClick={this.onPaymentClick} isExpanded>
@@ -252,8 +242,7 @@ class ContractorPaymentRow extends Component {
                         {contractorPaymentRequestProForma && <StyledAttachment className="attachments">
                             <ListItem
                                 hideClose={true}
-                                onClick={(e) => this.onProFormaClicked({
-                                    e,
+                                onClick={() => this.onProFormaClicked({
                                     payment,
                                     contractorPaymentRequestProForma
                                 })}
@@ -278,8 +267,8 @@ class ContractorPaymentRow extends Component {
                     {!!contractorPaymentRequestInvoice && <StyledAttachments className="attachments md">
                         <AttachmentIcon attachments={[contractorPaymentRequestInvoice]}/>
                     </StyledAttachments>}
-                    {reportedDate &&
-                    <StyledReportedDate className="reportedDateWrapper">{reportedDate}</StyledReportedDate>}
+                    {!!createdAtAsText &&
+                    <StyledReportedDate className="reportedDateWrapper">{createdAtAsText}</StyledReportedDate>}
                     {actions && <StyledActions className="moreWrapper">
                         <Dropdown list={actions} icon={more} buttonBackgroundColor={"transparent"}/>
                     </StyledActions>}
@@ -287,7 +276,9 @@ class ContractorPaymentRow extends Component {
             </StyledPaymentRow>
 
 
-            <ContractorPaymentRowExpandedContainer payments={orderedPayments} isExpanded={isExpanded}/>
+            <ContractorPaymentRowExpandedContainer payments={orderedPayments} isExpanded={isExpanded}
+                                                   onInvoiceClicked={this.onInvoiceClicked}
+                                                   onProFormaClicked={this.onProFormaClicked}/>
 
         </StyledPaymentContainer>;
     }
@@ -296,16 +287,11 @@ class ContractorPaymentRow extends Component {
 ContractorPaymentRow.propTypes = {
     className: PropTypes.string,
     children: PropTypes.any,
-    attachments: PropTypes.array,
     actions: PropTypes.array,
-    reportedDate: PropTypes.string,
-    hasComment: PropTypes.bool,
-    isMonthly: PropTypes.bool,
     selectable: PropTypes.bool,
     isExpanded: PropTypes.bool,
     selected: PropTypes.bool,
     onSelectClick: PropTypes.func,
-    onSelectAttachmentClicked: PropTypes.func,
     onProFormaClicked: PropTypes.func,
     onInvoiceClicked: PropTypes.func,
     payments: PropTypes.array

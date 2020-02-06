@@ -199,6 +199,7 @@ storiesOf("Contractor Payment Row", module)
                     selectable={boolean("selectable", false)}
                     selected={false}
                     onProFormaClicked={({payment, contractorPaymentRequestProForma}) => alert("clicked attachment pro forma")}
+                    onInvoiceClicked={({payment, contractorPaymentRequestProForma}) => alert("clicked attachment pro forma")}
                 />
             </div>
         </>

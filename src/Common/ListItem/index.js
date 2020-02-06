@@ -14,6 +14,7 @@ const StyledPillsWrapper = styled.div`
   border-radius: 20px; 
   padding: 5px 10px;
   width: fit-content;
+  cursor: pointer;
 `;
 const StyledTextContainer = styled.div`
   display: flex;
