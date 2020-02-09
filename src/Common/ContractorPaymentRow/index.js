@@ -34,6 +34,7 @@ import {DARK1, STATUSCRITICAL, STATUSOK} from "../../Constants";
 import {ReactComponent as RejectedProForma} from "../../assets/icons/rejected.svg";
 import {ReactComponent as ApprovedProForma} from "../../assets/icons/approved.svg";
 import Button from "../../Common/Button";
+import {getValueWithCurrency} from "../../utils/currency";
 
 
 const PAYMENT_REQUEST_STATUS = {
@@ -236,7 +237,7 @@ class ContractorPaymentRow extends Component {
         const {isExpanded} = this.state;
         const orderedPayments = orderBy(payments, ["createdAt"], ["asc"]);
         const payment = get(orderedPayments, `[${orderedPayments.length - 1}]`);
-        const {contractorPaymentRequestProForma, contractorPaymentRequestInvoice, total, createdAt} = payment || {};
+        const {contractorPaymentRequestProForma, contractorPaymentRequestInvoice, total: value, currency, createdAt} = payment || {};
 
         const {startedAt, endedAt} = get(payment, "paymentPeriod") || {};
         const dateRange = formatDateRange({startedAt, endedAt, format: monYear});
@@ -251,7 +252,10 @@ class ContractorPaymentRow extends Component {
                     <StyledRightArrow alt="Next" isExpanded={isExpanded} onClick={this.toggleCollapse}/>
                     <StyledDates className={"date-range"} isMonthly={true}>{dateRange}</StyledDates>
                     {!isExpanded && <>
-                        {total && <StyledAmount justifyStart flex={1} className="amountWrapper">{total}</StyledAmount>}
+                        {value && <StyledAmount justifyStart flex={1} className="amountWrapper">{getValueWithCurrency({
+                            currency,
+                            value
+                        })}</StyledAmount>}
                         {contractorPaymentRequestProForma && <StyledAttachment className="attachments">
                             <ListItem
                                 hideClose={true}
