@@ -110,27 +110,50 @@ const payments = [{
         "updatedAt": "2020-02-06T09:14:58.000Z",
         "__typename": "PaymentRequestInvoice"
     },
-    "contractorPaymentRequestProForma": {
-        "id": 17,
-        "fileId": 297,
-        "file": {
-            "id": 297,
-            "title": "Pro Forma Invoice - Alice Murray - February 1–29, 2020 - 2020-02-06 at 14:56 - Draft.pdf",
-            "name": "Pro Forma Invoice - Alice Murray - February 1–29, 2020 - 2020-02-06 at 14:56 - Draft.pdf",
-            "key": "dev/project/8/worker/66/pro_forma/64e52668-557c-48b0-bdf5-3f43cca60dec",
-            "type": "pro_forma",
-            "uploadDate": "2020-02-06",
-            "uploadedByUserId": "31",
-            "directUrl": "http://customer-1.dev.papayaglobal.com:8080/api/v1/file/297/link?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMxLCJrZXkiOiIyOTciLCJpYXQiOjE1ODA5ODgxNzksImV4cCI6MTU4MTU5Mjk3OX0.GwPiYtlGzSdw2EPW38cbmmQhM5HvpmQL2IZBSgetrhU&viewMode=true",
-            "createdAt": "2020-02-06T09:14:57.000Z",
-            "updatedAt": "2020-02-06T09:14:57.000Z",
-            "__typename": "File"
+    "contractorPaymentRequestProForma": [
+        {
+            "id": 17,
+            "fileId": 297,
+            "file": {
+                "id": 297,
+                "title": "Pro Forma Invoice - Alice Murray - February 1–29, 2020 - 2020-02-06 at 14:56 - Draft.pdf",
+                "name": "Pro Forma Invoice - Alice Murray - February 1–29, 2020 - 2020-02-06 at 14:56 - Draft.pdf",
+                "key": "dev/project/8/worker/66/pro_forma/64e52668-557c-48b0-bdf5-3f43cca60dec",
+                "type": "pro_forma",
+                "uploadDate": "2020-02-06",
+                "uploadedByUserId": "31",
+                "directUrl": "http://customer-1.dev.papayaglobal.com:8080/api/v1/file/297/link?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMxLCJrZXkiOiIyOTciLCJpYXQiOjE1ODA5ODgxNzksImV4cCI6MTU4MTU5Mjk3OX0.GwPiYtlGzSdw2EPW38cbmmQhM5HvpmQL2IZBSgetrhU&viewMode=true",
+                "createdAt": "2020-02-06T09:14:57.000Z",
+                "updatedAt": "2020-02-06T09:14:57.000Z",
+                "__typename": "File"
+            },
+            "contractorPaymentRequestId": 15,
+            "createdAt": "2020-02-06T09:14:58.000Z",
+            "updatedAt": "2020-02-06T09:14:58.000Z",
+            "__typename": "PaymentRequestProForma"
         },
-        "contractorPaymentRequestId": 15,
-        "createdAt": "2020-02-06T09:14:58.000Z",
-        "updatedAt": "2020-02-06T09:14:58.000Z",
-        "__typename": "PaymentRequestProForma"
-    },
+        {
+            "id": 17,
+            "fileId": 297,
+            "file": {
+                "id": 297,
+                "title": "Pro Forma Invoice - Alice Murray - February 1–29, 2020 - 2020-02-06 at 14:56.pdf",
+                "name": "Pro Forma Invoice - Alice Murray - February 1–29, 2020 - 2020-02-06 at 14:56.pdf",
+                "key": "dev/project/8/worker/66/pro_forma/64e52668-557c-48b0-bdf5-3f43cca60dec",
+                "type": "pro_forma_approved",
+                "uploadDate": "2020-02-06",
+                "uploadedByUserId": "31",
+                "directUrl": "http://customer-1.dev.papayaglobal.com:8080/api/v1/file/297/link?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMxLCJrZXkiOiIyOTciLCJpYXQiOjE1ODA5ODgxNzksImV4cCI6MTU4MTU5Mjk3OX0.GwPiYtlGzSdw2EPW38cbmmQhM5HvpmQL2IZBSgetrhU&viewMode=true",
+                "createdAt": "2020-02-06T09:14:57.000Z",
+                "updatedAt": "2020-02-06T09:14:57.000Z",
+                "__typename": "File"
+            },
+            "contractorPaymentRequestId": 15,
+            "createdAt": "2020-02-06T09:14:58.000Z",
+            "updatedAt": "2020-02-06T09:14:58.000Z",
+            "__typename": "PaymentRequestProForma"
+        }
+    ],
     "paymentPeriod": {
         "createdAt": "2020-01-14T12:24:01.000Z",
         "updatedAt": "2020-01-14T12:24:01.000Z",
