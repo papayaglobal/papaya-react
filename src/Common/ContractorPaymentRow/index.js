@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import PropTypes from 'prop-types';
-import {get, isFunction, map, orderBy} from "lodash";
+import {find, get, isFunction, map, orderBy} from "lodash";
 import moment from "moment";
 import {
     CreatedDate,
@@ -69,6 +69,14 @@ const ContractorExpandedPaymentRow = (props) => {
     const isApproved = status === PAYMENT_REQUEST_STATUS.APPROVED;
     const fileItemBackgroundColor = getBackgroundColorByStatus({status});
 
+    const proforma = findProFormaByType({
+        proFormaFiles: contractorPaymentRequestProForma,
+        type: `pro_forma`
+    });
+    const approvedProforma = findProFormaByType({
+        proFormaFiles: contractorPaymentRequestProForma,
+        type: `pro_forma_approved`
+    });
     const result = [<Flex key={"payment-expanded-item"} row className={"expanded-container"} margin={"0 0 20px 0"}>
         <Flex column flex={2} padding={"5px 0"}>
             <CreatedDate>{createdAtDate}</CreatedDate>
@@ -85,10 +93,10 @@ const ContractorExpandedPaymentRow = (props) => {
                 hideClose={true}
                 onClick={() => onProFormaClicked({
                     payment,
-                    contractorPaymentRequestProForma
+                    contractorPaymentRequestProForma: proforma
                 })}
                 bgColor={fileItemBackgroundColor}
-                name={get(contractorPaymentRequestProForma, "file.name")}
+                name={get(proforma, "file.name")}
             />
 
             <StyledAttachmentTitle margin={"25px 0 5px 0 "}>Tax Invoice</StyledAttachmentTitle>
@@ -146,10 +154,10 @@ const ContractorExpandedPaymentRow = (props) => {
                     hideClose={true}
                     onClick={() => onProFormaClicked({
                         payment,
-                        contractorPaymentRequestProForma
+                        contractorPaymentRequestProForma: approvedProforma
                     })}
                     bgColor={listItemBackground}
-                    name={get(contractorPaymentRequestProForma, "file.name")}
+                    name={get(approvedProforma, "file.name")}
                 />
 
                 <StyledAttachmentTitle margin={"25px 0 5px 0 "}>Tax Invoice</StyledAttachmentTitle>
@@ -178,6 +186,7 @@ const ContractorPaymentRowExpandedContainer = (props) => {
     </StyledExpandedContainer>
 };
 
+const findProFormaByType = ({proFormaFiles, type}) => find(proFormaFiles, proForma => get(proForma, "file.type") === type);
 
 class ContractorPaymentRow extends Component {
     state = {
@@ -237,7 +246,12 @@ class ContractorPaymentRow extends Component {
         const {isExpanded} = this.state;
         const orderedPayments = orderBy(payments, ["createdAt"], ["asc"]);
         const payment = get(orderedPayments, `[${orderedPayments.length - 1}]`);
-        const {contractorPaymentRequestProForma, contractorPaymentRequestInvoice, total: value, currency, createdAt} = payment || {};
+        const {contractorPaymentRequestProForma, contractorPaymentRequestInvoice, total: value, currency, createdAt, status} = payment || {};
+
+        const proforma = findProFormaByType({
+            proFormaFiles: contractorPaymentRequestProForma,
+            type: `pro_forma${status === "approved" ? "_approved" : ""}`
+        });
 
         const {startedAt, endedAt} = get(payment, "paymentPeriod") || {};
         const dateRange = formatDateRange({startedAt, endedAt, format: monYear});
@@ -256,26 +270,26 @@ class ContractorPaymentRow extends Component {
                             currency,
                             value
                         })}</StyledAmount>}
-                        {contractorPaymentRequestProForma && <StyledAttachment className="attachments">
+                        {proforma && <StyledAttachment className="attachments">
                             <ListItem
                                 hideClose={true}
                                 onClick={() => this.onProFormaClicked({
                                     payment,
-                                    contractorPaymentRequestProForma
+                                    contractorPaymentRequestProForma: proforma
                                 })}
-                                name={get(contractorPaymentRequestProForma, "file.name")}
+                                name={get(proforma, "file.name")}
                             />
                         </StyledAttachment>
                         }
                     </>}
                 </StyledLeftWrapper>
                 {!isExpanded && <StyledRightWrapper className="rightWrapper">
-                    {contractorPaymentRequestProForma && <StyledAttachmentIcon className="attachments">
-                        <AttachmentIcon attachments={[contractorPaymentRequestProForma]}
+                    {proforma && <StyledAttachmentIcon className="attachments">
+                        <AttachmentIcon attachments={[proforma]}
                                         onClick={(e) => this.onProFormaClicked({
                                             e,
                                             payment,
-                                            contractorPaymentRequestProForma
+                                            contractorPaymentRequestProForma: proforma
                                         })}
                                         type="proForma"
                         />
