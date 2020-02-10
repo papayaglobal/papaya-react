@@ -1,32 +1,187 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import PropTypes from 'prop-types';
-import { get, isFunction } from "lodash";
+import {get, isFunction, map, orderBy} from "lodash";
+import moment from "moment";
 import {
+    CreatedDate,
+    CreatedDateTime,
     StyledActions,
     StyledAmount,
     StyledAttachment,
     StyledAttachmentIcon,
     StyledAttachments,
+    StyledAttachmentTitle,
     StyledDates,
     StyledExpandedContainer,
-    StyledExpandedRight,
     StyledLeftWrapper,
     StyledPaymentContainer,
     StyledPaymentRow,
     StyledReportedDate,
     StyledRightArrow,
     StyledRightWrapper,
-    StyledSelectWrapper
-} from "../ContractorPaymentRow/contractorPaymentRowHelpers";
-import Attachment from "../../Common/Attachment";
-import { CheckBox } from "../../Common/Checkbox";
+    StyledSelectWrapper,
+    StyledSubmittedText
+} from "../../papaya-styled-components/contractorPaymentRowHelpers";
+import ListItem from "../../Common/ListItem"
+import {CheckBox} from "../../Common/Checkbox";
 import Dropdown from "../../Common/Dropdown";
 import more from "../../assets/icons/More.svg";
-import SubmittedProForma from "../../assets/icons/submitted-pro-forma.svg"
 import AttachmentIcon from "../../Common/AttachmentIcon";
-class ContractorPaymentRowComponent extends Component {
+import {formatDateRange, monYear, shortFullDate} from "../../Constants/date-utils";
+import {Flex} from "../../papaya-styled-components/flex-components";
+import {ReactComponent as SubmittedProForma} from "../../assets/icons/submitted-pro-forma.svg";
+import {DARK1, STATUSCRITICAL, STATUSOK} from "../../Constants";
+import {ReactComponent as RejectedProForma} from "../../assets/icons/rejected.svg";
+import {ReactComponent as ApprovedProForma} from "../../assets/icons/approved.svg";
+import Button from "../../Common/Button";
+import {getValueWithCurrency} from "../../utils/currency";
+
+
+const PAYMENT_REQUEST_STATUS = {
+    NOT_SUBMITTED: "not_submitted",
+    DRAFT: "draft",
+    APPROVED: "approved",
+    REVISIT: "revisit",
+    PENDING_AUDIT: "pending_audit",
+    REJECTED: "rejected",
+    PENDING_APPROVAL: "pending_approval"
+};
+
+const getBackgroundColorByStatus = ({status}) => {
+    switch (status) {
+        case PAYMENT_REQUEST_STATUS.REJECTED:
+            return "rgba(248,83,89,0.10)";
+        case PAYMENT_REQUEST_STATUS.APPROVED:
+        default:
+            return null;
+    }
+};
+
+const ContractorExpandedPaymentRow = (props) => {
+    const {payment, onInvoiceClicked, onProFormaClicked, onReviseClicked, isLastPaymentRequest} = props || {};
+    const {contractorPaymentRequestInvoice, contractorPaymentRequestProForma, createdAt, status, updatedAt, updatedBy, paymentPeriod} = payment || {};
+
+    const dateRange = formatDateRange(paymentPeriod);
+    const createdAtDate = moment(createdAt).format("DD MMM YYYY");
+    const createdAtDateTime = moment(createdAt).format("hh:mm");
+
+    const isRejected = status === PAYMENT_REQUEST_STATUS.REJECTED;
+    const isApproved = status === PAYMENT_REQUEST_STATUS.APPROVED;
+    const fileItemBackgroundColor = getBackgroundColorByStatus({status});
+
+    const result = [<Flex key={"payment-expanded-item"} row className={"expanded-container"} margin={"0 0 20px 0"}>
+        <Flex column flex={2} padding={"5px 0"}>
+            <CreatedDate>{createdAtDate}</CreatedDate>
+            <CreatedDateTime>{createdAtDateTime}</CreatedDateTime>
+        </Flex>
+        <Flex column flex={0.5}>
+            <SubmittedProForma style={{color: DARK1}}/>
+        </Flex>
+        <Flex column flex={12}>
+            <StyledSubmittedText><strong>You</strong>'ve submitted a payment request for the {dateRange} payment period</StyledSubmittedText>
+            <StyledAttachmentTitle margin={"25px 0 5px 0 "}>Pro Forma Invoice</StyledAttachmentTitle>
+
+            <ListItem
+                hideClose={true}
+                onClick={() => onProFormaClicked({
+                    payment,
+                    contractorPaymentRequestProForma
+                })}
+                bgColor={fileItemBackgroundColor}
+                name={get(contractorPaymentRequestProForma, "file.name")}
+            />
+
+            <StyledAttachmentTitle margin={"25px 0 5px 0 "}>Tax Invoice</StyledAttachmentTitle>
+            <ListItem
+                hideClose={true}
+                onClick={() => onInvoiceClicked({
+                    payment,
+                    contractorPaymentRequestInvoice
+                })}
+                bgColor={fileItemBackgroundColor}
+                name={get(contractorPaymentRequestInvoice, "file.name")}
+            />
+        </Flex>
+    </Flex>];
+
+    if (isRejected) {
+        const rejectedAtDate = moment(updatedAt).format("DD MMM YYYY");
+        const createdAtDateTime = moment(updatedAt).format("hh:mm");
+
+        result.push(<Flex key={"payment-expanded-item-rejected"} row className={"expanded-container-rejected"}
+                          margin={"0 0 20px 0"}>
+            <Flex column flex={2} padding={"5px 0"}>
+                <CreatedDate>{rejectedAtDate}</CreatedDate>
+                <CreatedDateTime>{createdAtDateTime}</CreatedDateTime>
+            </Flex>
+            <Flex column flex={0.5}>
+                <RejectedProForma style={{color: STATUSCRITICAL}}/>
+            </Flex>
+            <Flex column flex={12}>
+                <StyledSubmittedText><strong>{updatedBy}</strong> rejected your payment request.</StyledSubmittedText>
+
+                {isLastPaymentRequest && <Button style={{width: "220px", margin: "15px 0 0 0"}} size="medium"
+                                                 onClick={() => onReviseClicked({payment})}>Revise Payment
+                    Request</Button>}
+            </Flex>
+        </Flex>)
+    }
+
+    if (isApproved) {
+        const listItemBackground = "rgba(46,214,188,0.10)";
+        result.push(<Flex key={"payment-expanded-item-approved"} row className={"expanded-container-approved"}
+                          margin={"0 0 20px 0"}>
+            <Flex column flex={2} padding={"5px 0"}>
+                <CreatedDate>{createdAtDate}</CreatedDate>
+                <CreatedDateTime>{createdAtDateTime}</CreatedDateTime>
+            </Flex>
+            <Flex column flex={0.5}>
+                <ApprovedProForma style={{color: STATUSOK}}/>
+            </Flex>
+            <Flex column flex={12}>
+                <StyledSubmittedText><strong>{updatedBy}</strong> approved the payment request.</StyledSubmittedText>
+
+                <StyledAttachmentTitle margin={"25px 0 5px 0 "}>Pro Forma Invoice</StyledAttachmentTitle>
+                <ListItem
+                    hideClose={true}
+                    onClick={() => onProFormaClicked({
+                        payment,
+                        contractorPaymentRequestProForma
+                    })}
+                    bgColor={listItemBackground}
+                    name={get(contractorPaymentRequestProForma, "file.name")}
+                />
+
+                <StyledAttachmentTitle margin={"25px 0 5px 0 "}>Tax Invoice</StyledAttachmentTitle>
+                <ListItem
+                    hideClose={true}
+                    onClick={() => onInvoiceClicked({
+                        payment,
+                        contractorPaymentRequestInvoice
+                    })}
+                    bgColor={listItemBackground}
+                    name={get(contractorPaymentRequestInvoice, "file.name")}
+                />
+            </Flex>
+        </Flex>)
+    }
+
+    return result;
+};
+
+const ContractorPaymentRowExpandedContainer = (props) => {
+    const {payments, isExpanded, ...otherProps} = props;
+
+    return <StyledExpandedContainer column isExpanded={isExpanded}>
+        {map(payments, (payment, key) => <ContractorExpandedPaymentRow key={key} payment={payment}
+                                                                       isLastPaymentRequest={payments.length === (key + 1)} {...otherProps}/>)}
+    </StyledExpandedContainer>
+};
+
+
+class ContractorPaymentRow extends Component {
     state = {
-        isExpanded: false
+        isExpanded: get(this.props, "isExpanded", false)
     };
 
     toggleCollapse = (e) => {
@@ -36,29 +191,36 @@ class ContractorPaymentRowComponent extends Component {
         });
     };
 
-    onSelectClicked = ({ e, payment }) => {
-        const { onSelectClick } = this.props;
+    onSelectClicked = ({e, payment}) => {
+        const {onSelectClick} = this.props;
         e.stopPropagation();
 
-        isFunction(onSelectClick) && onSelectClick({ payment });
+        isFunction(onSelectClick) && onSelectClick({payment});
     };
 
-    onSelectAttachmentClicked = ({ e, payment, attachment }) => {
-        const { onSelectAttachmentClicked } = this.props;
-        e.stopPropagation();
+    onProFormaClicked = ({e, payment, contractorPaymentRequestProForma}) => {
+        const {onProFormaClicked} = this.props;
+        e && e.stopPropagation();
 
-        isFunction(onSelectAttachmentClicked) && onSelectAttachmentClicked({ payment, attachment });
+        isFunction(onProFormaClicked) && onProFormaClicked({payment, contractorPaymentRequestProForma});
     };
 
-    onAttachmentClicked = ({ e, payment, proForma }) => {
-        const { onAttachmentClicked } = this.props;
-        e.stopPropagation();
+    onInvoiceClicked = ({e, payment, contractorPaymentRequestInvoice}) => {
+        const {onInvoiceClicked} = this.props;
+        e && e.stopPropagation();
 
-        isFunction(onAttachmentClicked) && onAttachmentClicked({ payment, proForma });
+        isFunction(onInvoiceClicked) && onInvoiceClicked({payment, contractorPaymentRequestInvoice});
+    };
+
+    onReviseClicked = ({e, payment}) => {
+        const {onReviseClicked} = this.props;
+        e && e.stopPropagation();
+
+        isFunction(onReviseClicked) && onReviseClicked({payment});
     };
 
     onPaymentClick = (e) => {
-        const { onClick } = this.props;
+        const {onClick} = this.props;
         e.stopPropagation();
         isFunction(onClick) && onClick();
     };
@@ -66,104 +228,92 @@ class ContractorPaymentRowComponent extends Component {
     render() {
         const {
             className,
-            dates,
             actions,
-            reportedDate,
-            isMonthly,
-            amount,
             selectable,
             selected,
             selectedAttachments = [],
-            payment
+            payments
         } = this.props;
-        const { isExpanded } = this.state;
-        const { proForma, invoice } = payment || {};
+        const {isExpanded} = this.state;
+        const orderedPayments = orderBy(payments, ["createdAt"], ["asc"]);
+        const payment = get(orderedPayments, `[${orderedPayments.length - 1}]`);
+        const {contractorPaymentRequestProForma, contractorPaymentRequestInvoice, total: value, currency, createdAt} = payment || {};
+
+        const {startedAt, endedAt} = get(payment, "paymentPeriod") || {};
+        const dateRange = formatDateRange({startedAt, endedAt, format: monYear});
+        const createdAtAsText = moment(createdAt).format(shortFullDate);
 
         return <StyledPaymentContainer>
             <StyledPaymentRow className={className} onClick={this.onPaymentClick} isExpanded>
                 <StyledLeftWrapper className="leftWrapper">
                     {selectable && <StyledSelectWrapper className="selectWrapper">
-                        <CheckBox checked={selected} onClick={(e) => this.onSelectClicked({ e, payment })} />
+                        <CheckBox checked={selected} onClick={(e) => this.onSelectClicked({e, payment})}/>
                     </StyledSelectWrapper>}
-                    <StyledRightArrow alt="Next" isExpanded={isExpanded} onClick={this.toggleCollapse} />
-                    <StyledDates isMonthly={isMonthly}>{dates}</StyledDates>
+                    <StyledRightArrow alt="Next" isExpanded={isExpanded} onClick={this.toggleCollapse}/>
+                    <StyledDates className={"date-range"} isMonthly={true}>{dateRange}</StyledDates>
                     {!isExpanded && <>
-                        {amount && <StyledAmount className="amountWrapper">{amount}</StyledAmount>}
-                        {proForma && <StyledAttachment className="attachments">
-                            <Attachment attachments={[proForma]}
-                                onClick={(e) => this.onAttachmentClicked({
-                                    e,
+                        {value && <StyledAmount justifyStart flex={1} className="amountWrapper">{getValueWithCurrency({
+                            currency,
+                            value
+                        })}</StyledAmount>}
+                        {contractorPaymentRequestProForma && <StyledAttachment className="attachments">
+                            <ListItem
+                                hideClose={true}
+                                onClick={() => this.onProFormaClicked({
                                     payment,
-                                    proForma
+                                    contractorPaymentRequestProForma
                                 })}
-                                displayName
-                                type="proForma"
+                                name={get(contractorPaymentRequestProForma, "file.name")}
                             />
                         </StyledAttachment>
                         }
                     </>}
                 </StyledLeftWrapper>
                 {!isExpanded && <StyledRightWrapper className="rightWrapper">
-                    {proForma && <StyledAttachmentIcon className="attachments">
-                        <AttachmentIcon attachments={[proForma]}
-                            onClick={(e) => this.onAttachmentClicked({
-                                e,
-                                payment,
-                                proForma
-                            })}
-                            type="proForma"
+                    {contractorPaymentRequestProForma && <StyledAttachmentIcon className="attachments">
+                        <AttachmentIcon attachments={[contractorPaymentRequestProForma]}
+                                        onClick={(e) => this.onProFormaClicked({
+                                            e,
+                                            payment,
+                                            contractorPaymentRequestProForma
+                                        })}
+                                        type="proForma"
                         />
                     </StyledAttachmentIcon>
                     }
-                    {!!get(payment, "invoice") &&
-                        <StyledAttachments className="attachments md">
-                            <AttachmentIcon attachments={[get(payment, "invoice"), get(payment, "invoice")]} />
-                        </StyledAttachments>}
-                    {reportedDate &&
-                        <StyledReportedDate className="reportedDateWrapper">{reportedDate}</StyledReportedDate>}
+                    {!!contractorPaymentRequestInvoice && <StyledAttachments className="attachments md">
+                        <AttachmentIcon attachments={[contractorPaymentRequestInvoice]}/>
+                    </StyledAttachments>}
+                    {!!createdAtAsText &&
+                    <StyledReportedDate className="reportedDateWrapper">{createdAtAsText}</StyledReportedDate>}
                     {actions && <StyledActions className="moreWrapper">
-                        <Dropdown list={actions} icon={more} buttonBackgroundColor={"transparent"} />
+                        <Dropdown list={actions} icon={more} buttonBackgroundColor={"transparent"}/>
                     </StyledActions>}
                 </StyledRightWrapper>}
             </StyledPaymentRow>
-            <StyledExpandedContainer isExpanded={isExpanded}>
-                <div className="date">{dates}</div>
-                <StyledExpandedRight>
-                    <img src={SubmittedProForma} />
-                    <div className="right-content">
-                        <div>
-                            <div>You've submitted a payment request for the January 1 - 31, 2019 payment period</div>
-                        </div>
-                        <div>
-                            <div className="attachment-title">Pro Forma Invoice</div>
-                            <Attachment attachments={[proForma]} displayName type = "proForma" bgColor="rgba(25, 117, 240, 0.05)"></Attachment>
-                        </div>
-                        <div>
-                            <div className="attachment-title">Tax Invoice</div>
-                            <Attachment attachments={[invoice]} displayName></Attachment>
-                        </div>
-                    </div>
-                </StyledExpandedRight>
-            </StyledExpandedContainer>
+
+
+            <ContractorPaymentRowExpandedContainer payments={orderedPayments} isExpanded={isExpanded}
+                                                   onReviseClicked={this.onReviseClicked}
+                                                   onInvoiceClicked={this.onInvoiceClicked}
+                                                   onProFormaClicked={this.onProFormaClicked}/>
+
         </StyledPaymentContainer>;
     }
 }
 
-ContractorPaymentRowComponent.propTypes = {
+ContractorPaymentRow.propTypes = {
     className: PropTypes.string,
     children: PropTypes.any,
-    attachments: PropTypes.array,
-    dates: PropTypes.string,
     actions: PropTypes.array,
-    reportedDate: PropTypes.string,
-    hasComment: PropTypes.bool,
-    isMonthly: PropTypes.bool,
-    amount: PropTypes.string,
     selectable: PropTypes.bool,
+    isExpanded: PropTypes.bool,
     selected: PropTypes.bool,
     onSelectClick: PropTypes.func,
-    onSelectAttachmentClicked: PropTypes.func,
-    onAttachmentClicked: PropTypes.func,
+    onProFormaClicked: PropTypes.func,
+    onInvoiceClicked: PropTypes.func,
+    onReviseClicked: PropTypes.func,
+    payments: PropTypes.array
 };
 
-export default ContractorPaymentRowComponent;
+export default ContractorPaymentRow;
