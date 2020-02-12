@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
-import { get, map, omit, update, each } from "lodash";
-import { StyledDates } from "../ContractorPaymentRow/contractorPaymentRowHelpers";
+import { get, map, omit, update, orderBy } from "lodash";
+import { ReactComponent as TableArrow } from "../../assets/icons/tableArrow.svg";
+import { ReactComponent as TableSortArrowIcon } from "../../assets/icons/table-sorting-arrow.svg";
+import SideMenuIcon from "../../assets/icons/context-menu.svg";
+import Dropdown from "../../Common/Dropdown";
+import { StyledActions } from "../../papaya-styled-components/contractorPaymentRowHelpers";
 
 export default function Table({
   columns,
@@ -9,23 +13,43 @@ export default function Table({
   selectable,
   selectKey,
   onSelected,
-  expandable
+  expandable,
+  expandKey,
+  sideMenu
 }) {
   const customData = map(data, d => {
     return {
       ...d,
-      isExpanded: false
+      isExpanded: false,
+      expandRowEl: useRef()
     };
   });
+
+  const customColumns = map(columns, c => {
+    return {
+      ...c,
+      sortOrder: null
+    };
+  });
+
+  const [customColumnState, setCustomColumnState] = useState(customColumns);
   const [customDataState, setCustomDataState] = useState(customData);
-  const [isExpanded, setIsExpanded] = useState(false);
+  // const [sortOrder, setSortOrder] = useState(null);
 
   const renderHeaders = () => {
-    return map(columns, (column, key) => {
-      const { output, flex } = column;
+    return map(customColumnState, (column, headerIdx) => {
+      const { output, flex, sortOrder } = column;
       return (
-        <TableText key={`header-table-text-${key}`} flex={flex}>
+        <TableText
+          key={`header-table-text-${headerIdx}`}
+          flex={flex}
+          onClick={() => sortColumn(column, headerIdx)}
+          header
+        >
           {output}
+          <SortArrowContainer sortorder={sortOrder}>
+            <TableSortArrowIcon />
+          </SortArrowContainer>
         </TableText>
       );
     });
@@ -34,8 +58,11 @@ export default function Table({
   const renderBody = () => {
     return map(customDataState, (row, rowIdx) => {
       return (
-        <TableRowContainer isExpanded={row.isExpanded}>
-          <TableRow key={`table-row-${rowIdx}`} isExpanded={row.isExpanded}>
+        <TableRowContainer
+          key={`table-row-${rowIdx}`}
+          isExpanded={row.isExpanded}
+        >
+          <TableRow isExpanded={row.isExpanded}>
             {selectable && (
               <Checkbox
                 type="checkbox"
@@ -44,9 +71,14 @@ export default function Table({
               />
             )}
             {expandable && (
-              <ExpandArrow onClick={() => expandRow(rowIdx)}>></ExpandArrow>
+              <ExpandArrow
+                onClick={() => expandRow(rowIdx)}
+                isExpanded={row.isExpanded}
+              >
+                <TableArrow></TableArrow>
+              </ExpandArrow>
             )}
-            {map(columns, (column, colKey) => {
+            {map(customColumnState, (column, colKey) => {
               const { colId, flex } = column;
               return (
                 <TableText key={`body-table-text-${colKey}`} flex={flex}>
@@ -54,15 +86,47 @@ export default function Table({
                 </TableText>
               );
             })}
+            {sideMenu && (
+              <SideMenuContainer>
+                <StyledActions>
+                  <Dropdown
+                    list={row.sideMenuContent}
+                    icon={SideMenuIcon}
+                    buttonBackgroundColor={"transparent"}
+                  />
+                </StyledActions>
+              </SideMenuContainer>
+            )}
           </TableRow>
-          {expandable && row.isExpanded && (
-            <ExpandRowContent isExpanded={row.isExpanded}>
-              {expandable}
-            </ExpandRowContent>
-          )}
+          <ExpandRowContent
+            isExpanded={row.isExpanded}
+            expandEl={row.expandRowEl}
+            ref={row.expandRowEl}
+            onClick={() => console.log(row.expandRowEl)}
+          >
+            {row[expandKey]}
+          </ExpandRowContent>
         </TableRowContainer>
       );
     });
+  };
+
+  const sortColumn = (column, headerIdx) => {
+    let { sortOrder, colId } = column;
+    const updatedColumns = customColumnState;
+    if (sortOrder === "acs") {
+      update(updatedColumns, `[${headerIdx}].sortOrder`, () => "desc");
+      sortOrder = "desc";
+    } else if (sortOrder === null || sortOrder !== "asc") {
+      update(updatedColumns, `[${headerIdx}].sortOrder`, () => "acs");
+      sortOrder = "acs";
+    }
+    let updatedData;
+    if (column.sortMethod)
+      updatedData = column.sortMethod(customDataState, sortOrder);
+    else updatedData = orderBy(customDataState, colId, sortOrder);
+    setCustomColumnState([...updatedColumns]);
+    setCustomDataState([...updatedData]);
   };
 
   const toggleCheckbox = rowIndex => {
@@ -76,7 +140,7 @@ export default function Table({
 
   const getSelected = () => {
     let selectedRows = customDataState.filter(i => i[selectKey]);
-    return map(selectedRows, i => omit(i, "isExpanded"));
+    return map(selectedRows, i => omit(i, ["isExpanded", "expandRowEl"]));
   };
 
   const toggleAll = event => {
@@ -102,6 +166,7 @@ export default function Table({
         {selectable && <Checkbox type="checkbox" onClick={toggleAll} />}
         {expandable && <ExpandArrow></ExpandArrow>}
         {renderHeaders()}
+        {sideMenu && <SideMenuContainer></SideMenuContainer>}
       </TableRow>
       {renderBody()}
     </TableContainer>
@@ -127,30 +192,68 @@ const TableRow = styled.div`
       ? "none"
       : "0 1px 4px 0 rgba(0, 0, 0, 0.1)"};
   border-radius: ${props => (props.header ? "none" : "4px")};
+  transition: ${props => (props.isExpanded ? "none" : "all 1.2s ease-out")};
 `;
 
 const TableRowContainer = styled.div`
   display: flex;
+  /* overflow: hidden; */
   flex-direction: column;
   box-shadow: ${props =>
     props.isExpanded ? "0 1px 4px 0 rgba(0, 0, 0, 0.1)" : "none"};
+  transition: all 0.5s ease-out;
 `;
 
 const TableText = styled.div`
   flex: ${props => props.flex};
+  &:hover {
+    cursor: ${({ header }) => (header ? "pointer" : "")};
+  }
 `;
 
 const ExpandRowContent = styled.div`
-  padding: 10px;
-  height: ${({ isExpanded }) => (isExpanded ? "fit-content" : "0px")};
-  visibility: ${({ isExpanded }) => (isExpanded ? "visible" : "hidden")};
-  transition: all 0.3s ease-out;
+  overflow: hidden;
+  height: ${({ isExpanded, expandEl }) =>
+    isExpanded
+      ? `${expandEl.current.firstElementChild.clientHeight}px`
+      : "0px"};
+  transition: visibility 0.5s ease-out, height 0.5s ease-out;
+
+  > *:first-of-type {
+    padding: 10px;
+  }
 `;
 
 const Checkbox = styled.input`
-  flex: 0.4;
+  flex: 0.2;
 `;
 
 const ExpandArrow = styled.div`
+  flex: 0.2;
+  svg {
+    transition: all 0.5s ease;
+    transform: ${({ isExpanded }) => (isExpanded ? "rotate(90deg)" : "")};
+    &:hover {
+      cursor: pointer;
+    }
+  }
+`;
+
+const SideMenuContainer = styled.div`
   flex: 0.4;
+  svg {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+`;
+
+const SortArrowContainer = styled.span`
+  margin-left: 5px;
+  svg {
+    transition: transform 0.5s, height 0.1s;
+    height: ${({ sortorder }) => (sortorder ? "5px" : "0px")};
+    transform: ${({ sortorder }) =>
+      sortorder === "desc" ? "rotate(0deg)" : "rotate(-180deg)"};
+  }
 `;
