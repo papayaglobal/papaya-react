@@ -114,6 +114,7 @@ export default function Table({
   const sortColumn = (column, headerIdx) => {
     let { sortOrder, colId } = column;
     const updatedColumns = customColumnState;
+    map(updatedColumns, column => (column.sortOrder = null));
     if (sortOrder === "acs") {
       update(updatedColumns, `[${headerIdx}].sortOrder`, () => "desc");
       sortOrder = "desc";
