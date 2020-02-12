@@ -36,23 +36,26 @@ const CheckBoxInput = styled.input`
   }
 `;
 
-export const CheckBox = (props) => {
-    const {className, children, checked, onClick} = props;
-    const onCheckboxClick = (e) => {
-        e.stopPropagation();
-        onClick(e);
-    };
-    return (<CheckBoxInput type="checkbox" className={className}
-                           checked={checked}
-                           onClick={onCheckboxClick}
-                           onChange={() => {
-                           }}/>
-    )
+export const CheckBox = props => {
+  const { className, children, checked, onClick } = props;
+  const onCheckboxClick = e => {
+    e.stopPropagation();
+    onClick(e);
+  };
+  return (
+    <CheckBoxInput
+      type="checkbox"
+      className={className}
+      checked={checked}
+      onClick={onCheckboxClick}
+      onChange={() => {}}
+    />
+  );
 };
 
 CheckBox.propTypes = {
-    className: PropTypes.string,
-    children: PropTypes.any,
-    checked: PropTypes.bool,
-    onClick: PropTypes.func,
+  className: PropTypes.string,
+  children: PropTypes.any,
+  checked: PropTypes.bool,
+  onClick: PropTypes.func
 };

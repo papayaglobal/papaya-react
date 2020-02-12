@@ -1,6 +1,6 @@
 import React from "react";
-import PropTypes from 'prop-types';
-import {find, get, isFunction} from "lodash";
+import PropTypes from "prop-types";
+import { find, get, isFunction } from "lodash";
 import Attachment from "../Attachment";
 import Dropdown from "../Dropdown";
 import Label from "../Label";
@@ -8,281 +8,333 @@ import styled from "styled-components";
 import more from "../../assets/icons/More.svg";
 import expand from "../../assets/icons/Expand.svg";
 import comment from "../../assets/icons/Comment.svg";
-import {CheckBox} from "../../Common/Checkbox";
+import { CheckBox } from "../../Common/Checkbox";
 import media from "../../Constants/mediaQueries";
 import PopOver from "../../Common/PopOver";
 
 class PaymentRowComponent extends React.Component {
-    state = {
-        isExpanded: false
-    };
+  state = {
+    isExpanded: false
+  };
 
-    toggleCollapse = (e) => {
-        e.stopPropagation();
-        this.setState({
-            isExpanded: !this.state.isExpanded
-        });
-    };
+  toggleCollapse = e => {
+    e.stopPropagation();
+    this.setState({
+      isExpanded: !this.state.isExpanded
+    });
+  };
 
-    onSelectClicked = ({e, payment}) => {
-        const {onSelectClick} = this.props;
-        e.stopPropagation();
+  onSelectClicked = ({ e, payment }) => {
+    const { onSelectClick } = this.props;
+    e.stopPropagation();
 
-        isFunction(onSelectClick) && onSelectClick({payment});
-    };
+    isFunction(onSelectClick) && onSelectClick({ payment });
+  };
 
-    onSelectAttachmentClicked = ({e, payment, attachment}) => {
-        const {onSelectAttachmentClicked} = this.props;
-        e.stopPropagation();
+  onSelectAttachmentClicked = ({ e, payment, attachment }) => {
+    const { onSelectAttachmentClicked } = this.props;
+    e.stopPropagation();
 
-        isFunction(onSelectAttachmentClicked) && onSelectAttachmentClicked({payment, attachment});
-    };
+    isFunction(onSelectAttachmentClicked) &&
+      onSelectAttachmentClicked({ payment, attachment });
+  };
 
-    onAttachmentClicked = ({e, payment, attachment}) => {
-        const {onAttachmentClicked} = this.props;
-        e.stopPropagation();
+  onAttachmentClicked = ({ e, payment, attachment }) => {
+    const { onAttachmentClicked } = this.props;
+    e.stopPropagation();
 
-        isFunction(onAttachmentClicked) && onAttachmentClicked({payment, attachment});
-    };
+    isFunction(onAttachmentClicked) &&
+      onAttachmentClicked({ payment, attachment });
+  };
 
-    render() {
-        const {
-            className,
-            attachments = [],
-            dates,
-            actions,
-            reportedDate,
-            isNew,
-            isMonthly,
-            amount,
-            selectable,
-            selected,
-            selectedAttachments = [],
-            payment,
-            onClick
-        } = this.props;
-        const {isExpanded} = this.state;
-        if (attachments.length > 1) {
-            return (
-                <div className={`${className}`} onClick={onClick}>
-                    <div
-                        id="parentRow"
-                        className={`wrapper multipleAttachments ${isExpanded && "isExpanded"}`}
-                        style={{border: isNew ? "1px solid #2ED6BC" : "none"}}
-                        onClick={(e) => this.toggleCollapse(e)}
-                    >
-                        <div className="leftWrapper">
-                            {selectable && (
-                                <div className="selectWrapper">
-                                    <CheckBox checked={selected} onClick={(e) => this.onSelectClicked({e, payment})}/>
-                                </div>
-                            )}
-                            <div className={`${isMonthly ? "dateWrapper isMonthly" : "dateWrapper"}`}>
-                                <span className="date">{dates}</span>
-                            </div>
-                            {amount && (
-                                <div className="amountWrapper">
-                                    <span className="amount">{`${amount}`}</span>
-                                </div>
-                            )}
-                            {attachments &&
-                            (attachments.length > 0 && (
-                                <div className="attachments">
-                                    <Attachment
-                                        attachments={attachments}
-                                        displayName type="link"/>
-                                    {attachments.length > 1 && <img src={expand} alt="Expand More"/>}
-                                </div>
-                            ))}
-                        </div>
-                        <div className="rightWrapper">
-                            {isNew && (
-                                <div className="labelWrapper">
-                                    <Label title="New"/>
-                                </div>
-                            )}
-                            {!!get(payment, "comment") && (
-                                <PopOver
-                                    position="top"
-                                    message={get(payment, "comment")}
-                                >
-                                    <div className="labelWrapper">
-                                        <img src={comment} alt="comment"/>
-                                    </div>
-                                </PopOver>
-                            )}
-                            {attachments && (attachments.length > 0 && (
-                                <div className="attachments md">
-                                    <Attachment attachments={attachments}/>
-                                </div>
-                            ))}
-                            {reportedDate && (
-                                <div className="reportedDateWrapper">
-                                    <span className="date">{reportedDate}</span>
-                                </div>
-                            )}
-                            {actions && (
-                                <div className="moreWrapper">
-                                    <Dropdown list={actions} icon={more}/>
-                                </div>
-                            )}
-                        </div>
+  render() {
+    const {
+      className,
+      attachments = [],
+      dates,
+      actions,
+      reportedDate,
+      isNew,
+      isMonthly,
+      amount,
+      selectable,
+      selected,
+      selectedAttachments = [],
+      payment,
+      onClick
+    } = this.props;
+    const { isExpanded } = this.state;
+    if (attachments.length > 1) {
+      return (
+        <div className={`${className}`} onClick={onClick}>
+          <div
+            id="parentRow"
+            className={`wrapper multipleAttachments ${isExpanded &&
+              "isExpanded"}`}
+            style={{ border: isNew ? "1px solid #2ED6BC" : "none" }}
+            onClick={e => this.toggleCollapse(e)}
+          >
+            <div className="leftWrapper">
+              {selectable && (
+                <div className="selectWrapper">
+                  <CheckBox
+                    checked={selected}
+                    onClick={e => this.onSelectClicked({ e, payment })}
+                  />
+                </div>
+              )}
+              <div
+                className={`${
+                  isMonthly ? "dateWrapper isMonthly" : "dateWrapper"
+                }`}
+              >
+                <span className="date">{dates}</span>
+              </div>
+              {amount && (
+                <div className="amountWrapper">
+                  <span className="amount">{`${amount}`}</span>
+                </div>
+              )}
+              {attachments && attachments.length > 0 && (
+                <div className="attachments">
+                  <Attachment
+                    attachments={attachments}
+                    displayName
+                    type="link"
+                  />
+                  {attachments.length > 1 && (
+                    <img src={expand} alt="Expand More" />
+                  )}
+                </div>
+              )}
+            </div>
+            <div className="rightWrapper">
+              {isNew && (
+                <div className="labelWrapper">
+                  <Label title="New" />
+                </div>
+              )}
+              {!!get(payment, "comment") && (
+                <PopOver position="top" message={get(payment, "comment")}>
+                  <div className="labelWrapper">
+                    <img src={comment} alt="comment" />
+                  </div>
+                </PopOver>
+              )}
+              {attachments && attachments.length > 0 && (
+                <div className="attachments md">
+                  <Attachment attachments={attachments} />
+                </div>
+              )}
+              {reportedDate && (
+                <div className="reportedDateWrapper">
+                  <span className="date">{reportedDate}</span>
+                </div>
+              )}
+              {actions && (
+                <div className="moreWrapper">
+                  <Dropdown list={actions} icon={more} />
+                </div>
+              )}
+            </div>
+          </div>
+          <div
+            className={`subComponent ${isExpanded && "visible"}`}
+            style={{ border: isNew ? "1px solid #2ED6BC" : "none" }}
+          >
+            {attachments.map((attachment, i) => (
+              <div
+                key={i}
+                className="subComponentRow"
+                onClick={evt => evt.stopPropagation()}
+              >
+                <div className="leftWrapper">
+                  {selectable && (
+                    <div className="selectWrapper">
+                      <CheckBox
+                        checked={
+                          !!find(
+                            selectedAttachments,
+                            sa => +sa.id === +attachment.id
+                          )
+                        }
+                        onClick={e =>
+                          this.onSelectAttachmentClicked({
+                            e,
+                            payment,
+                            attachment
+                          })
+                        }
+                      />
                     </div>
-                    <div
-                        className={`subComponent ${isExpanded && "visible"}`}
-                        style={{border: isNew ? "1px solid #2ED6BC" : "none"}}
-                    >
-                        {attachments.map((attachment, i) => (
-                            <div key={i} className="subComponentRow" onClick={(evt) => evt.stopPropagation()}>
-                                <div className="leftWrapper">
-                                    {selectable && (
-                                        <div className="selectWrapper">
-                                            <CheckBox
-                                                checked={!!find(selectedAttachments, sa => +sa.id === +attachment.id)}
-                                                onClick={(e) => this.onSelectAttachmentClicked({
-                                                    e,
-                                                    payment,
-                                                    attachment
-                                                })}/>
-                                        </div>
-                                    )}
-                                    <div className={`${isMonthly ? "dateWrapper isMonthly" : "dateWrapper"}`}/>
-                                    <div className="amountWrapper">
-                                        <span className="type">{attachment.type}</span>
-                                    </div>
-                                    <div className="attachments">
-                                        <Attachment
-                                            onClick={(e) => this.onAttachmentClicked({
-                                                e,
-                                                payment,
-                                                attachment
-                                            })}
-                                            attachments={[attachment]}
-                                            displayName isExpanded type="link"/>
-                                    </div>
-                                </div>
+                  )}
+                  <div
+                    className={`${
+                      isMonthly ? "dateWrapper isMonthly" : "dateWrapper"
+                    }`}
+                  />
+                  <div className="amountWrapper">
+                    <span className="type">{attachment.type}</span>
+                  </div>
+                  <div className="attachments">
+                    <Attachment
+                      onClick={e =>
+                        this.onAttachmentClicked({
+                          e,
+                          payment,
+                          attachment
+                        })
+                      }
+                      attachments={[attachment]}
+                      displayName
+                      isExpanded
+                      type="link"
+                    />
+                  </div>
+                </div>
 
-                                <div className="rightWrapper">
-                                    <div className="attachments md">
-                                        <Attachment
-                                            onClick={(e) => this.onAttachmentClicked({
-                                                e,
-                                                payment,
-                                                attachment
-                                            })}
-                                            attachments={[attachment]}
-                                        />
-                                    </div>
-                                    {attachment.title && (
-                                        <div className="noteWrapper">
+                <div className="rightWrapper">
+                  <div className="attachments md">
+                    <Attachment
+                      onClick={e =>
+                        this.onAttachmentClicked({
+                          e,
+                          payment,
+                          attachment
+                        })
+                      }
+                      attachments={[attachment]}
+                    />
+                  </div>
+                  {attachment.title && (
+                    <div className="noteWrapper">
                       <span className="note">
                         {attachment.title.length <= 50
-                            ? attachment.title
-                            : `${attachment.title.substring(0, 50)}...`}
+                          ? attachment.title
+                          : `${attachment.title.substring(0, 50)}...`}
                       </span>
-                                        </div>
-                                    )}
-                                    <div className="moreWrapper" style={{visibility: "hidden"}}>
-                                        <Dropdown list={actions} icon={more}/>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
                     </div>
+                  )}
+                  <div className="moreWrapper" style={{ visibility: "hidden" }}>
+                    <Dropdown list={actions} icon={more} />
+                  </div>
                 </div>
-            );
-        } else {
-            return (
-                <div
-                    className={`${className} singleAttachment`}
-                    style={{border: isNew ? "1px solid #2ED6BC" : "none"}}
-                    onClick={onClick}
-                >
-                    <div className="leftWrapper">
-                        {selectable && (
-                            <div className="selectWrapper">
-                                <CheckBox checked={selected} onClick={(e) => this.onSelectClicked({e, payment})}/>
-                            </div>
-                        )}
-                        <div className={`${isMonthly ? "dateWrapper isMonthly" : "dateWrapper"}`}>
-                            <span className="date">{dates}</span>
-                        </div>
-                        {amount && (
-                            <div className="amountWrapper">
-                                <span className="amount">{`${amount}`}</span>
-                            </div>
-                        )}
-                        {attachments && (attachments.length > 0 && (
-                            <div className="attachments">
-                                <Attachment attachments={attachments}
-                                            onClick={attachments.length === 1 ? (e) => this.onAttachmentClicked({
-                                                e,
-                                                payment,
-                                                attachment: attachments[0]
-                                            }) : null}
-                                            displayName type="link"/>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="rightWrapper">
-                        {isNew && (
-                            <div className="labelWrapper">
-                                <Label title="New"/>
-                            </div>
-                        )}
-                        {!!get(payment, "comment") && (
-                            <PopOver
-                                position="top"
-                                message={get(payment, "comment")}
-                            >
-                                <div className="labelWrapper">
-                                    <img src={comment} alt="comment"/>
-                                </div>
-                            </PopOver>
-                        )}
-                        {attachments && (attachments.length > 0 && (
-                            <div className="attachments md">
-                                <Attachment attachments={attachments}
-                                            onClick={attachments.length === 1 ? (e) => this.onAttachmentClicked({
-                                                e,
-                                                payment,
-                                                attachment: attachments[0]
-                                            }) : null}/>
-                            </div>
-                        ))}
-                        {reportedDate && (
-                            <div className="reportedDateWrapper">
-                                <span className="date">{reportedDate}</span>
-                            </div>
-                        )}
-                        {actions && (
-                            <div className="moreWrapper">
-                                <Dropdown list={actions} icon={more}/>
-                            </div>
-                        )}
-                    </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div
+          className={`${className} singleAttachment`}
+          style={{ border: isNew ? "1px solid #2ED6BC" : "none" }}
+          onClick={onClick}
+        >
+          <div className="leftWrapper">
+            {selectable && (
+              <div className="selectWrapper">
+                <CheckBox
+                  checked={selected}
+                  onClick={e => this.onSelectClicked({ e, payment })}
+                />
+              </div>
+            )}
+            <div
+              className={`${
+                isMonthly ? "dateWrapper isMonthly" : "dateWrapper"
+              }`}
+            >
+              <span className="date">{dates}</span>
+            </div>
+            {amount && (
+              <div className="amountWrapper">
+                <span className="amount">{`${amount}`}</span>
+              </div>
+            )}
+            {attachments && attachments.length > 0 && (
+              <div className="attachments">
+                <Attachment
+                  attachments={attachments}
+                  onClick={
+                    attachments.length === 1
+                      ? e =>
+                          this.onAttachmentClicked({
+                            e,
+                            payment,
+                            attachment: attachments[0]
+                          })
+                      : null
+                  }
+                  displayName
+                  type="link"
+                />
+              </div>
+            )}
+          </div>
+          <div className="rightWrapper">
+            {isNew && (
+              <div className="labelWrapper">
+                <Label title="New" />
+              </div>
+            )}
+            {!!get(payment, "comment") && (
+              <PopOver position="top" message={get(payment, "comment")}>
+                <div className="labelWrapper">
+                  <img src={comment} alt="comment" />
                 </div>
-            );
-        }
+              </PopOver>
+            )}
+            {attachments && attachments.length > 0 && (
+              <div className="attachments md">
+                <Attachment
+                  attachments={attachments}
+                  onClick={
+                    attachments.length === 1
+                      ? e =>
+                          this.onAttachmentClicked({
+                            e,
+                            payment,
+                            attachment: attachments[0]
+                          })
+                      : null
+                  }
+                />
+              </div>
+            )}
+            {reportedDate && (
+              <div className="reportedDateWrapper">
+                <span className="date">{reportedDate}</span>
+              </div>
+            )}
+            {actions && (
+              <div className="moreWrapper">
+                <Dropdown list={actions} icon={more} />
+              </div>
+            )}
+          </div>
+        </div>
+      );
     }
+  }
 }
 
 PaymentRowComponent.propTypes = {
-    className: PropTypes.string,
-    children: PropTypes.any,
-    attachments: PropTypes.array,
-    dates: PropTypes.string,
-    actions: PropTypes.array,
-    reportedDate: PropTypes.string,
-    isNew: PropTypes.bool,
-    hasComment: PropTypes.bool,
-    isMonthly: PropTypes.bool,
-    amount: PropTypes.string,
-    selectable: PropTypes.bool,
-    selected: PropTypes.bool,
-    onSelectClick: PropTypes.func,
-    onSelectAttachmentClicked: PropTypes.func,
-    onAttachmentClicked: PropTypes.func,
+  className: PropTypes.string,
+  children: PropTypes.any,
+  attachments: PropTypes.array,
+  dates: PropTypes.string,
+  actions: PropTypes.array,
+  reportedDate: PropTypes.string,
+  isNew: PropTypes.bool,
+  hasComment: PropTypes.bool,
+  isMonthly: PropTypes.bool,
+  amount: PropTypes.string,
+  selectable: PropTypes.bool,
+  selected: PropTypes.bool,
+  onSelectClick: PropTypes.func,
+  onSelectAttachmentClicked: PropTypes.func,
+  onAttachmentClicked: PropTypes.func
 };
 
 const PaymentRow = styled(PaymentRowComponent)`

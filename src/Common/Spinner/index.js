@@ -53,7 +53,8 @@ const StyledSpinner = styled.svg`
     stroke-dashoffset: -10;
     -webkit-animation: ${dashKeyFrames} 1.5s ease-in-out infinite,
       ${colorKeyFrames} 6s ease-in-out infinite;
-    animation: ${dashKeyFrames} 1.5s ease-in-out infinite, ${colorKeyFrames} 6s ease-in-out infinite;
+    animation: ${dashKeyFrames} 1.5s ease-in-out infinite,
+      ${colorKeyFrames} 6s ease-in-out infinite;
     stroke-linecap: round;
   }
 `;

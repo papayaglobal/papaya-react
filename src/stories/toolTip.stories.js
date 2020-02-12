@@ -12,7 +12,11 @@ storiesOf("Tooltips", module)
   .addDecorator(withKnobs)
   .add("Default", () => (
     <div className="app">
-      <ToolTip position="right" message="This is a right tooltip" displayTooltip />
+      <ToolTip
+        position="right"
+        message="This is a right tooltip"
+        displayTooltip
+      />
     </div>
   ))
   .add("Positions", () => (

@@ -3,17 +3,21 @@ import React from "react";
 
 import * as Colors from "../../Constants/colors";
 
-const RadioComponent = ({className, children, checked, onClick}) => {
-    const onCheckboxClick = (e) => {
-        e.stopPropagation();
-        onClick(e);
-    };
+const RadioComponent = ({ className, children, checked, onClick }) => {
+  const onCheckboxClick = e => {
+    e.stopPropagation();
+    onClick(e);
+  };
 
-    return <input type="radio" className={className}
-                  onClick={onCheckboxClick}
-                  onChange={() => {
-                  }}
-                  checked={checked}/>
+  return (
+    <input
+      type="radio"
+      className={className}
+      onClick={onCheckboxClick}
+      onChange={() => {}}
+      checked={checked}
+    />
+  );
 };
 
 const RadioButton = styled(RadioComponent)`

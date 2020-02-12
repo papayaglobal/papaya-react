@@ -7,10 +7,10 @@ export const Flex = styled.div`
   flex-wrap: nowrap;
   justify-content: flex-start;
   align-content: stretch;
-  
-  border-top: ${({borderTop}) => borderTop};
-  flex: ${({flex}) => flex};
-  
+
+  border-top: ${({ borderTop }) => borderTop};
+  flex: ${({ flex }) => flex};
+
   ${is("pointer")`
     cursor: pointer;
   `};
@@ -18,7 +18,7 @@ export const Flex = styled.div`
   ${is("widthFit")`
     width: fit-content;
   `};
-  
+
   ${is("fullHeight")`    
     height: 100%;
   `};
@@ -26,7 +26,7 @@ export const Flex = styled.div`
   ${is("fullWidth")`    
     width: 100%;
   `};
-  
+
   ${is("inline")`
     display: inline-flex;
   `};
@@ -133,9 +133,9 @@ export const Flex = styled.div`
     align-items: center;
     justify-content: center;
   `};
-  
-  padding: ${({padding}) => padding};
-  margin: ${({margin}) => margin};
-  height: ${({height}) => height};
-  cursor: ${({cursor}) => cursor};
+
+  padding: ${({ padding }) => padding};
+  margin: ${({ margin }) => margin};
+  height: ${({ height }) => height};
+  cursor: ${({ cursor }) => cursor};
 `;

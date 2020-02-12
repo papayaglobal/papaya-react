@@ -16,19 +16,28 @@ const options = [
 ];
 
 storiesOf("Select", module)
-    .addDecorator(withKnobs)
-    .add("Default", () => (
-        <div className="app">
-          <SelectBox options={options} placeholder="Placeholder" isMulti={false} />
-        </div>
-      ))
-    .add("Multiple Values", () => (
-        <div className="app">
-        <SelectBox options={options} placeholder="Placeholder" isMulti={boolean("isMulti", true)} />
-        </div>
-        ))
-    .add("Single Value Already selected", () => (
-        <div className="app">
-            <SelectBox options={options} placeholder="Placeholder" isMulti={false} value={options[3]} />
-        </div>
-    ));
+  .addDecorator(withKnobs)
+  .add("Default", () => (
+    <div className="app">
+      <SelectBox options={options} placeholder="Placeholder" isMulti={false} />
+    </div>
+  ))
+  .add("Multiple Values", () => (
+    <div className="app">
+      <SelectBox
+        options={options}
+        placeholder="Placeholder"
+        isMulti={boolean("isMulti", true)}
+      />
+    </div>
+  ))
+  .add("Single Value Already selected", () => (
+    <div className="app">
+      <SelectBox
+        options={options}
+        placeholder="Placeholder"
+        isMulti={false}
+        value={options[3]}
+      />
+    </div>
+  ));

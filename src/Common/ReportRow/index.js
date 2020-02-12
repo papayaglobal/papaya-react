@@ -1,7 +1,7 @@
-import React, {useEffect, useRef, useState} from "react";
-import PropTypes from 'prop-types';
+import React, { useEffect, useRef, useState } from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
-import {isFunction} from "lodash";
+import { isFunction } from "lodash";
 
 import ToolTip from "../Tooltip";
 import Attachment from "../Attachment";
@@ -15,136 +15,141 @@ import commentIcon from "../../assets/icons/Comment.svg";
 import PopOver from "../PopOver";
 
 const leaveTypes = {
-    sick: "Sick Leave(s)",
-    leave: "Vacations",
-    unpaid: "Unpaid"
+  sick: "Sick Leave(s)",
+  leave: "Vacations",
+  unpaid: "Unpaid"
 };
 
 const leaveColors = {
-    sick: "#E24C84",
-    leave: "#976FED",
-    unpaid: "#48C4D3"
+  sick: "#E24C84",
+  leave: "#976FED",
+  unpaid: "#48C4D3"
 };
 
-const ReportRowComponent = (props) => {
-    const {
-        className,
-        children,
-        reportStatus = "planned",
-        payPeriod,
-        paddingPayPeriod,
-        type,
-        attachments = [],
-        dates,
-        pendingTooltip,
-        actions,
-        reportedDate,
-        daysReported,
-        comment,
-        onClick
-    } = props;
-    const [size, setSize] = useState("normal-size");
-    const reportRef = useRef(null);
-    useEffect(() => {
-        handleResize();
-        window.addEventListener("resize", handleResize);
-        return () => {
-            window.removeEventListener("resize", handleResize);
-        };
-    });
-    const handleResize = () => {
-        const width = reportRef.current.getBoundingClientRect().width;
-        if (width < 600) {
-            setSize("small-size");
-        } else {
-            setSize("normal-size");
-        }
+const ReportRowComponent = props => {
+  const {
+    className,
+    children,
+    reportStatus = "planned",
+    payPeriod,
+    paddingPayPeriod,
+    type,
+    attachments = [],
+    dates,
+    pendingTooltip,
+    actions,
+    reportedDate,
+    daysReported,
+    comment,
+    onClick
+  } = props;
+  const [size, setSize] = useState("normal-size");
+  const reportRef = useRef(null);
+  useEffect(() => {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
     };
+  });
+  const handleResize = () => {
+    const width = reportRef.current.getBoundingClientRect().width;
+    if (width < 600) {
+      setSize("small-size");
+    } else {
+      setSize("normal-size");
+    }
+  };
 
-    const onAttachmentsClicked = ({e, attachments}) => {
-        const {onAttachmentsClicked} = props;
-        e.stopPropagation();
-        isFunction(onAttachmentsClicked) && onAttachmentsClicked({attachments});
-    };
+  const onAttachmentsClicked = ({ e, attachments }) => {
+    const { onAttachmentsClicked } = props;
+    e.stopPropagation();
+    isFunction(onAttachmentsClicked) && onAttachmentsClicked({ attachments });
+  };
 
-    return (
-        <div
-            ref={reportRef}
-            className={`${className} ${reportStatus} ${size}`}
-            onClick={onClick}
-        >
-            <div className="leftWrapper">
-                <div className="leaveWrapper">
-                    {payPeriod && (<span className="date payPeriod">{payPeriod}</span>)}
-                    <div className={`leaveBorder ${paddingPayPeriod ? "paddingPayPeriod" : ""}`}/>
-                    <span className="leaveType">{leaveTypes[type]}</span>
-                </div>
-                <div className="dateWrapper">
-                    <span className="date">{dates}</span>
-                    {daysReported && (
-                        <div className="daysReported">
-                            <span className="date">{daysReported}</span>
-                        </div>
-                    )}
-                </div>
-            </div>
-            <div className="rightWrapper">
-                {!!comment && (
-                    <PopOver
-                        position="top"
-                        message={comment}
-                    >
-                        <div className="labelWrapper">
-                            <img src={commentIcon} alt="comment"/>
-                        </div>
-                    </PopOver>
-                )}
-
-                {attachments &&
-                (attachments.length > 0 && (
-                    <div className="attachments">
-                        <Attachment attachments={attachments} onClick={(e) => onAttachmentsClicked({
-                            e,
-                            attachments
-                        })}/>
-                    </div>
-                ))}
-                {reportedDate && (
-                    <div className="reportedDateWrapper">
-                        <span className="date">{reportedDate}</span>
-                    </div>
-                )}
-                {reportStatus === "planned" && (
-                    <div className="timeWrapper">
-                        {pendingTooltip ? (
-                            <ToolTip position="top" message={pendingTooltip}>
-                                <img src={pending} alt="Pending Icon" className="icon"/>
-                            </ToolTip>
-                        ) : (
-                            <img src={pending} alt="Pending Icon" className="icon"/>
-                        )}
-                    </div>
-                )}
-                {actions && (
-                    <div className="moreWrapper">
-                        <Dropdown list={actions} icon={more}/>
-                    </div>
-                )}
-            </div>
+  return (
+    <div
+      ref={reportRef}
+      className={`${className} ${reportStatus} ${size}`}
+      onClick={onClick}
+    >
+      <div className="leftWrapper">
+        <div className="leaveWrapper">
+          {payPeriod && <span className="date payPeriod">{payPeriod}</span>}
+          <div
+            className={`leaveBorder ${
+              paddingPayPeriod ? "paddingPayPeriod" : ""
+            }`}
+          />
+          <span className="leaveType">{leaveTypes[type]}</span>
         </div>
-    );
+        <div className="dateWrapper">
+          <span className="date">{dates}</span>
+          {daysReported && (
+            <div className="daysReported">
+              <span className="date">{daysReported}</span>
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="rightWrapper">
+        {!!comment && (
+          <PopOver position="top" message={comment}>
+            <div className="labelWrapper">
+              <img src={commentIcon} alt="comment" />
+            </div>
+          </PopOver>
+        )}
+
+        {attachments && attachments.length > 0 && (
+          <div className="attachments">
+            <Attachment
+              attachments={attachments}
+              onClick={e =>
+                onAttachmentsClicked({
+                  e,
+                  attachments
+                })
+              }
+            />
+          </div>
+        )}
+        {reportedDate && (
+          <div className="reportedDateWrapper">
+            <span className="date">{reportedDate}</span>
+          </div>
+        )}
+        {reportStatus === "planned" && (
+          <div className="timeWrapper">
+            {pendingTooltip ? (
+              <ToolTip position="top" message={pendingTooltip}>
+                <img src={pending} alt="Pending Icon" className="icon" />
+              </ToolTip>
+            ) : (
+              <img src={pending} alt="Pending Icon" className="icon" />
+            )}
+          </div>
+        )}
+        {actions && (
+          <div className="moreWrapper">
+            <Dropdown list={actions} icon={more} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };
 ReportRowComponent.propTypes = {
-    reportStatus: PropTypes.string,
-    type: PropTypes.string,
-    attachments: PropTypes.array,
-    dates: PropTypes.string,
-    pendingTooltip: PropTypes.bool,
-    actions: PropTypes.array,
-    reportedDate: PropTypes.string,
-    daysReported: PropTypes.string,
-    onClick: PropTypes.func,
-    onAttachmentsClicked: PropTypes.func,
+  reportStatus: PropTypes.string,
+  type: PropTypes.string,
+  attachments: PropTypes.array,
+  dates: PropTypes.string,
+  pendingTooltip: PropTypes.bool,
+  actions: PropTypes.array,
+  reportedDate: PropTypes.string,
+  daysReported: PropTypes.string,
+  onClick: PropTypes.func,
+  onAttachmentsClicked: PropTypes.func
 };
 
 const ReportRow = styled(ReportRowComponent)`

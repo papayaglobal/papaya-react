@@ -23,7 +23,11 @@ class PopOverComponent extends React.Component {
             <div className="popup-message">{message}</div>
           </div>
         )}
-        <span className="popup-trigger" onMouseOver={this.showPopup} onMouseLeave={this.hidePopup}>
+        <span
+          className="popup-trigger"
+          onMouseOver={this.showPopup}
+          onMouseLeave={this.hidePopup}
+        >
           {children}
         </span>
       </span>
@@ -125,8 +129,8 @@ const PopOver = styled(PopOverComponent)`
     line-height: 1.4;
     padding: 0.75em;
     text-align: center;
-    box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.1), 0px 0px 2px 1px rgba(0, 0, 0, 0.04),
-      0px 0px 0px -1px rgba(0, 0, 0, 0.02);
+    box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.1),
+      0px 0px 2px 1px rgba(0, 0, 0, 0.04), 0px 0px 0px -1px rgba(0, 0, 0, 0.02);
   }
 `;
 

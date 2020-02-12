@@ -1,264 +1,299 @@
 import React from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import styled from "styled-components";
-import {find, get} from "lodash";
+import { find, get } from "lodash";
 import moment from "moment";
 import {
-    addDays,
-    addMonths,
-    endOfMonth,
-    endOfWeek,
-    format,
-    startOfMonth,
-    startOfWeek,
-    subMonths,
-    toDate
+  addDays,
+  addMonths,
+  endOfMonth,
+  endOfWeek,
+  format,
+  startOfMonth,
+  startOfWeek,
+  subMonths,
+  toDate
 } from "date-fns";
-import {LeftArrow, RightArrow} from "./../../papaya-styled-components";
+import { LeftArrow, RightArrow } from "./../../papaya-styled-components";
 
 class CalendarComponent extends React.Component {
-    state = {
-        currentMonth: new Date(),
-        previousMonth: null,
-        nextMonth: null,
-        selectedDate: new Date(),
+  state = {
+    currentMonth: new Date(),
+    previousMonth: null,
+    nextMonth: null,
+    selectedDate: new Date(),
+    direction: ""
+  };
+
+  componentDidMount() {
+    this.changeMonth();
+  }
+
+  changeMonth = () => {
+    const { currentMonth } = this.state;
+    const previousMonth = subMonths(currentMonth, 1);
+    const nextMonth = addMonths(currentMonth, 1);
+
+    this.setState({ previousMonth, nextMonth });
+    setTimeout(() => {
+      this.setState({
         direction: ""
-    };
+      });
+    }, 300);
+  };
 
-    componentDidMount() {
-        this.changeMonth();
+  renderHeading = () => {
+    const { currentMonth } = this.state;
+    const dateFormat = "MMMM, yyyy";
+    return (
+      <div className="calendar-header">
+        <div className="header-date">
+          <span className="current-month">
+            {format(currentMonth, dateFormat)}
+          </span>
+        </div>
+        <div className="prev-next-icon">
+          <LeftArrow
+            alt="Previous"
+            margin={"0 10px 0 0"}
+            onClick={() => this.previousMonth()}
+          />
+          <RightArrow alt="Next" onClick={() => this.nextMonth()} />
+        </div>
+      </div>
+    );
+  };
+
+  renderBody = () => {
+    const { weekStartsOn } = this.props;
+    const days =
+      weekStartsOn === "sunday"
+        ? ["S", "M", "T", "W", "T", "F", "S"]
+        : ["M", "T", "W", "T", "F", "S", "S"];
+    const d = [];
+    for (let i in days) {
+      d.push(
+        <div className="number" key={i}>
+          <div className="days">{days[i]}</div>
+        </div>
+      );
     }
+    return <div className="days-wrapper">{d}</div>;
+  };
 
-    changeMonth = () => {
-        const {currentMonth} = this.state;
-        const previousMonth = subMonths(currentMonth, 1);
-        const nextMonth = addMonths(currentMonth, 1);
+  renderCells = ({ month }) => {
+    const { weekStartsOn: startWeekConfig } = this.props;
+    const weekStartsOn = startWeekConfig === "sunday" ? 0 : 1;
 
-        this.setState({previousMonth, nextMonth});
-        setTimeout(() => {
-            this.setState({
-                direction: ""
-            });
-        }, 300);
-    };
+    const monthStart = startOfMonth(month);
+    const monthEnd = endOfMonth(monthStart);
+    const startDate = startOfWeek(monthStart, { weekStartsOn });
+    const endDate = endOfWeek(monthEnd, { weekStartsOn });
+    const dateFormat = "d";
+    const rows = [];
 
-    renderHeading = () => {
-        const {currentMonth} = this.state;
-        const dateFormat = "MMMM, yyyy";
-        return (
-            <div className="calendar-header">
-                <div className="header-date">
-                    <span className="current-month">{format(currentMonth, dateFormat)}</span>
-                </div>
-                <div className="prev-next-icon">
-                    <LeftArrow alt="Previous" margin={"0 10px 0 0"} onClick={() => this.previousMonth()}/>
-                    <RightArrow alt="Next" onClick={() => this.nextMonth()}/>
-                </div>
-            </div>
-        );
-    };
+    let days = [];
+    let day = startDate;
+    let formattedDate = "";
 
-    renderBody = () => {
-        const {weekStartsOn} = this.props;
-        const days = weekStartsOn === "sunday" ? ["S", "M", "T", "W", "T", "F", "S"] : ["M", "T", "W", "T", "F", "S", "S"];
-        const d = [];
-        for (let i in days) {
-            d.push(
-                <div className="number" key={i}>
-                    <div className="days">{days[i]}</div>
-                </div>
-            );
-        }
-        return <div className="days-wrapper">{d}</div>;
-    };
-
-    renderCells = ({month}) => {
-        const {weekStartsOn: startWeekConfig} = this.props;
-        const weekStartsOn = startWeekConfig === "sunday" ? 0 : 1;
-
-        const monthStart = startOfMonth(month);
-        const monthEnd = endOfMonth(monthStart);
-        const startDate = startOfWeek(monthStart, {weekStartsOn});
-        const endDate = endOfWeek(monthEnd, {weekStartsOn});
-        const dateFormat = "d";
-        const rows = [];
-
-        let days = [];
-        let day = startDate;
-        let formattedDate = "";
-
-        while (day <= endDate) {
-            for (let i = 0; i < 7; i++) {
-                formattedDate = format(day, dateFormat);
-                const cloneDay = day;
-                days.push(
-                    <div
-                        className={`number ${this.getDayStatus({day, monthStart})}`}
-                        key={day}
-                        onClick={() => this.props.onDateClick(toDate(cloneDay))}
-                    >
-                        <div className={`days ${this.isCurrentMonth({
-                            day,
-                            monthStart,
-                            monthEnd
-                        })}`}>{formattedDate}</div>
-                    </div>
-                );
-                day = addDays(day, 1);
-            }
-            rows.push(<div className="row-wrapper" key={day}> {days} </div>);
-            days = [];
-        }
-        return rows;
-    };
-
-    isCurrentMonth = ({day, monthStart, monthEnd}) => {
-        if (moment(day).isBetween(moment(monthStart), moment(monthEnd), undefined, "[]")) {
-            return "dayCurrentMonth";
-        }
-        return "dayNotCurrentMonth";
-    };
-
-    getDayStatus = ({day}) => {
-        const {ptoItems = []} = this.props;
-        const cleanDate = moment(day).format("YYYY-MM-DD");
-
-        const ptoItem = find(ptoItems, (pto) => {
-            if (pto.dateDisplayType === "SINGLE_DAY") {
-                return cleanDate === get(pto, "start");
-            } else {
-                return moment(cleanDate).isBetween(moment(get(pto, "start")), moment(get(pto, "end")), undefined, "[]");
-            }
-        });
-
-        switch (get(ptoItem, "type")) {
-            case "sick":
-                return this.getSickLeaveClasses({ptoItem, day});
-            case "leave":
-                return this.getVacationLeaveClasses({ptoItem, day});
-            case "unpaid":
-                return this.getUnpaidLeaveClasses({ptoItem, day});
-            default:
-                return ""
-        }
-    };
-
-    getSickLeaveClasses = ({day, ptoItem}) => {
-        const {currentPeriod, nextPeriod} = this.props;
-        const currentPeriodId = +get(currentPeriod, "id");
-        const nextPeriodId = +get(nextPeriod, "id");
-        const periodEnd = moment(get(currentPeriod, "endedAt"));
-        const ptoPeriod = +get(ptoItem, "workerReport.paymentPeriodId");
-
-        if (currentPeriodId === ptoPeriod) {
-            return "sick currentPeriod";
-        } else if (ptoPeriod === nextPeriodId) {
-            return "sick futurePeriod";
-        } else if (moment(day).isBefore(periodEnd)) {
-            return "sick oldPeriod";
-        } else if (moment(day).isAfter(periodEnd)) {
-            return "sick futurePeriod";
-        } else {
-            return "";
-        }
-    };
-
-    getVacationLeaveClasses = ({day, ptoItem}) => {
-        const {currentPeriod, nextPeriod} = this.props;
-        const currentPeriodId = +get(currentPeriod, "id");
-        const periodEnd = moment(get(currentPeriod, "endedAt"));
-        const nextPeriodId = +get(nextPeriod, "id");
-        const ptoPeriod = +get(ptoItem, "workerReport.paymentPeriodId");
-
-        if (currentPeriodId === ptoPeriod) {
-            return "vacation currentPeriod";
-        } else if (ptoPeriod === nextPeriodId) {
-            return "vacation futurePeriod";
-        } else if (moment(day).isBefore(periodEnd)) {
-            return "vacation oldPeriod";
-        } else if (moment(day).isAfter(periodEnd)) {
-            return "vacation futurePeriod";
-        } else {
-            return "";
-        }
-
-    };
-
-    getUnpaidLeaveClasses = ({day, ptoItem}) => {
-        const {currentPeriod, nextPeriod} = this.props;
-        const currentPeriodId = +get(currentPeriod, "id");
-        const nextPeriodId = +get(nextPeriod, "id");
-        const periodEnd = moment(get(currentPeriod, "endedAt"));
-        const ptoPeriod = +get(ptoItem, "workerReport.paymentPeriodId");
-
-        if (currentPeriodId === ptoPeriod) {
-            return "unpaid currentPeriod";
-        } else if (ptoPeriod === nextPeriodId) {
-            return "unpaid futurePeriod";
-        } else if (moment(day).isBefore(periodEnd)) {
-            return "unpaid oldPeriod";
-        } else if (moment(day).isAfter(periodEnd)) {
-            return "unpaid futurePeriod";
-        } else {
-            return "";
-        }
-    };
-
-    nextMonth = () => {
-        this.setState({
-            currentMonth: addMonths(this.state.currentMonth, 1),
-            direction: "ltr"
-        });
-        this.changeMonth();
-    };
-
-    previousMonth = () => {
-        this.setState({
-            currentMonth: subMonths(this.state.currentMonth, 1),
-            direction: "rtl"
-        });
-        this.changeMonth();
-    };
-
-    render() {
-        const {direction, previousMonth, currentMonth, nextMonth} = this.state;
-        const {className, flat} = this.props;
-        return (
+    while (day <= endDate) {
+      for (let i = 0; i < 7; i++) {
+        formattedDate = format(day, dateFormat);
+        const cloneDay = day;
+        days.push(
+          <div
+            className={`number ${this.getDayStatus({ day, monthStart })}`}
+            key={day}
+            onClick={() => this.props.onDateClick(toDate(cloneDay))}
+          >
             <div
-                className={className}
-                style={{boxShadow: flat ? "none" : "0 2px 10px 0 rgba(0, 0, 0, 0.1)"}}
+              className={`days ${this.isCurrentMonth({
+                day,
+                monthStart,
+                monthEnd
+              })}`}
             >
-                {this.renderHeading()}
-
-                <div className="calendar-body">
-                    {this.renderBody()}
-                    <div
-                        className={
-                            direction === "ltr"
-                                ? "monthsWrapper nxt"
-                                : direction === "rtl"
-                                ? "monthsWrapper prev"
-                                : "monthsWrapper"
-                        }
-                    >
-                        <div className="rows-wrapper previous">{this.renderCells({month: previousMonth})}</div>
-                        <div className="rows-wrapper">{this.renderCells({month: currentMonth})}</div>
-                        <div className="rows-wrapper next">{this.renderCells({month: nextMonth})}</div>
-                    </div>
-                </div>
+              {formattedDate}
             </div>
+          </div>
         );
+        day = addDays(day, 1);
+      }
+      rows.push(
+        <div className="row-wrapper" key={day}>
+          {" "}
+          {days}{" "}
+        </div>
+      );
+      days = [];
     }
+    return rows;
+  };
+
+  isCurrentMonth = ({ day, monthStart, monthEnd }) => {
+    if (
+      moment(day).isBetween(
+        moment(monthStart),
+        moment(monthEnd),
+        undefined,
+        "[]"
+      )
+    ) {
+      return "dayCurrentMonth";
+    }
+    return "dayNotCurrentMonth";
+  };
+
+  getDayStatus = ({ day }) => {
+    const { ptoItems = [] } = this.props;
+    const cleanDate = moment(day).format("YYYY-MM-DD");
+
+    const ptoItem = find(ptoItems, pto => {
+      if (pto.dateDisplayType === "SINGLE_DAY") {
+        return cleanDate === get(pto, "start");
+      } else {
+        return moment(cleanDate).isBetween(
+          moment(get(pto, "start")),
+          moment(get(pto, "end")),
+          undefined,
+          "[]"
+        );
+      }
+    });
+
+    switch (get(ptoItem, "type")) {
+      case "sick":
+        return this.getSickLeaveClasses({ ptoItem, day });
+      case "leave":
+        return this.getVacationLeaveClasses({ ptoItem, day });
+      case "unpaid":
+        return this.getUnpaidLeaveClasses({ ptoItem, day });
+      default:
+        return "";
+    }
+  };
+
+  getSickLeaveClasses = ({ day, ptoItem }) => {
+    const { currentPeriod, nextPeriod } = this.props;
+    const currentPeriodId = +get(currentPeriod, "id");
+    const nextPeriodId = +get(nextPeriod, "id");
+    const periodEnd = moment(get(currentPeriod, "endedAt"));
+    const ptoPeriod = +get(ptoItem, "workerReport.paymentPeriodId");
+
+    if (currentPeriodId === ptoPeriod) {
+      return "sick currentPeriod";
+    } else if (ptoPeriod === nextPeriodId) {
+      return "sick futurePeriod";
+    } else if (moment(day).isBefore(periodEnd)) {
+      return "sick oldPeriod";
+    } else if (moment(day).isAfter(periodEnd)) {
+      return "sick futurePeriod";
+    } else {
+      return "";
+    }
+  };
+
+  getVacationLeaveClasses = ({ day, ptoItem }) => {
+    const { currentPeriod, nextPeriod } = this.props;
+    const currentPeriodId = +get(currentPeriod, "id");
+    const periodEnd = moment(get(currentPeriod, "endedAt"));
+    const nextPeriodId = +get(nextPeriod, "id");
+    const ptoPeriod = +get(ptoItem, "workerReport.paymentPeriodId");
+
+    if (currentPeriodId === ptoPeriod) {
+      return "vacation currentPeriod";
+    } else if (ptoPeriod === nextPeriodId) {
+      return "vacation futurePeriod";
+    } else if (moment(day).isBefore(periodEnd)) {
+      return "vacation oldPeriod";
+    } else if (moment(day).isAfter(periodEnd)) {
+      return "vacation futurePeriod";
+    } else {
+      return "";
+    }
+  };
+
+  getUnpaidLeaveClasses = ({ day, ptoItem }) => {
+    const { currentPeriod, nextPeriod } = this.props;
+    const currentPeriodId = +get(currentPeriod, "id");
+    const nextPeriodId = +get(nextPeriod, "id");
+    const periodEnd = moment(get(currentPeriod, "endedAt"));
+    const ptoPeriod = +get(ptoItem, "workerReport.paymentPeriodId");
+
+    if (currentPeriodId === ptoPeriod) {
+      return "unpaid currentPeriod";
+    } else if (ptoPeriod === nextPeriodId) {
+      return "unpaid futurePeriod";
+    } else if (moment(day).isBefore(periodEnd)) {
+      return "unpaid oldPeriod";
+    } else if (moment(day).isAfter(periodEnd)) {
+      return "unpaid futurePeriod";
+    } else {
+      return "";
+    }
+  };
+
+  nextMonth = () => {
+    this.setState({
+      currentMonth: addMonths(this.state.currentMonth, 1),
+      direction: "ltr"
+    });
+    this.changeMonth();
+  };
+
+  previousMonth = () => {
+    this.setState({
+      currentMonth: subMonths(this.state.currentMonth, 1),
+      direction: "rtl"
+    });
+    this.changeMonth();
+  };
+
+  render() {
+    const { direction, previousMonth, currentMonth, nextMonth } = this.state;
+    const { className, flat } = this.props;
+    return (
+      <div
+        className={className}
+        style={{ boxShadow: flat ? "none" : "0 2px 10px 0 rgba(0, 0, 0, 0.1)" }}
+      >
+        {this.renderHeading()}
+
+        <div className="calendar-body">
+          {this.renderBody()}
+          <div
+            className={
+              direction === "ltr"
+                ? "monthsWrapper nxt"
+                : direction === "rtl"
+                ? "monthsWrapper prev"
+                : "monthsWrapper"
+            }
+          >
+            <div className="rows-wrapper previous">
+              {this.renderCells({ month: previousMonth })}
+            </div>
+            <div className="rows-wrapper">
+              {this.renderCells({ month: currentMonth })}
+            </div>
+            <div className="rows-wrapper next">
+              {this.renderCells({ month: nextMonth })}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
 CalendarComponent.propTypes = {
-    ptoItems: PropTypes.array,
-    weekStartsOn: PropTypes.string,
-    currentPeriod: PropTypes.any,
-    nextPeriod: PropTypes.any,
+  ptoItems: PropTypes.array,
+  weekStartsOn: PropTypes.string,
+  currentPeriod: PropTypes.any,
+  nextPeriod: PropTypes.any
 };
 CalendarComponent.defaultProps = {
-    weekStartsOn: 'sunday'
+  weekStartsOn: "sunday"
 };
 
 const Calendar = styled(CalendarComponent)`
@@ -376,7 +411,7 @@ const Calendar = styled(CalendarComponent)`
     line-height: 1;
     cursor: pointer;
   }
-  .number .days.dayNotCurrentMonth, 
+  .number .days.dayNotCurrentMonth,
   .disabled .days {
     color: #d4d5d8;
     cursor: default;
@@ -407,7 +442,7 @@ const Calendar = styled(CalendarComponent)`
     right: 50%;
   }
   .number.sick.futurePeriod {
-    background-color: #ED93B5;
+    background-color: #ed93b5;
     border-radius: 24px;
     position: relative;
   }
@@ -430,7 +465,7 @@ const Calendar = styled(CalendarComponent)`
     border-radius: 24px;
     position: relative;
   }
-  
+
   .number.vacation.currentPeriod {
     background-color: #976fed;
     border-radius: 24px;
@@ -438,13 +473,13 @@ const Calendar = styled(CalendarComponent)`
   }
 
   .number.unpaid.oldPeriod {
-    border: 1px solid #48C4D3;
+    border: 1px solid #48c4d3;
     border-radius: 24px;
     position: relative;
   }
-      
+
   .number.unpaid.currentPeriod {
-    background-color: #48C4D3;
+    background-color: #48c4d3;
     border-radius: 24px;
     position: relative;
   }
@@ -461,9 +496,9 @@ const Calendar = styled(CalendarComponent)`
     left: -95%;
     right: 50%;
   }
-  
+
   .number.vacation.futurePeriod {
-    background-color: #D5C5F7;
+    background-color: #d5c5f7;
     border-radius: 24px;
     position: relative;
   }
@@ -480,7 +515,7 @@ const Calendar = styled(CalendarComponent)`
     left: -95%;
     right: 50%;
   }
-  
+
   .number.unpaid.currentPeriod .days {
     color: #ffffff;
   }
@@ -494,9 +529,9 @@ const Calendar = styled(CalendarComponent)`
     left: -95%;
     right: 50%;
   }
-  
+
   .number.unpaid.futurePeriod {
-    background-color: #7EECF1;
+    background-color: #7eecf1;
     border-radius: 24px;
     position: relative;
   }
@@ -513,7 +548,7 @@ const Calendar = styled(CalendarComponent)`
     left: -95%;
     right: 50%;
   }
-  
+
   .slideinltr-enter {
     opacity: 0;
     transform: translateX(-336px);

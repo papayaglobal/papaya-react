@@ -16,7 +16,11 @@ storiesOf("TextArea", module)
   ))
   .add("With Cols & Rows", () => (
     <div className="app">
-      <TextArea placeholder="Text input..." cols={number("cols", 80)} rows={number("rows", 8)} />
+      <TextArea
+        placeholder="Text input..."
+        cols={number("cols", 80)}
+        rows={number("rows", 8)}
+      />
     </div>
   ))
   .add("Disabled", () => (

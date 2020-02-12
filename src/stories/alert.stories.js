@@ -16,7 +16,10 @@ storiesOf("Alert", module)
   .add("Default", () => (
     <div className="app alert">
       <Alert
-        message={text("message", "Well done! You successfully read this important alert message")}
+        message={text(
+          "message",
+          "Well done! You successfully read this important alert message"
+        )}
         type={text("type", "primary")}
       />
     </div>
@@ -36,7 +39,10 @@ storiesOf("Alert", module)
         type="warning"
         dismissable
       />
-      <Alert message="Oh snap! Change a few things up and try submitting again." type="error" />
+      <Alert
+        message="Oh snap! Change a few things up and try submitting again."
+        type="error"
+      />
     </div>
   ))
   .add("Dismissable", () => (

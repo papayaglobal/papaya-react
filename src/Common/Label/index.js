@@ -3,14 +3,14 @@ import styled from "styled-components";
 
 import * as Colors from "../../Constants/colors";
 
-const LabelComponent = ({className, title}) => (
-    <div className={className}>
-        <p>{title}</p>
-    </div>
+const LabelComponent = ({ className, title }) => (
+  <div className={className}>
+    <p>{title}</p>
+  </div>
 );
 
 const Label = styled(LabelComponent)`
-  background-color: ${({color}) => color || Colors.STATUSOK};
+  background-color: ${({ color }) => color || Colors.STATUSOK};
   color: #ffffff;
   border-radius: 20px;
   height: 22px;

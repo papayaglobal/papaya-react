@@ -25,33 +25,33 @@ import TextInput from "./Common/TextInput";
 import ToolTip from "./Common/Tooltip";
 import ListItem from "./Common/ListItem";
 import ContractorPaymentRow from "./Common/ContractorPaymentRow";
-import {CheckBox} from "./Common/Checkbox/index";
+import { CheckBox } from "./Common/Checkbox/index";
 
 export {
-    Alert,
-    Attachment,
-    Button,
-    Calendar,
-    CheckBox,
-    Dropdown,
-    Link,
-    Label,
-    Message,
-    PaymentRow,
-    PopOver,
-    RadioButton,
-    ReportRow,
-    SelectBox,
-    Spinner,
-    Switch,
-    TextArea,
-    TextInput,
-    ToolTip,
-    ContractorPaymentRow,
-    ListItem
+  Alert,
+  Attachment,
+  Button,
+  Calendar,
+  CheckBox,
+  Dropdown,
+  Link,
+  Label,
+  Message,
+  PaymentRow,
+  PopOver,
+  RadioButton,
+  ReportRow,
+  SelectBox,
+  Spinner,
+  Switch,
+  TextArea,
+  TextInput,
+  ToolTip,
+  ContractorPaymentRow,
+  ListItem
 };
 
-ReactDOM.render(<App/>, document.getElementById("root"));
+ReactDOM.render(<App />, document.getElementById("root"));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
