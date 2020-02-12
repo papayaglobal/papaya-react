@@ -88,6 +88,8 @@ export const StyledAmount = styled(Flex)`
 
 export const StyledAttachment = styled.div`
   display: none;
+  max-height: 36px;
+  overflow: hidden;
   @media (min-width: ${sizes.md}px) {
     display: flex;
     flex: 10;
@@ -154,7 +156,8 @@ export const StyledExpandedContainer = styled(Flex)`
   color: #1E0000;
   transition: height 250ms ease-out;
   .date {
-    font-family: OpenSans-Italic;
+    font-family: "Open Sans", sans-serif;
+    font-style: italic;
   }
 `;
 

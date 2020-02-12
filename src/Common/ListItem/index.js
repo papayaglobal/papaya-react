@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled ,{css} from "styled-components";
 import {isFunction} from "lodash";
 import {ReactComponent as ListItemClose} from "../../assets/icons/ListItemClose.svg";
 import {ReactComponent as AttachmentIcon} from "../../assets/icons/attachment.svg";
@@ -15,7 +15,20 @@ const StyledPillsWrapper = styled.div`
   padding: 5px 10px;
   width: fit-content;
   cursor: pointer;
+  overflow: hidden;
 `;
+
+const FileName = styled.span`
+  ${props => props.limit ? css`
+      max-height: 15px;
+      max-width: calc(100% - 250px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    `:''
+  }
+`;
+
 const StyledTextContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -40,7 +53,7 @@ const StyledCloseIcon = styled(ListItemClose)`
   cursor: pointer;
 `;
 const ListItemComponent = (props) => {
-    const {className, onClick, name, onCloseClick, hideClose = false, bgColor} = props;
+    const {className, onClick, name, onCloseClick, hideClose = false, bgColor, limit} = props;
 
     const onClickPills = (e) => {
         e.stopPropagation();
@@ -57,7 +70,7 @@ const ListItemComponent = (props) => {
                                onClick={onClickPills}>
         <StyledTextContainer>
             <AttachmentIcon className="icon" style={{flexShrink: 0}}/>
-            <span className="fileName">{name}</span>
+            <FileName className="fileName" limit={limit}>{name}</FileName>
         </StyledTextContainer>
 
         {!hideClose && <StyledCloseIcon className="closeIcon" alt="" onClick={onClosePillClick}/>}
