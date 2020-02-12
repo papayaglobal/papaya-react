@@ -2,6 +2,7 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 import { withKnobs, text } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
+import { orderBy } from "lodash";
 
 import "./stories.css";
 import Table from "../Common/Table";
@@ -23,44 +24,144 @@ const columns = [
   //   { colId: "checkbox", name: <input type="checkbox" />, flex: 0.5 },
   { colId: "type", output: "Type", flex: 1 },
   { colId: "id", output: "ID", flex: 1 },
-  { colId: "name", output: "Name", flex: 3 },
-  { colId: "org", output: "Org", flex: 3 },
-  { colId: "projects", output: "Projects", flex: 2 },
-  { colId: "status", output: "Status", flex: 2 }
+  {
+    colId: "nameAndEmailOutput",
+    output: "Name",
+    flex: 2,
+    sortMethod: (data, sortOrder) => sortNameColumnBy(data, sortOrder)
+  },
+  { colId: "org", output: "Org", flex: 2 },
+  { colId: "projects", output: "Projects", flex: 1 },
+  { colId: "status", output: "Status", flex: 0.5 }
 ];
 
 const data = [
   {
     isSelected: true,
+    expandContent: <div>Expand Content 1</div>,
+    sideMenuContent: [
+      {
+        name: "View Profile",
+        action: () => {
+          console.log("Viewing profile...");
+        }
+      },
+      {
+        name: "Edit",
+        action: () => {
+          console.log("Editing...");
+        }
+      },
+      { name: "Re-Invite", action: () => console.log("Re-inviting...") },
+      { name: "Suspend User", action: () => console.log("Suspending...") },
+      { name: "Block User", action: () => console.log("Blocking...") },
+      {
+        name: "Send Change Pasword",
+        action: () => console.log("Change pass...")
+      }
+    ],
     type: "P",
-    id: "5531",
-    name: tablenameInput("Frank Boehm", "popo@gmail.com"),
+    id: 5532,
+    name: "Frank Boehm",
+    nameAndEmailOutput: tablenameInput("Frank Boehm", "popo@gmail.com"),
     org: "Blue Eagle",
-    projects: "3",
+    projects: 3,
     status: "Active"
   },
   {
     isSelected: false,
+    expandContent: (
+      <div>
+        Expand Content 2
+        <div>
+          hello
+          <div>
+            popo
+            <div>
+              momo
+              <div>
+                lolo
+                <div>
+                  dodo
+                  <div>
+                    gogo<div>soso</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ),
+    sideMenuContent: [
+      {
+        name: "View Profile",
+        action: () => {
+          console.log("Viewing profile 2...");
+        }
+      },
+      {
+        name: "Edit",
+        action: () => {
+          console.log("Editing 2...");
+        }
+      },
+      { name: "Re-Invite", action: () => console.log("Re-inviting 2...") },
+      { name: "Suspend User", action: () => console.log("Suspending 2...") },
+      { name: "Block User", action: () => console.log("Blocking 2...") },
+      {
+        name: "Send Change Pasword",
+        action: () => console.log("Change pass 3...")
+      }
+    ],
     type: "S",
-    id: "5532",
-    name: tablenameInput("Ivan Morais", "popo@gmail.com"),
+    id: 5531,
+    name: "Ivan Morais",
+    nameAndEmailOutput: tablenameInput("Ivan Morais", "popo@gmail.com"),
     org: "Mango",
-    projects: "15",
+    projects: 15,
     status: "Active"
   },
   {
     isSelected: false,
+    expandContent: <div>Expand Content 3</div>,
+    sideMenuContent: [
+      {
+        name: "View Profile",
+        action: () => {
+          console.log("Viewing profile 3...");
+        }
+      },
+      {
+        name: "Edit",
+        action: () => {
+          console.log("Editing 3...");
+        }
+      },
+      { name: "Re-Invite", action: () => console.log("Re-inviting 3...") },
+      { name: "Suspend User", action: () => console.log("Suspending 3...") },
+      { name: "Block User", action: () => console.log("Blocking 3...") },
+      {
+        name: "Send Change Pasword",
+        action: () => console.log("Change pass 3...")
+      }
+    ],
     type: "P",
-    id: "5533",
-    name: tablenameInput("Dominik Doudny", "popo@gmail.com"),
+    id: 5533,
+    name: "Dominik Doudny",
+    nameAndEmailOutput: tablenameInput("Dominik Doudny", "popo@gmail.com"),
     org: "Facebook",
-    projects: "6",
+    projects: 6,
     status: "Active"
   }
 ];
 
 function log(x) {
   console.log("sleceted", x);
+}
+
+function sortNameColumnBy(data, sortOrder) {
+  return orderBy(data, "name", sortOrder);
 }
 
 storiesOf("Table", module)
@@ -72,8 +173,10 @@ storiesOf("Table", module)
         data={data}
         selectable
         selectKey="isSelected"
-        expandable={<div>Expand Content</div>}
+        expandable
+        expandKey="expandContent"
         onSelected={log}
+        sideMenu
       ></Table>
     </div>
   ));
