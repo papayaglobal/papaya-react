@@ -6,7 +6,7 @@ import {ReactComponent as AttachmentIcon} from "../../assets/icons/attachment.sv
 import * as Color from "../../Constants/colors";
 
 const StyledPillsWrapper = styled.div`
-  background-color: rgba(25, 117, 240, 0.05);
+  background-color: ${({bgColor}) => bgColor || "rgba(25, 117, 240, 0.05)"};
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -14,6 +14,7 @@ const StyledPillsWrapper = styled.div`
   border-radius: 20px; 
   padding: 5px 10px;
   width: fit-content;
+  cursor: pointer;
 `;
 const StyledTextContainer = styled.div`
   display: flex;
@@ -39,7 +40,7 @@ const StyledCloseIcon = styled(ListItemClose)`
   cursor: pointer;
 `;
 const ListItemComponent = (props) => {
-    const {className, onClick, name, onCloseClick} = props;
+    const {className, onClick, name, onCloseClick, hideClose = false, bgColor} = props;
 
     const onClickPills = (e) => {
         e.stopPropagation();
@@ -52,13 +53,14 @@ const ListItemComponent = (props) => {
     };
 
     return <StyledPillsWrapper className={className}
+                               bgColor={bgColor}
                                onClick={onClickPills}>
         <StyledTextContainer>
             <AttachmentIcon className="icon" style={{flexShrink: 0}}/>
             <span className="fileName">{name}</span>
         </StyledTextContainer>
 
-        <StyledCloseIcon className="closeIcon" alt="" onClick={onClosePillClick}/>
+        {!hideClose && <StyledCloseIcon className="closeIcon" alt="" onClick={onClosePillClick}/>}
     </StyledPillsWrapper>
 };
 
