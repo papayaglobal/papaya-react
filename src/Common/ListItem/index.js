@@ -4,6 +4,7 @@ import {isFunction} from "lodash";
 import {ReactComponent as ListItemClose} from "../../assets/icons/ListItemClose.svg";
 import {ReactComponent as AttachmentIcon} from "../../assets/icons/attachment.svg";
 import * as Color from "../../Constants/colors";
+// import MiddleTruncate from './react-middle-truncate/middle-truncate';
 
 const StyledPillsWrapper = styled.div`
   background-color: ${({bgColor}) => bgColor || "rgba(25, 117, 240, 0.05)"};
@@ -21,7 +22,7 @@ const StyledPillsWrapper = styled.div`
 const FileName = styled.span`
   ${props => props.limit ? css`
       max-height: 15px;
-      max-width: calc(100% - 250px);
+      max-width: calc(100% - 130px);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -32,7 +33,7 @@ const FileName = styled.span`
 const StyledTextContainer = styled.div`
   display: flex;
   flex-direction: row;
-  
+
   > svg.icon {
     margin-right: 10px;
     fill: ${Color.ACCENT1};
@@ -70,6 +71,7 @@ const ListItemComponent = (props) => {
                                onClick={onClickPills}>
         <StyledTextContainer>
             <AttachmentIcon className="icon" style={{flexShrink: 0}}/>
+            {/* <MiddleTruncate onResizeDebounceMs={300} text={name} style={{ minWidth: 400 }} /> */}
             <FileName className="fileName" limit={limit}>{name}</FileName>
         </StyledTextContainer>
 
