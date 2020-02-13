@@ -1,6 +1,6 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { withKnobs, text } from "@storybook/addon-knobs";
+import { withKnobs } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
 import { orderBy } from "lodash";
 
@@ -153,6 +153,38 @@ const data = [
     org: "Facebook",
     projects: 6,
     status: "Active"
+  },
+  {
+    isSelected: false,
+    expandContent: <div>Expand Content 4</div>,
+    sideMenuContent: [
+      {
+        name: "View Profile",
+        action: () => {
+          console.log("Viewing profile 4...");
+        }
+      },
+      {
+        name: "Edit",
+        action: () => {
+          console.log("Editing 4...");
+        }
+      },
+      { name: "Re-Invite", action: () => console.log("Re-inviting 4...") },
+      { name: "Suspend User", action: () => console.log("Suspending 4...") },
+      { name: "Block User", action: () => console.log("Blocking 4...") },
+      {
+        name: "Send Change Pasword",
+        action: () => console.log("Change pass 4...")
+      }
+    ],
+    type: "P",
+    id: 5534,
+    name: "Mike Adams",
+    nameAndEmailOutput: tablenameInput("Mike Adams", "popo@gmail.com"),
+    org: "CyberArk",
+    projects: 6,
+    status: "Active"
   }
 ];
 
@@ -177,6 +209,7 @@ storiesOf("Table", module)
         expandKey="expandContent"
         onSelected={log}
         sideMenu
+        rowLimit={2}
       ></Table>
     </div>
   ));

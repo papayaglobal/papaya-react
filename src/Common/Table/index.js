@@ -1,10 +1,20 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
-import { get, map, omit, update, orderBy } from "lodash";
+import {
+  get,
+  map,
+  omit,
+  update,
+  orderBy,
+  slice,
+  includes,
+  filter
+} from "lodash";
 import { ReactComponent as TableArrow } from "../../assets/icons/tableArrow.svg";
 import { ReactComponent as TableSortArrowIcon } from "../../assets/icons/table-sorting-arrow.svg";
 import SideMenuIcon from "../../assets/icons/context-menu.svg";
 import Dropdown from "../../Common/Dropdown";
+import Paging from "../../Common/Paging";
 import { StyledActions } from "../../papaya-styled-components/contractorPaymentRowHelpers";
 
 export default function Table({
@@ -15,13 +25,15 @@ export default function Table({
   onSelected,
   expandable,
   expandKey,
-  sideMenu
+  sideMenu,
+  rowLimit
 }) {
-  const customData = map(data, d => {
+  const customData = map(data, (d, index) => {
     return {
       ...d,
       isExpanded: false,
-      expandRowEl: useRef()
+      expandRowEl: useRef(),
+      rowIndex: index
     };
   });
 
@@ -34,7 +46,12 @@ export default function Table({
 
   const [customColumnState, setCustomColumnState] = useState(customColumns);
   const [customDataState, setCustomDataState] = useState(customData);
-  // const [sortOrder, setSortOrder] = useState(null);
+  const [firstRowIndex, setFirstRowIndex] = useState(0);
+  const headerCheckbox = useRef();
+
+  useEffect(() => {
+    checkIfAllSelected();
+  }, [firstRowIndex]);
 
   const renderHeaders = () => {
     return map(customColumnState, (column, headerIdx) => {
@@ -56,10 +73,11 @@ export default function Table({
   };
 
   const renderBody = () => {
-    return map(customDataState, (row, rowIdx) => {
+    let rowsToShow = getRowsToShow();
+    return map(rowsToShow, row => {
       return (
         <TableRowContainer
-          key={`table-row-${rowIdx}`}
+          key={`table-row-${row.rowIndex}`}
           isExpanded={row.isExpanded}
         >
           <TableRow isExpanded={row.isExpanded}>
@@ -67,12 +85,12 @@ export default function Table({
               <Checkbox
                 type="checkbox"
                 checked={!!get(row, selectKey)}
-                onChange={() => toggleCheckbox(rowIdx)}
+                onChange={() => toggleCheckbox(row.rowIndex)}
               />
             )}
             {expandable && (
               <ExpandArrow
-                onClick={() => expandRow(rowIdx)}
+                onClick={() => expandRow(row.rowIndex)}
                 isExpanded={row.isExpanded}
               >
                 <TableArrow></TableArrow>
@@ -111,6 +129,18 @@ export default function Table({
     });
   };
 
+  const getRowsToShow = () => {
+    let rowsToShow;
+    if (rowLimit) {
+      rowsToShow = slice(
+        customDataState,
+        firstRowIndex,
+        firstRowIndex + rowLimit
+      );
+    } else rowsToShow = customDataState;
+    return rowsToShow;
+  };
+
   const sortColumn = (column, headerIdx) => {
     let { sortOrder, colId } = column;
     const updatedColumns = customColumnState;
@@ -137,16 +167,31 @@ export default function Table({
     if (onSelected) {
       onSelected(getSelected());
     }
+    checkIfAllSelected();
+  };
+
+  const checkIfAllSelected = () => {
+    if (!filter(getRowsToShow(), [selectKey, false]).length) {
+      headerCheckbox.current.checked = true;
+    } else headerCheckbox.current.checked = false;
+  };
+
+  const contractRows = () => {
+    map(getRowsToShow(), row => (row.isExpanded = false));
   };
 
   const getSelected = () => {
     let selectedRows = customDataState.filter(i => i[selectKey]);
-    return map(selectedRows, i => omit(i, ["isExpanded", "expandRowEl"]));
+    return map(selectedRows, i =>
+      omit(i, ["isExpanded", "expandRowEl", "rowIndex"])
+    );
   };
 
   const toggleAll = event => {
     const updatedData = map(customDataState, i => {
-      i[selectKey] = event.target.checked;
+      if (includes(getRowsToShow(), i)) {
+        i[selectKey] = event.target.checked;
+      }
       return i;
     });
     setCustomDataState([...updatedData]);
@@ -161,16 +206,35 @@ export default function Table({
     setCustomDataState([...updatedData]);
   };
 
+  const changePage = page => {
+    contractRows();
+    setFirstRowIndex(page * rowLimit - rowLimit);
+  };
+
   return (
-    <TableContainer>
-      <TableRow header>
-        {selectable && <Checkbox type="checkbox" onClick={toggleAll} />}
-        {expandable && <ExpandArrow></ExpandArrow>}
-        {renderHeaders()}
-        {sideMenu && <SideMenuContainer></SideMenuContainer>}
-      </TableRow>
-      {renderBody()}
-    </TableContainer>
+    <>
+      <TableContainer>
+        <TableRow header>
+          {selectable && (
+            <Checkbox
+              ref={headerCheckbox}
+              type="checkbox"
+              onClick={toggleAll}
+            />
+          )}
+          {expandable && <ExpandArrow></ExpandArrow>}
+          {renderHeaders()}
+          {sideMenu && <SideMenuContainer></SideMenuContainer>}
+        </TableRow>
+        {renderBody()}
+        {rowLimit && (
+          <Paging
+            pageCount={Math.ceil(customDataState.length / rowLimit)}
+            onNumClick={page => changePage(page)}
+          ></Paging>
+        )}
+      </TableContainer>
+    </>
   );
 }
 
@@ -198,7 +262,6 @@ const TableRow = styled.div`
 
 const TableRowContainer = styled.div`
   display: flex;
-  /* overflow: hidden; */
   flex-direction: column;
   box-shadow: ${props =>
     props.isExpanded ? "0 1px 4px 0 rgba(0, 0, 0, 0.1)" : "none"};
