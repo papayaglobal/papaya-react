@@ -49,15 +49,9 @@ const PAYMENT_REQUEST_STATUS = {
     PENDING_APPROVAL: "pending_approval"
 };
 
-const MobileWrapper = styled(Flex)`
+const RowWrapper = styled(Flex)`
     @media (max-width: ${sizes.md}px) {
         flex-wrap: wrap;
-    }
-`;
-
-const MobileStyledExpandedContainer = styled(StyledExpandedContainer)`
-    @media (max-width: ${sizes.md}px) {
-        padding: 10px 10px 25px;
     }
 `;
 
@@ -72,12 +66,6 @@ const MobileBreak = styled.div`
 const DateWrapper = styled(Flex)`
     @media (max-width: ${sizes.md}px) {
       display: block;
-    }
-`;
-
-const CreatedDateWrapper = styled(CreatedDate)`
-    @media (max-width: ${sizes.md}px) {
-        margin-right: 20px;
     }
 `;
 
@@ -124,12 +112,12 @@ const ContractorExpandedPaymentRow = (props) => {
 
     const submittedProForma = <SubmittedProForma style={{color: DARK1}}/>;
     
-    const result = [<MobileWrapper key={"payment-expanded-item"} row className={"expanded-container"} margin={"0 0 20px 0"}>
+    const result = [<RowWrapper key={"payment-expanded-item"} row className={"expanded-container"} margin={"0 0 20px 0"}>
         <IconWrapperMobile column flex={0.35} showOnMobile >
             {submittedProForma}
         </IconWrapperMobile>
         <DateWrapper column flex={2} padding={"5px 0"}>
-            <CreatedDateWrapper>{createdAtDate}</CreatedDateWrapper>
+            <CreatedDate>{createdAtDate}</CreatedDate>
             <CreatedDateTime>{createdAtDateTime}</CreatedDateTime>
         </DateWrapper>
         <IconWrapper column flex={0.5} hideOnMobile >
@@ -161,7 +149,7 @@ const ContractorExpandedPaymentRow = (props) => {
                 name={get(contractorPaymentRequestInvoice, "file.name")}
             />
         </Flex>
-    </MobileWrapper>];
+    </RowWrapper>];
 
     if (isRejected) {
         const rejectedAtDate = moment(updatedAt).format("DD MMM YYYY");
@@ -169,12 +157,12 @@ const ContractorExpandedPaymentRow = (props) => {
 
         const rejectedProForma = <RejectedProForma style={{color: STATUSCRITICAL}}/>
 
-        result.push(<MobileWrapper key={"payment-expanded-item-rejected"} row className={"expanded-container-rejected"} margin={"0 0 20px 0"}>
+        result.push(<RowWrapper key={"payment-expanded-item-rejected"} row className={"expanded-container-rejected"} margin={"0 0 20px 0"}>
             <IconWrapper column flex={0.35} showOnMobile >
                 {rejectedProForma}
             </IconWrapper>
             <DateWrapper column flex={2} padding={"5px 0"}>
-                <CreatedDateWrapper>{rejectedAtDate}</CreatedDateWrapper>
+                <CreatedDate>{rejectedAtDate}</CreatedDate>
                 <CreatedDateTime>{createdAtDateTime}</CreatedDateTime>
             </DateWrapper>
             <IconWrapper column flex={0.5} hideOnMobile>
@@ -190,21 +178,21 @@ const ContractorExpandedPaymentRow = (props) => {
                 onClick={() => onReviseClicked({payment})}
                 >Revise Payment Request</Button>}
             </Flex>
-        </MobileWrapper>)
+        </RowWrapper>)
     }
 
     if (isApproved) {
         const listItemBackground = "rgba(46,214,188,0.10)";
         const approvedProForma = <ApprovedProForma style={{color: STATUSOK}}/>;
 
-        result.push(<MobileWrapper key={"payment-expanded-item-approved"} row className={"expanded-container-approved"}
+        result.push(<RowWrapper key={"payment-expanded-item-approved"} row className={"expanded-container-approved"}
                           margin={"0 0 20px 0"}>
             <IconWrapperMobile column flex={0.35} showOnMobile >
                 {approvedProForma}
             </IconWrapperMobile>
             
             <DateWrapper column flex={2} padding={"5px 0"}>
-                <CreatedDateWrapper>{createdAtDate}</CreatedDateWrapper>
+                <CreatedDate>{createdAtDate}</CreatedDate>
                 <CreatedDateTime>{createdAtDateTime}</CreatedDateTime>
             </DateWrapper>
             <IconWrapper column flex={0.5} hideOnMobile>
@@ -236,7 +224,7 @@ const ContractorExpandedPaymentRow = (props) => {
                     name={get(contractorPaymentRequestInvoice, "file.name")}
                 />
             </Flex>
-        </MobileWrapper>)
+        </RowWrapper>)
     }
 
     return result;
@@ -245,10 +233,10 @@ const ContractorExpandedPaymentRow = (props) => {
 const ContractorPaymentRowExpandedContainer = (props) => {
     const {payments, isExpanded, ...otherProps} = props;
 
-    return <MobileStyledExpandedContainer column isExpanded={isExpanded}>
+    return <StyledExpandedContainer column isExpanded={isExpanded}>
         {map(payments, (payment, key) => <ContractorExpandedPaymentRow key={key} payment={payment}
                                                                        isLastPaymentRequest={payments.length === (key + 1)} {...otherProps}/>)}
-    </MobileStyledExpandedContainer>
+    </StyledExpandedContainer>
 };
 
 const findProFormaByType = ({proFormaFiles, type}) => find(proFormaFiles, proForma => get(proForma, "file.type") === type);

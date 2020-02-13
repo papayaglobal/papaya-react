@@ -151,7 +151,9 @@ export const StyledExpandedContainer = styled(Flex)`
   border-top: 1px solid rgba(0, 0, 0, 0.1);  
   padding: ${({isExpanded}) => isExpanded ? "30px 40px 25px" : "0"};;
   height: ${({isExpanded}) => isExpanded ? "fit-content" : "0px"};  
-  visibility: ${({isExpanded}) => isExpanded ? "visible" : "hidden"};  
+  visibility: ${({isExpanded}) => isExpanded ? "visible" : "hidden"};
+  display: ${({isExpanded}) => isExpanded ? "block" : "none"};
+
   width: 100%;  
   color: #1E0000;
   transition: height 250ms ease-out;
@@ -159,6 +161,9 @@ export const StyledExpandedContainer = styled(Flex)`
     font-family: "Open Sans", sans-serif;
     font-style: italic;
   }
+  @media (max-width: ${sizes.md}px) {
+        padding: 10px 10px 25px;
+    }
 `;
 
 export const CreatedDate = styled.span`  
@@ -167,6 +172,9 @@ export const CreatedDate = styled.span`
   margin-bottom: 5px;
   font-size: 14px;
   color: ${DARK1};
+  @media (max-width: ${sizes.md}px) {
+        margin-right: 20px;
+  }
 `;
 
 export const CreatedDateTime = styled.span`
