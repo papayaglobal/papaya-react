@@ -1,14 +1,23 @@
 import React, { useState } from "react";
+import Select from "react-select";
 import styled from "styled-components";
 import { map } from "lodash";
+import { ReactComponent as TableSortArrowIcon } from "../../assets/icons/table-sorting-arrow.svg";
 import { ReactComponent as TableArrow } from "../../assets/icons/tableArrow.svg";
 
-export default function Paging({ pageCount, onNumClick }) {
+export default function Paging({
+  rowCount,
+  onNumClick,
+  rowCountDefault,
+  rowCountOptions,
+  changeRowCount
+}) {
   const [currPage, setCurrPage] = useState(1);
+  const [currRowCount, setCurrRowCount] = useState(rowCountDefault);
 
   const renderPagesNums = () => {
     const pageNums = [];
-    for (let i = 1; i <= pageCount; i++) {
+    for (let i = 1; i <= rowCount; i++) {
       pageNums.push(
         <PageNumber
           key={i}
@@ -32,16 +41,92 @@ export default function Paging({ pageCount, onNumClick }) {
     return false;
   };
 
-  const GoNextPage = () => {
-    if (currPage === pageCount) return;
+  const NextPage = () => {
+    if (currPage === rowCount) return;
     setCurrPage(currPage => currPage + 1);
     onNumClick(currPage + 1);
+  };
+
+  const handleRowCountChange = newRowCount => {
+    setCurrRowCount({ value: newRowCount, label: newRowCount });
+    changeRowCount(newRowCount);
+    setCurrPage(1);
+    onNumClick(1);
+  };
+
+  const customSelectStyle = {
+    indicatorSeparator: styles => {
+      return {
+        ...styles,
+        display: "none"
+      };
+    },
+    valueContainer: styles => {
+      return {
+        ...styles,
+        padding: "2px 3px"
+      };
+    },
+    container: (styles, { isFocused }) => {
+      return {
+        ...styles,
+        backgroundColor: "#ffffff",
+        border: "none",
+        boxShadow: "0 1px 2px 0 rgba(0,0,0,0.15)",
+        borderRadius: "4px",
+        marginLeft: "42px",
+        width: "82px",
+        borderBottomLeftRadius: isFocused ? 0 : 4,
+        borderBottomRightRadius: isFocused ? 0 : 4
+      };
+    },
+    control: styles => {
+      return {
+        ...styles,
+        border: "none",
+        padding: "8px"
+        // width: "82px"
+      };
+    },
+    option: (styles, { isFocused }) => {
+      return {
+        ...styles,
+        backgroundColor: isFocused ? "#F7F8FB" : "#ffffff",
+        borderColor: "transparent",
+        fontFamily: "Open Sans",
+        color: "#212529",
+        fontSize: 16,
+        paddingLeft: 22
+      };
+    },
+    singleValue: styles => {
+      return {
+        ...styles,
+        paddingLeft: 10
+      };
+    }
+  };
+
+  const dropdownIndicatorStyle = {
+    color: "#C2C3C8",
+    marginRight: 10
   };
 
   return (
     <PagingNumbers>
       {map(renderPagesNums(), num => num)}
-      <TableArrow onClick={GoNextPage} />
+      <TableArrow onClick={NextPage} />
+      <Select
+        options={rowCountOptions}
+        onChange={e => handleRowCountChange(e.value)}
+        value={currRowCount}
+        components={{
+          DropdownIndicator: () => (
+            <TableSortArrowIcon style={dropdownIndicatorStyle} />
+          )
+        }}
+        styles={customSelectStyle}
+      ></Select>
     </PagingNumbers>
   );
 }

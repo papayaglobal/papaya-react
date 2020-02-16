@@ -188,6 +188,12 @@ const data = [
   }
 ];
 
+const rowCountOptions = [
+  { value: 2, label: "2" },
+  { value: 3, label: "3" },
+  { value: 4, label: "4" }
+];
+
 function log(x) {
   console.log("sleceted", x);
 }
@@ -209,7 +215,8 @@ storiesOf("Table", module)
         expandKey="expandContent"
         onSelected={log}
         sideMenu
-        rowLimit={2}
+        rowCountDefault={2}
+        rowCountOptions={rowCountOptions}
       ></Table>
     </div>
   ));

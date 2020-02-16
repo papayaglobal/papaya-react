@@ -26,7 +26,8 @@ export default function Table({
   expandable,
   expandKey,
   sideMenu,
-  rowLimit
+  rowCountDefault,
+  rowCountOptions
 }) {
   const customData = map(data, (d, index) => {
     return {
@@ -47,6 +48,7 @@ export default function Table({
   const [customColumnState, setCustomColumnState] = useState(customColumns);
   const [customDataState, setCustomDataState] = useState(customData);
   const [firstRowIndex, setFirstRowIndex] = useState(0);
+  const [rowCountState, setRowCountState] = useState(rowCountDefault);
   const headerCheckbox = useRef();
 
   useEffect(() => {
@@ -131,11 +133,11 @@ export default function Table({
 
   const getRowsToShow = () => {
     let rowsToShow;
-    if (rowLimit) {
+    if (rowCountState) {
       rowsToShow = slice(
         customDataState,
         firstRowIndex,
-        firstRowIndex + rowLimit
+        firstRowIndex + rowCountState
       );
     } else rowsToShow = customDataState;
     return rowsToShow;
@@ -208,7 +210,12 @@ export default function Table({
 
   const changePage = page => {
     contractRows();
-    setFirstRowIndex(page * rowLimit - rowLimit);
+    setFirstRowIndex(page * rowCountState - rowCountState);
+  };
+
+  const changeRowCount = rowCount => {
+    if (!rowCount) return;
+    setRowCountState(rowCount);
   };
 
   return (
@@ -227,10 +234,13 @@ export default function Table({
           {sideMenu && <SideMenuContainer></SideMenuContainer>}
         </TableRow>
         {renderBody()}
-        {rowLimit && (
+        {rowCountState && (
           <Paging
-            pageCount={Math.ceil(customDataState.length / rowLimit)}
+            rowCount={Math.ceil(customDataState.length / rowCountState)}
             onNumClick={page => changePage(page)}
+            rowCountDefault={{ value: rowCountDefault, label: rowCountDefault }}
+            rowCountOptions={rowCountOptions}
+            changeRowCount={changeRowCount}
           ></Paging>
         )}
       </TableContainer>
