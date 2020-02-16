@@ -51,7 +51,7 @@ export default function Table({
 
   useEffect(() => {
     if (selectKey) checkIfAllSelected();
-  }, [firstRowIndex]);
+  }, [firstRowIndex, rowCountState]);
 
   const renderHeaders = () => {
     return map(customColumnState, (column, headerIdx) => {
