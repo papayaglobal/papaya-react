@@ -20,12 +20,10 @@ import { StyledActions } from "../../papaya-styled-components/contractorPaymentR
 export default function Table({
   columns,
   data,
-  selectable,
   selectKey,
   onSelected,
-  expandable,
   expandKey,
-  sideMenu,
+  sideMenuKey,
   rowCountDefault,
   rowCountOptions
 }) {
@@ -52,7 +50,7 @@ export default function Table({
   const headerCheckbox = useRef();
 
   useEffect(() => {
-    checkIfAllSelected();
+    if (selectKey) checkIfAllSelected();
   }, [firstRowIndex]);
 
   const renderHeaders = () => {
@@ -83,14 +81,14 @@ export default function Table({
           isExpanded={row.isExpanded}
         >
           <TableRow isExpanded={row.isExpanded}>
-            {selectable && (
+            {selectKey && (
               <Checkbox
                 type="checkbox"
                 checked={!!get(row, selectKey)}
                 onChange={() => toggleCheckbox(row.rowIndex)}
               />
             )}
-            {expandable && (
+            {expandKey && (
               <ExpandArrow
                 onClick={() => expandRow(row.rowIndex)}
                 isExpanded={row.isExpanded}
@@ -106,7 +104,7 @@ export default function Table({
                 </TableText>
               );
             })}
-            {sideMenu && (
+            {sideMenuKey && (
               <SideMenuContainer>
                 <StyledActions>
                   <Dropdown
@@ -222,16 +220,16 @@ export default function Table({
     <>
       <TableContainer>
         <TableRow header>
-          {selectable && (
+          {selectKey && (
             <Checkbox
               ref={headerCheckbox}
               type="checkbox"
               onClick={toggleAll}
             />
           )}
-          {expandable && <ExpandArrow></ExpandArrow>}
+          {expandKey && <ExpandArrow></ExpandArrow>}
           {renderHeaders()}
-          {sideMenu && <SideMenuContainer></SideMenuContainer>}
+          {sideMenuKey && <SideMenuContainer></SideMenuContainer>}
         </TableRow>
         {renderBody()}
         {rowCountState && (

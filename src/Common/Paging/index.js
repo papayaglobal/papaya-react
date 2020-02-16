@@ -116,17 +116,19 @@ export default function Paging({
     <PagingNumbers>
       {map(renderPagesNums(), num => num)}
       <TableArrow onClick={NextPage} />
-      <Select
-        options={rowCountOptions}
-        onChange={e => handleRowCountChange(e.value)}
-        value={currRowCount}
-        components={{
-          DropdownIndicator: () => (
-            <TableSortArrowIcon style={dropdownIndicatorStyle} />
-          )
-        }}
-        styles={customSelectStyle}
-      ></Select>
+      {rowCountOptions && (
+        <Select
+          options={rowCountOptions}
+          onChange={e => handleRowCountChange(e.value)}
+          value={currRowCount}
+          components={{
+            DropdownIndicator: () => (
+              <TableSortArrowIcon style={dropdownIndicatorStyle} />
+            )
+          }}
+          styles={customSelectStyle}
+        ></Select>
+      )}
     </PagingNumbers>
   );
 }
