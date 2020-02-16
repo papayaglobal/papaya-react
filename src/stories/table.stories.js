@@ -21,7 +21,6 @@ function tablenameInput(name, email) {
 }
 
 const columns = [
-  //   { colId: "checkbox", name: <input type="checkbox" />, flex: 0.5 },
   { colId: "type", output: "Type", flex: 1 },
   { colId: "id", output: "ID", flex: 1 },
   {
@@ -209,12 +208,9 @@ storiesOf("Table", module)
       <Table
         columns={columns}
         data={data}
-        selectable
-        selectKey="isSelected"
-        expandable
-        expandKey="expandContent"
         onSelected={log}
-        sideMenu
+        expandKey="expandContent"
+        sideMenuKey="sideMenuContent"
         rowCountDefault={2}
         rowCountOptions={rowCountOptions}
       ></Table>
