@@ -51,32 +51,24 @@ const PAYMENT_REQUEST_STATUS = {
 
 const RowWrapper = styled(Flex)`
     @media (max-width: ${sizes.md}px) {
-        flex-wrap: wrap;
-    }
-`;
-
-const MobileBreak = styled.div`
-    width: 100%;
-    display: none;
-    @media (max-width: ${sizes.md}px) {
-        display: block;
+        flex-direction: column;
     }
 `;
 
 const DateWrapper = styled(Flex)`
     @media (max-width: ${sizes.md}px) {
       display: block;
+      margin: 0px 0px 0px 15px;
     }
 `;
 
-const IconWrapperMobile = styled(Flex)`
-    flex-basis: 36px;
-    flex-grow: 0;
-`;
-
-const IconWrapper = styled(Flex)`
-    flex-basis: 36px;
-    flex-grow: 0;
+const FirstCollWrapper = styled(Flex)`
+    width: 150px;
+    margin: 0px 15px 0px 0px;
+    @media (max-width: ${sizes.md}px) {
+        flex-direction: row-reverse;
+        width: initial;
+    }
 `;
 
 const getBackgroundColorByStatus = ({status}) => {
@@ -110,20 +102,15 @@ const ContractorExpandedPaymentRow = (props) => {
         type: `pro_forma_approved`
     });
 
-    const submittedProForma = <SubmittedProForma style={{color: DARK1}}/>;
-    
     const result = [<RowWrapper key={"payment-expanded-item"} row className={"expanded-container"} margin={"0 0 20px 0"}>
-        <IconWrapperMobile column flex={0.35} showOnMobile >
-            {submittedProForma}
-        </IconWrapperMobile>
-        <DateWrapper column flex={2} padding={"5px 0"}>
-            <CreatedDate>{createdAtDate}</CreatedDate>
-            <CreatedDateTime>{createdAtDateTime}</CreatedDateTime>
-        </DateWrapper>
-        <IconWrapper column flex={0.5} hideOnMobile >
-            {submittedProForma}
-        </IconWrapper>        
-        <MobileBreak/>
+        <FirstCollWrapper>
+            <DateWrapper column flex={2} padding={"5px 0"}>
+                <CreatedDate>{createdAtDate}</CreatedDate>
+                <CreatedDateTime>{createdAtDateTime}</CreatedDateTime>
+            </DateWrapper>
+            <SubmittedProForma style={{color: DARK1}}/>
+        </FirstCollWrapper>
+
         <Flex column flex={12}>
             <StyledSubmittedText><strong>You</strong>'ve submitted a payment request for the {dateRange} payment period</StyledSubmittedText>
             <StyledAttachmentTitle margin={"25px 0 5px 0 "}>Pro Forma Invoice</StyledAttachmentTitle>
@@ -155,20 +142,15 @@ const ContractorExpandedPaymentRow = (props) => {
         const rejectedAtDate = moment(updatedAt).format("DD MMM YYYY");
         const createdAtDateTime = moment(updatedAt).format("hh:mm");
 
-        const rejectedProForma = <RejectedProForma style={{color: STATUSCRITICAL}}/>
-
         result.push(<RowWrapper key={"payment-expanded-item-rejected"} row className={"expanded-container-rejected"} margin={"0 0 20px 0"}>
-            <IconWrapper column flex={0.35} showOnMobile >
-                {rejectedProForma}
-            </IconWrapper>
-            <DateWrapper column flex={2} padding={"5px 0"}>
-                <CreatedDate>{rejectedAtDate}</CreatedDate>
-                <CreatedDateTime>{createdAtDateTime}</CreatedDateTime>
-            </DateWrapper>
-            <IconWrapper column flex={0.5} hideOnMobile>
-                {rejectedProForma}
-            </IconWrapper>
-            <MobileBreak/>
+            <FirstCollWrapper>
+                <DateWrapper column flex={2} padding={"5px 0"}>
+                    <CreatedDate>{rejectedAtDate}</CreatedDate>
+                    <CreatedDateTime>{createdAtDateTime}</CreatedDateTime>
+                </DateWrapper>
+                <RejectedProForma style={{color: STATUSCRITICAL}}/>
+            </FirstCollWrapper>
+
             <Flex column flex={12}>
                 <StyledSubmittedText><strong>{updatedBy}</strong> rejected your payment request.</StyledSubmittedText>
 
@@ -183,22 +165,19 @@ const ContractorExpandedPaymentRow = (props) => {
 
     if (isApproved) {
         const listItemBackground = "rgba(46,214,188,0.10)";
-        const approvedProForma = <ApprovedProForma style={{color: STATUSOK}}/>;
+
 
         result.push(<RowWrapper key={"payment-expanded-item-approved"} row className={"expanded-container-approved"}
                           margin={"0 0 20px 0"}>
-            <IconWrapperMobile column flex={0.35} showOnMobile >
-                {approvedProForma}
-            </IconWrapperMobile>
-            
-            <DateWrapper column flex={2} padding={"5px 0"}>
-                <CreatedDate>{createdAtDate}</CreatedDate>
-                <CreatedDateTime>{createdAtDateTime}</CreatedDateTime>
-            </DateWrapper>
-            <IconWrapper column flex={0.5} hideOnMobile>
-                {approvedProForma}
-            </IconWrapper>
-            <MobileBreak/>
+            <FirstCollWrapper>            
+                <DateWrapper column flex={2} padding={"5px 0"}>
+                    <CreatedDate>{createdAtDate}</CreatedDate>
+                    <CreatedDateTime>{createdAtDateTime}</CreatedDateTime>
+                </DateWrapper>
+                
+                <ApprovedProForma style={{color: STATUSOK}}/>
+            </FirstCollWrapper>
+
             <Flex column flex={12}>
                 <StyledSubmittedText><strong>{updatedBy}</strong> approved the payment request.</StyledSubmittedText>
 
