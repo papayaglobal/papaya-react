@@ -154,7 +154,7 @@ const ContractorExpandedPaymentRow = (props) => {
             <Flex column flex={12}>
                 <StyledSubmittedText><strong>{updatedBy}</strong> rejected your payment request.</StyledSubmittedText>
 
-                {isLastPaymentRequest && <Button 
+                {isLastPaymentRequest && <Button
                 style={{width: "220px", margin: "15px 0 0 0"}}
                 size="medium"
                 onClick={() => onReviseClicked({payment})}
@@ -165,16 +165,16 @@ const ContractorExpandedPaymentRow = (props) => {
 
     if (isApproved) {
         const listItemBackground = "rgba(46,214,188,0.10)";
-
-
+        const approvedAtDate = moment(updatedAt).format("DD MMM YYYY");
+        const approvedAtDateTime = moment(updatedAt).format("hh:mm");
         result.push(<RowWrapper key={"payment-expanded-item-approved"} row className={"expanded-container-approved"}
                           margin={"0 0 20px 0"}>
-            <FirstCollWrapper>            
+            <FirstCollWrapper>
                 <DateWrapper column flex={2} padding={"5px 0"}>
-                    <CreatedDate>{createdAtDate}</CreatedDate>
-                    <CreatedDateTime>{createdAtDateTime}</CreatedDateTime>
+                    <CreatedDate>{approvedAtDate}</CreatedDate>
+                    <CreatedDateTime>{approvedAtDateTime}</CreatedDateTime>
                 </DateWrapper>
-                
+
                 <ApprovedProForma style={{color: STATUSOK}}/>
             </FirstCollWrapper>
 
