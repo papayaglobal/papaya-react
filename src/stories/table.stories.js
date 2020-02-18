@@ -2,7 +2,7 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 import { withKnobs } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
-import { orderBy } from "lodash";
+import { orderBy, times } from "lodash";
 
 import "./stories.css";
 import Table from "../Common/Table";
@@ -10,6 +10,37 @@ import Table from "../Common/Table";
 export const actions = {
   onClick: action("onClick")
 };
+
+const defaultSideMenu = [
+  {
+    name: "View Profile",
+    action: context => {
+      console.log(context, "Viewing profile...");
+    }
+  },
+  {
+    name: "Edit",
+    action: context => {
+      console.log(context, "Editing...");
+    }
+  },
+  {
+    name: "Re-Invite",
+    action: context => console.log(context, "Re-inviting...")
+  },
+  {
+    name: "Suspend User",
+    action: context => console.log(context, "Suspending...")
+  },
+  {
+    name: "Block User",
+    action: context => console.log(context, "Blocking...")
+  },
+  {
+    name: "Send Change Pasword",
+    action: context => console.log(context, "Change pass...")
+  }
+];
 
 function tablenameInput(name, email) {
   return (
@@ -38,33 +69,55 @@ const data = [
   {
     isSelected: true,
     expandContent: <div>Expand Content 1</div>,
-    sideMenuContent: [
-      {
-        name: "View Profile",
-        action: () => {
-          console.log("Viewing profile...");
-        }
-      },
-      {
-        name: "Edit",
-        action: () => {
-          console.log("Editing...");
-        }
-      },
-      { name: "Re-Invite", action: () => console.log("Re-inviting...") },
-      { name: "Suspend User", action: () => console.log("Suspending...") },
-      { name: "Block User", action: () => console.log("Blocking...") },
-      {
-        name: "Send Change Pasword",
-        action: () => console.log("Change pass...")
-      }
-    ],
     type: "P",
     id: 5532,
     name: "Frank Boehm",
     nameAndEmailOutput: tablenameInput("Frank Boehm", "popo@gmail.com"),
     org: "Blue Eagle",
     projects: 3,
+    status: "Active",
+    sideMenuContent: [
+      {
+        name: "Avi",
+        action: () => console.log("my own action!")
+      },
+      {
+        name: "Itay",
+        action: context => console.log("we use the row context!", context)
+      }
+    ]
+  },
+  {
+    isSelected: false,
+    expandContent: (
+      <div>
+        Expand Content 2
+        <div>
+          hello
+          <div>
+            popo
+            <div>
+              momo
+              <div>
+                lolo
+                <div>
+                  dodo
+                  <div>
+                    gogo<div>soso</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ),
+    type: "S",
+    id: 5531,
+    name: "Ivan Morais",
+    nameAndEmailOutput: tablenameInput("Ivan Morais", "popo@gmail.com"),
+    org: "Mango",
+    projects: 15,
     status: "Active"
   },
   {
@@ -92,27 +145,138 @@ const data = [
         </div>
       </div>
     ),
-    sideMenuContent: [
-      {
-        name: "View Profile",
-        action: () => {
-          console.log("Viewing profile 2...");
-        }
-      },
-      {
-        name: "Edit",
-        action: () => {
-          console.log("Editing 2...");
-        }
-      },
-      { name: "Re-Invite", action: () => console.log("Re-inviting 2...") },
-      { name: "Suspend User", action: () => console.log("Suspending 2...") },
-      { name: "Block User", action: () => console.log("Blocking 2...") },
-      {
-        name: "Send Change Pasword",
-        action: () => console.log("Change pass 3...")
-      }
-    ],
+    type: "S",
+    id: 5531,
+    name: "Ivan Morais",
+    nameAndEmailOutput: tablenameInput("Ivan Morais", "popo@gmail.com"),
+    org: "Mango",
+    projects: 15,
+    status: "Active"
+  },
+  {
+    isSelected: false,
+    expandContent: (
+      <div>
+        Expand Content 2
+        <div>
+          hello
+          <div>
+            popo
+            <div>
+              momo
+              <div>
+                lolo
+                <div>
+                  dodo
+                  <div>
+                    gogo<div>soso</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ),
+    type: "S",
+    id: 5531,
+    name: "Ivan Morais",
+    nameAndEmailOutput: tablenameInput("Ivan Morais", "popo@gmail.com"),
+    org: "Mango",
+    projects: 15,
+    status: "Active"
+  },
+  {
+    isSelected: false,
+    expandContent: (
+      <div>
+        Expand Content 2
+        <div>
+          hello
+          <div>
+            popo
+            <div>
+              momo
+              <div>
+                lolo
+                <div>
+                  dodo
+                  <div>
+                    gogo<div>soso</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ),
+    type: "S",
+    id: 5531,
+    name: "Ivan Morais",
+    nameAndEmailOutput: tablenameInput("Ivan Morais", "popo@gmail.com"),
+    org: "Mango",
+    projects: 15,
+    status: "Active"
+  },
+  {
+    isSelected: false,
+    expandContent: (
+      <div>
+        Expand Content 2
+        <div>
+          hello
+          <div>
+            popo
+            <div>
+              momo
+              <div>
+                lolo
+                <div>
+                  dodo
+                  <div>
+                    gogo<div>soso</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ),
+    type: "S",
+    id: 5531,
+    name: "Ivan Morais",
+    nameAndEmailOutput: tablenameInput("Ivan Morais", "popo@gmail.com"),
+    org: "Mango",
+    projects: 15,
+    status: "Active"
+  },
+  {
+    isSelected: false,
+    expandContent: (
+      <div>
+        Expand Content 2
+        <div>
+          hello
+          <div>
+            popo
+            <div>
+              momo
+              <div>
+                lolo
+                <div>
+                  dodo
+                  <div>
+                    gogo<div>soso</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ),
     type: "S",
     id: 5531,
     name: "Ivan Morais",
@@ -124,27 +288,6 @@ const data = [
   {
     isSelected: false,
     expandContent: <div>Expand Content 3</div>,
-    sideMenuContent: [
-      {
-        name: "View Profile",
-        action: () => {
-          console.log("Viewing profile 3...");
-        }
-      },
-      {
-        name: "Edit",
-        action: () => {
-          console.log("Editing 3...");
-        }
-      },
-      { name: "Re-Invite", action: () => console.log("Re-inviting 3...") },
-      { name: "Suspend User", action: () => console.log("Suspending 3...") },
-      { name: "Block User", action: () => console.log("Blocking 3...") },
-      {
-        name: "Send Change Pasword",
-        action: () => console.log("Change pass 3...")
-      }
-    ],
     type: "P",
     id: 5533,
     name: "Dominik Doudny",
@@ -156,27 +299,6 @@ const data = [
   {
     isSelected: false,
     expandContent: <div>Expand Content 4</div>,
-    sideMenuContent: [
-      {
-        name: "View Profile",
-        action: () => {
-          console.log("Viewing profile 4...");
-        }
-      },
-      {
-        name: "Edit",
-        action: () => {
-          console.log("Editing 4...");
-        }
-      },
-      { name: "Re-Invite", action: () => console.log("Re-inviting 4...") },
-      { name: "Suspend User", action: () => console.log("Suspending 4...") },
-      { name: "Block User", action: () => console.log("Blocking 4...") },
-      {
-        name: "Send Change Pasword",
-        action: () => console.log("Change pass 4...")
-      }
-    ],
     type: "P",
     id: 5534,
     name: "Mike Adams",
@@ -184,7 +306,20 @@ const data = [
     org: "CyberArk",
     projects: 6,
     status: "Active"
-  }
+  },
+  ...times(101, () => {
+    return {
+      isSelected: false,
+      expandContent: <div>Expand Content 4</div>,
+      type: "P",
+      id: 5534,
+      name: "Mike Adams",
+      nameAndEmailOutput: tablenameInput("Mike Adams", "popo@gmail.com"),
+      org: "CyberArk",
+      projects: 6,
+      status: "Active"
+    };
+  })
 ];
 
 const rowCountOptions = [
@@ -212,6 +347,7 @@ storiesOf("Table", module)
         onSelected={log}
         expandKey="expandContent"
         sideMenuKey="sideMenuContent"
+        defaultSideMenu={defaultSideMenu}
         rowCountDefault={2}
         rowCountOptions={rowCountOptions}
       ></Table>

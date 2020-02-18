@@ -1,20 +1,25 @@
-import React, { useState, useRef, useEffect } from "react";
-import styled from "styled-components";
 import {
+  filter,
   get,
+  includes,
   map,
   omit,
-  update,
   orderBy,
   slice,
-  includes,
-  filter
+  update,
+  findIndex,
+  isEmpty,
+  isNil
 } from "lodash";
-import { ReactComponent as TableArrow } from "../../assets/icons/tableArrow.svg";
-import { ReactComponent as TableSortArrowIcon } from "../../assets/icons/table-sorting-arrow.svg";
+import React, { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
+import { DARK3, DARK1 } from "../../Constants/colors";
 import SideMenuIcon from "../../assets/icons/context-menu.svg";
+import { ReactComponent as TableSortArrowIcon } from "../../assets/icons/table-sorting-arrow.svg";
+import { ReactComponent as TableArrow } from "../../assets/icons/tableArrow.svg";
 import Dropdown from "../../Common/Dropdown";
 import Paging from "../../Common/Paging";
+import { CheckBox } from "../../Common/Checkbox";
 import { StyledActions } from "../../papaya-styled-components/contractorPaymentRowHelpers";
 
 export default function Table({
@@ -24,21 +29,22 @@ export default function Table({
   onSelected,
   expandKey,
   sideMenuKey,
+  defaultSideMenu,
   rowCountDefault,
   rowCountOptions
 }) {
-  const customData = map(data, (d, index) => {
+  const customData = map(data, (item, index) => {
     return {
-      ...d,
+      ...item,
       isExpanded: false,
       expandRowEl: useRef(),
       rowIndex: index
     };
   });
 
-  const customColumns = map(columns, c => {
+  const customColumns = map(columns, column => {
     return {
-      ...c,
+      ...column,
       sortOrder: null
     };
   });
@@ -47,23 +53,20 @@ export default function Table({
   const [customDataState, setCustomDataState] = useState(customData);
   const [firstRowIndex, setFirstRowIndex] = useState(0);
   const [rowCountState, setRowCountState] = useState(rowCountDefault);
-  const headerCheckbox = useRef();
+  const [headerCheckboxState, setCheckboxState] = useState(false);
 
   useEffect(() => {
-    if (selectKey) checkIfAllSelected();
+    if (selectKey) {
+      checkIfAllSelected();
+    }
   }, [firstRowIndex, rowCountState]);
 
   const renderHeaders = () => {
     return map(customColumnState, (column, headerIdx) => {
       const { output, flex, sortOrder } = column;
       return (
-        <TableText
-          key={`header-table-text-${headerIdx}`}
-          flex={flex}
-          onClick={() => sortColumn(column, headerIdx)}
-          header
-        >
-          {output}
+        <TableText key={`header-table-text-${headerIdx}`} flex={flex} header>
+          <span onClick={() => sortColumn(column, headerIdx)}>{output}</span>
           <SortArrowContainer sortorder={sortOrder}>
             <TableSortArrowIcon />
           </SortArrowContainer>
@@ -82,11 +85,12 @@ export default function Table({
         >
           <TableRow isExpanded={row.isExpanded}>
             {selectKey && (
-              <Checkbox
-                type="checkbox"
-                checked={!!get(row, selectKey)}
-                onChange={() => toggleCheckbox(row.rowIndex)}
-              />
+              <CheckboxContainer>
+                <CheckBox
+                  checked={!!get(row, selectKey)}
+                  onClick={() => toggleCheckbox(row.rowIndex)}
+                />
+              </CheckboxContainer>
             )}
             {expandKey && (
               <ExpandArrow
@@ -104,26 +108,17 @@ export default function Table({
                 </TableText>
               );
             })}
-            {sideMenuKey && (
-              <SideMenuContainer>
-                <StyledActions>
-                  <Dropdown
-                    list={row.sideMenuContent}
-                    icon={SideMenuIcon}
-                    buttonBackgroundColor={"transparent"}
-                  />
-                </StyledActions>
-              </SideMenuContainer>
-            )}
+            {defaultSideMenu && renderSideMenu(row)}
           </TableRow>
-          <ExpandRowContent
-            isExpanded={row.isExpanded}
-            expandEl={row.expandRowEl}
-            ref={row.expandRowEl}
-            onClick={() => console.log(row.expandRowEl)}
-          >
-            {row[expandKey]}
-          </ExpandRowContent>
+          {expandKey && (
+            <ExpandRowContent
+              isExpanded={row.isExpanded}
+              expandEl={row.expandRowEl}
+              ref={row.expandRowEl}
+            >
+              {row[expandKey]}
+            </ExpandRowContent>
+          )}
         </TableRowContainer>
       );
     });
@@ -137,32 +132,63 @@ export default function Table({
         firstRowIndex,
         firstRowIndex + rowCountState
       );
-    } else rowsToShow = customDataState;
+    } else {
+      rowsToShow = customDataState;
+    }
+
     return rowsToShow;
+  };
+
+  const renderSideMenu = row => {
+    let list = [...defaultSideMenu];
+    if (!isNil(sideMenuKey)) {
+      if (!isNil(row[sideMenuKey])) {
+        list = row[sideMenuKey];
+      }
+    }
+
+    list = map(list, sideMenu => ({
+      ...sideMenu,
+      action: () => {
+        sideMenu.action(row);
+      }
+    }));
+
+    return (
+      <SideMenuContainer>
+        <StyledActions>
+          <Dropdown
+            list={list}
+            icon={SideMenuIcon}
+            buttonBackgroundColor={"transparent"}
+          />
+        </StyledActions>
+      </SideMenuContainer>
+    );
   };
 
   const sortColumn = (column, headerIdx) => {
     let { sortOrder, colId } = column;
-    const updatedColumns = customColumnState;
-    map(updatedColumns, column => (column.sortOrder = null));
-    if (sortOrder === "acs") {
-      update(updatedColumns, `[${headerIdx}].sortOrder`, () => "desc");
-      sortOrder = "desc";
-    } else if (sortOrder === null || sortOrder !== "asc") {
-      update(updatedColumns, `[${headerIdx}].sortOrder`, () => "acs");
-      sortOrder = "acs";
-    }
-    let updatedData;
-    if (column.sortMethod)
-      updatedData = column.sortMethod(customDataState, sortOrder);
-    else updatedData = orderBy(customDataState, colId, sortOrder);
+    const updatedColumns = map(customColumnState, column => ({
+      ...column,
+      sortOrder: null
+    }));
+
+    const updatedSortOrder = sortOrder === "asc" ? "desc" : "asc";
+    update(updatedColumns, `[${headerIdx}].sortOrder`, () => updatedSortOrder);
+
+    const updatedData = column.sortMethod
+      ? column.sortMethod(customDataState, updatedSortOrder)
+      : orderBy(customDataState, colId, updatedSortOrder);
+
     setCustomColumnState([...updatedColumns]);
     setCustomDataState([...updatedData]);
   };
 
   const toggleCheckbox = rowIndex => {
     const updatedData = customDataState;
-    update(updatedData, `[${rowIndex}]${selectKey}`, value => !value);
+    const index = findIndex(updatedData, item => item.rowIndex === rowIndex);
+    update(updatedData, `[${index}]${selectKey}`, value => !value);
     setCustomDataState([...updatedData]);
     if (onSelected) {
       onSelected(getSelected());
@@ -171,30 +197,36 @@ export default function Table({
   };
 
   const checkIfAllSelected = () => {
-    if (!filter(getRowsToShow(), [selectKey, false]).length) {
-      headerCheckbox.current.checked = true;
-    } else headerCheckbox.current.checked = false;
+    const unSelectedItems = filter(getRowsToShow(), [selectKey, false]);
+
+    setCheckboxState(isEmpty(unSelectedItems));
   };
 
-  const contractRows = () => {
+  const collapseRows = () => {
     map(getRowsToShow(), row => (row.isExpanded = false));
   };
 
   const getSelected = () => {
-    let selectedRows = customDataState.filter(i => i[selectKey]);
-    return map(selectedRows, i =>
-      omit(i, ["isExpanded", "expandRowEl", "rowIndex"])
+    let selectedRows = filter(customDataState, item => item[selectKey]);
+
+    return map(selectedRows, row =>
+      omit(row, ["isExpanded", "expandRowEl", "rowIndex"])
     );
   };
 
   const toggleAll = event => {
-    const updatedData = map(customDataState, i => {
-      if (includes(getRowsToShow(), i)) {
-        i[selectKey] = event.target.checked;
+    const updatedData = map(customDataState, item => {
+      if (includes(getRowsToShow(), item)) {
+        item[selectKey] = event.target.checked;
       }
-      return i;
+
+      return item;
     });
+
     setCustomDataState([...updatedData]);
+
+    checkIfAllSelected();
+
     if (onSelected) {
       onSelected(getSelected());
     }
@@ -202,17 +234,20 @@ export default function Table({
 
   const expandRow = rowIndex => {
     const updatedData = customDataState;
-    update(updatedData, `[${rowIndex}].isExpanded`, value => !value);
+    const index = updatedData.findIndex(d => d.rowIndex === rowIndex);
+    update(updatedData, `[${index}].isExpanded`, value => !value);
     setCustomDataState([...updatedData]);
   };
 
   const changePage = page => {
-    contractRows();
+    collapseRows();
     setFirstRowIndex(page * rowCountState - rowCountState);
   };
 
   const changeRowCount = rowCount => {
-    if (!rowCount) return;
+    if (!rowCount) {
+      return;
+    }
     setRowCountState(rowCount);
   };
 
@@ -221,11 +256,9 @@ export default function Table({
       <TableContainer>
         <TableRow header>
           {selectKey && (
-            <Checkbox
-              ref={headerCheckbox}
-              type="checkbox"
-              onClick={toggleAll}
-            />
+            <CheckboxContainer>
+              <CheckBox checked={headerCheckboxState} onClick={toggleAll} />
+            </CheckboxContainer>
           )}
           {expandKey && <ExpandArrow></ExpandArrow>}
           {renderHeaders()}
@@ -234,7 +267,7 @@ export default function Table({
         {renderBody()}
         {rowCountState && (
           <Paging
-            rowCount={Math.ceil(customDataState.length / rowCountState)}
+            pageCount={Math.ceil(customDataState.length / rowCountState)}
             onNumClick={page => changePage(page)}
             rowCountDefault={{ value: rowCountDefault, label: rowCountDefault }}
             rowCountOptions={rowCountOptions}
@@ -258,14 +291,14 @@ const TableRow = styled.div`
   align-items: center;
   padding: 10px;
   margin-bottom: 7px;
-  color: ${props =>
-    props.header ? "rgba(181,183,189,1)" : "rgba(72, 77, 91, 1)"};
+  color: ${props => (props.header ? `${DARK3}` : `${DARK1}`)};
   box-shadow: ${props =>
     props.header || props.isExpanded
       ? "none"
       : "0 1px 4px 0 rgba(0, 0, 0, 0.1)"};
   border-radius: ${props => (props.header ? "none" : "4px")};
-  transition: ${props => (props.isExpanded ? "none" : "all 1.2s ease-out")};
+  transition: ${props =>
+    props.isExpanded ? "none" : "box-shadow 1.2s ease-out"};
 `;
 
 const TableRowContainer = styled.div`
@@ -273,13 +306,16 @@ const TableRowContainer = styled.div`
   flex-direction: column;
   box-shadow: ${props =>
     props.isExpanded ? "0 1px 4px 0 rgba(0, 0, 0, 0.1)" : "none"};
-  transition: all 0.5s ease-out;
+  transition: box-shadow 0.5s ease-out;
 `;
 
 const TableText = styled.div`
   flex: ${props => props.flex};
-  &:hover {
-    cursor: ${({ header }) => (header ? "pointer" : "")};
+  font-weight: ${({ header }) => (header ? "bold" : "regular")};
+  span {
+    &:hover {
+      cursor: pointer;
+    }
   }
 `;
 
@@ -296,12 +332,14 @@ const ExpandRowContent = styled.div`
   }
 `;
 
-const Checkbox = styled.input`
+const CheckboxContainer = styled.div`
   flex: 0.2;
+  margin-right: 4px;
 `;
 
 const ExpandArrow = styled.div`
   flex: 0.2;
+  margin-bottom: 3px;
   svg {
     transition: all 0.5s ease;
     transform: ${({ isExpanded }) => (isExpanded ? "rotate(90deg)" : "")};

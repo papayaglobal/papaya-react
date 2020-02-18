@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import styled from "styled-components";
 import { map } from "lodash";
 import { ReactComponent as TableSortArrowIcon } from "../../assets/icons/table-sorting-arrow.svg";
-import { ReactComponent as TableArrow } from "../../assets/icons/tableArrow.svg";
+import { ReactComponent as ArrowSolid } from "../../assets/icons/arrow-solid.svg";
+import { ReactComponent as LastPageArrow } from "../../assets/icons/arrow-solid-last-page.svg";
 
 export default function Paging({
-  rowCount,
+  pageCount,
   onNumClick,
   rowCountDefault,
   rowCountOptions,
@@ -15,9 +16,23 @@ export default function Paging({
   const [currPage, setCurrPage] = useState(1);
   const [currRowCount, setCurrRowCount] = useState(rowCountDefault);
 
+  useEffect(() => {
+    onNumClick(currPage);
+  }, [currPage]);
+
   const renderPagesNums = () => {
     const pageNums = [];
-    for (let i = 1; i <= rowCount; i++) {
+    let pagesToShowRange;
+    if (pageCount < 6) {
+      pagesToShowRange = { firstPage: 1, lastPage: pageCount };
+    } else {
+      pagesToShowRange = getPagesToShowRange();
+    }
+    for (
+      let i = pagesToShowRange.firstPage;
+      i <= pagesToShowRange.lastPage;
+      i++
+    ) {
       pageNums.push(
         <PageNumber
           key={i}
@@ -31,9 +46,28 @@ export default function Paging({
 
     return pageNums;
   };
+
+  const getPagesToShowRange = () => {
+    const pagesRange = { firstPage: null, lastPage: null };
+    if (currPage === 1 || currPage === 2 || currPage === 3) {
+      pagesRange.firstPage = 1;
+      pagesRange.lastPage = 5;
+    } else if (
+      currPage === pageCount ||
+      currPage === pageCount - 1 ||
+      currPage === pageCount - 2
+    ) {
+      pagesRange.firstPage = pageCount - 4;
+      pagesRange.lastPage = pageCount;
+    } else {
+      pagesRange.firstPage = currPage - 2;
+      pagesRange.lastPage = currPage + 2;
+    }
+    return pagesRange;
+  };
+
   const numClick = num => {
     setCurrPage(num);
-    return onNumClick(num);
   };
 
   const isCurrPage = num => {
@@ -42,16 +76,27 @@ export default function Paging({
   };
 
   const NextPage = () => {
-    if (currPage === rowCount) return;
+    if (currPage === pageCount) return;
     setCurrPage(currPage => currPage + 1);
-    onNumClick(currPage + 1);
+  };
+
+  const prevPage = () => {
+    if (currPage === 1) return;
+    setCurrPage(currPage => currPage - 1);
   };
 
   const handleRowCountChange = newRowCount => {
     setCurrRowCount({ value: newRowCount, label: newRowCount });
     changeRowCount(newRowCount);
     setCurrPage(1);
-    onNumClick(1);
+  };
+
+  const goLastPage = () => {
+    setCurrPage(pageCount);
+  };
+
+  const goFirstPage = () => {
+    setCurrPage(1);
   };
 
   const customSelectStyle = {
@@ -93,7 +138,6 @@ export default function Paging({
         ...styles,
         backgroundColor: isFocused ? "#F7F8FB" : "#ffffff",
         borderColor: "transparent",
-        fontFamily: "Open Sans",
         color: "#212529",
         fontSize: 16,
         paddingLeft: 22
@@ -114,8 +158,27 @@ export default function Paging({
 
   return (
     <PagingNumbers>
+      {currPage !== 1 && (
+        <>
+          <LastPageArrowContainer first onClick={goFirstPage}>
+            <LastPageArrow></LastPageArrow>
+          </LastPageArrowContainer>
+          <ArrowContainer onClick={prevPage}>
+            <ArrowSolid />
+          </ArrowContainer>
+        </>
+      )}
       {map(renderPagesNums(), num => num)}
-      <TableArrow onClick={NextPage} />
+      {currPage !== pageCount && (
+        <>
+          <ArrowContainer next onClick={NextPage}>
+            <ArrowSolid />
+          </ArrowContainer>
+          <LastPageArrowContainer onClick={goLastPage}>
+            <LastPageArrow></LastPageArrow>
+          </LastPageArrowContainer>
+        </>
+      )}
       {rowCountOptions && (
         <Select
           options={rowCountOptions}
@@ -138,7 +201,6 @@ const PagingNumbers = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 30px;
-  font-family: OpenSans-SemiBold;
   font-size: 14px;
   color: #484d5b;
   letter-spacing: 0;
@@ -152,15 +214,64 @@ const PagingNumbers = styled.div`
 
 const PageNumber = styled.span`
   margin-right: 23px;
-  padding: 11px;
-  transition: all 0.5s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 30px;
+  /* transition: all 0.3s ease; */
   border-radius: 50%;
   background-color: ${({ currPage }) =>
     currPage ? "rgba(72,77,91,0.05)" : "transparent"};
-  font-family: ${({ currPage }) =>
-    currPage ? "OpenSans-SemiBold" : "OpenSans-Regular"};
+  font-weight: ${({ currPage }) => (currPage ? "600" : "regular")};
   color: ${({ currPage }) => (currPage ? "#484D5B" : "#797C87")};
   &:hover {
     cursor: pointer;
+    color: #0d1975f0;
+    background-color: #1975f00d;
+  }
+`;
+
+const ArrowContainer = styled.div`
+  transform: ${({ next }) => (next ? "rotate(270deg)" : "rotate(90deg)")};
+  margin: ${({ next }) => (next ? "0 15px 0 0" : "0 12px 0 15px")};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  &:hover {
+    cursor: pointer;
+    background-color: #1975f00d;
+    svg {
+      color: #0d1975f0;
+    }
+  }
+  svg {
+    color: #b5b7bd;
+    transition: all 0.3s ease;
+  }
+`;
+
+const LastPageArrowContainer = styled.div`
+  transform: ${({ first }) => (first ? "rotate(180deg)" : "rotate(0deg)")};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  &:hover {
+    cursor: pointer;
+    background-color: #1975f00d;
+    svg {
+      color: #0d1975f0;
+    }
+  }
+  svg {
+    color: #b5b7bd;
+    transition: all 0.3s ease;
   }
 `;
