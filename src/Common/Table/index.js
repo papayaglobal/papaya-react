@@ -54,6 +54,7 @@ export default function Table({
   const [firstRowIndex, setFirstRowIndex] = useState(0);
   const [rowCountState, setRowCountState] = useState(rowCountDefault);
   const [headerCheckboxState, setCheckboxState] = useState(false);
+  const paginRef = useRef();
 
   useEffect(() => {
     if (selectKey) {
@@ -183,6 +184,8 @@ export default function Table({
 
     setCustomColumnState([...updatedColumns]);
     setCustomDataState([...updatedData]);
+    setFirstRowIndex(1);
+    paginRef.current.goFirstPage();
   };
 
   const toggleCheckbox = rowIndex => {
@@ -267,6 +270,7 @@ export default function Table({
         {renderBody()}
         {rowCountState && (
           <Paging
+            ref={paginRef}
             pageCount={Math.ceil(customDataState.length / rowCountState)}
             onNumClick={page => changePage(page)}
             rowCountDefault={{ value: rowCountDefault, label: rowCountDefault }}

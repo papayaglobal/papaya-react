@@ -1,4 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle
+} from "react";
 import Select from "react-select";
 import styled from "styled-components";
 import { map } from "lodash";
@@ -6,15 +11,18 @@ import { ReactComponent as TableSortArrowIcon } from "../../assets/icons/table-s
 import { ReactComponent as ArrowSolid } from "../../assets/icons/arrow-solid.svg";
 import { ReactComponent as LastPageArrow } from "../../assets/icons/arrow-solid-last-page.svg";
 
-export default function Paging({
-  pageCount,
-  onNumClick,
-  rowCountDefault,
-  rowCountOptions,
-  changeRowCount
-}) {
+export default forwardRef(function Paging(
+  { pageCount, onNumClick, rowCountDefault, rowCountOptions, changeRowCount },
+  ref
+) {
   const [currPage, setCurrPage] = useState(1);
   const [currRowCount, setCurrRowCount] = useState(rowCountDefault);
+
+  useImperativeHandle(ref, () => ({
+    goFirstPage() {
+      setCurrPage(1);
+    }
+  }));
 
   useEffect(() => {
     onNumClick(currPage);
@@ -194,7 +202,7 @@ export default function Paging({
       )}
     </PagingNumbers>
   );
-}
+});
 
 const PagingNumbers = styled.div`
   display: flex;
