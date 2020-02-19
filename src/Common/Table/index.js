@@ -9,7 +9,8 @@ import {
   update,
   findIndex,
   isEmpty,
-  isNil
+  isNil,
+  find
 } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
@@ -31,13 +32,16 @@ export default function Table({
   sideMenuKey,
   defaultSideMenu,
   rowCountDefault,
-  rowCountOptions
+  rowCountOptions,
+  onLazyLoad,
+  totalRows
 }) {
+  // const expandRowEl = useRef();
   const customData = map(data, (item, index) => {
     return {
       ...item,
       isExpanded: false,
-      expandRowEl: useRef(),
+      // expandRowEl: useRef(),
       rowIndex: index
     };
   });
@@ -61,6 +65,36 @@ export default function Table({
       checkIfAllSelected();
     }
   }, [firstRowIndex, rowCountState]);
+
+  useEffect(() => {
+    emitLazyLoad();
+  }, [customColumnState, firstRowIndex, rowCountState]);
+
+  const emitLazyLoad = async () => {
+    if (isNil(onLazyLoad)) {
+      return;
+    }
+
+    const sortedColumn = find(
+      customColumnState,
+      column => !isNil(column.sortOrder)
+    );
+    const slicedData = await onLazyLoad({
+      first: firstRowIndex,
+      rowCount: rowCountState,
+      sortColumnId: get(sortedColumn, "colId"),
+      sortColumnOrder: get(sortedColumn, "sortOrder")
+    });
+    const slicedCostumData = map(slicedData, (item, index) => {
+      return {
+        ...item,
+        isExpanded: false,
+        // expandRowEl,
+        rowIndex: index
+      };
+    });
+    setCustomDataState(slicedCostumData);
+  };
 
   const renderHeaders = () => {
     return map(customColumnState, (column, headerIdx) => {
@@ -95,7 +129,7 @@ export default function Table({
             )}
             {expandKey && (
               <ExpandArrow
-                onClick={() => expandRow(row.rowIndex)}
+                onClick={() => expandRow(row.rowIndex, row)}
                 isExpanded={row.isExpanded}
               >
                 <TableArrow></TableArrow>
@@ -112,12 +146,8 @@ export default function Table({
             {defaultSideMenu && renderSideMenu(row)}
           </TableRow>
           {expandKey && (
-            <ExpandRowContent
-              isExpanded={row.isExpanded}
-              expandEl={row.expandRowEl}
-              ref={row.expandRowEl}
-            >
-              {row[expandKey]}
+            <ExpandRowContent isExpanded={row.isExpanded} ref={row.expandRowEl}>
+              {row[expandKey] ? row[expandKey] : <div>Loading...</div>}
             </ExpandRowContent>
           )}
         </TableRowContainer>
@@ -125,7 +155,20 @@ export default function Table({
     });
   };
 
+  const lazyRenderExpandContent = async (row, index) => {
+    let currentData = customDataState;
+
+    const newContent = await row.expandContentLazy();
+    update(currentData, `[${index}][${expandKey}]`, () => newContent);
+
+    setCustomDataState([...currentData]);
+  };
+
   const getRowsToShow = () => {
+    if (!isNil(onLazyLoad)) {
+      return slice(customDataState, 0, 0 + rowCountState);
+    }
+
     let rowsToShow;
     if (rowCountState) {
       rowsToShow = slice(
@@ -178,14 +221,20 @@ export default function Table({
     const updatedSortOrder = sortOrder === "asc" ? "desc" : "asc";
     update(updatedColumns, `[${headerIdx}].sortOrder`, () => updatedSortOrder);
 
-    const updatedData = column.sortMethod
-      ? column.sortMethod(customDataState, updatedSortOrder)
-      : orderBy(customDataState, colId, updatedSortOrder);
-
     setCustomColumnState([...updatedColumns]);
-    setCustomDataState([...updatedData]);
-    setFirstRowIndex(1);
-    paginRef.current.goFirstPage();
+
+    if (!isNil(onLazyLoad)) {
+      setFirstRowIndex(0);
+      paginRef.current.goFirstPage();
+    } else {
+      const updatedData = column.sortMethod
+        ? column.sortMethod(customDataState, updatedSortOrder)
+        : orderBy(customDataState, colId, updatedSortOrder);
+
+      setCustomDataState([...updatedData]);
+      setFirstRowIndex(0);
+      paginRef.current.goFirstPage();
+    }
   };
 
   const toggleCheckbox = rowIndex => {
@@ -235,11 +284,15 @@ export default function Table({
     }
   };
 
-  const expandRow = rowIndex => {
+  const expandRow = (rowIndex, row) => {
     const updatedData = customDataState;
     const index = updatedData.findIndex(d => d.rowIndex === rowIndex);
     update(updatedData, `[${index}].isExpanded`, value => !value);
     setCustomDataState([...updatedData]);
+
+    if (!!row.expandContentLazy) {
+      lazyRenderExpandContent(row, rowIndex);
+    }
   };
 
   const changePage = page => {
@@ -271,7 +324,11 @@ export default function Table({
         {rowCountState && (
           <Paging
             ref={paginRef}
-            pageCount={Math.ceil(customDataState.length / rowCountState)}
+            pageCount={Math.ceil(
+              onLazyLoad
+                ? totalRows / rowCountState
+                : customDataState.length / rowCountState
+            )}
             onNumClick={page => changePage(page)}
             rowCountDefault={{ value: rowCountDefault, label: rowCountDefault }}
             rowCountOptions={rowCountOptions}
@@ -325,11 +382,9 @@ const TableText = styled.div`
 
 const ExpandRowContent = styled.div`
   overflow: hidden;
-  height: ${({ isExpanded, expandEl }) =>
-    isExpanded
-      ? `${expandEl.current.firstElementChild.clientHeight}px`
-      : "0px"};
-  transition: visibility 0.5s ease-out, height 0.5s ease-out;
+  max-height: ${({ isExpanded, expandEl }) =>
+    isExpanded ? "fit-content" : "0px"};
+  transition: max-height 0.5s ease-out;
 
   > *:first-of-type {
     padding: 10px;

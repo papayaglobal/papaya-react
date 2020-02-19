@@ -11,6 +11,14 @@ export const actions = {
   onClick: action("onClick")
 };
 
+const getExpandContent = () => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(<div>Lazy Expand Content</div>);
+    }, 2500);
+  });
+};
+
 const defaultSideMenu = [
   {
     name: "View Profile",
@@ -68,7 +76,7 @@ const columns = [
 const data = [
   {
     isSelected: true,
-    expandContent: <div>Expand Content 1</div>,
+    expandContentLazy: getExpandContent,
     type: "P",
     id: 5532,
     name: "Frank Boehm",
@@ -310,7 +318,7 @@ const data = [
   ...times(101, () => {
     return {
       isSelected: false,
-      expandContent: <div>Expand Content 4</div>,
+      expandContentLazy: getExpandContent,
       type: "P",
       id: 5534,
       name: "Mike Adams",
@@ -352,4 +360,27 @@ storiesOf("Table", module)
         rowCountOptions={rowCountOptions}
       ></Table>
     </div>
-  ));
+  ))
+  .add("LazyLoad", () => {
+    const loadData = event => {
+      console.log(event);
+      return data.slice(event.first, event.rowCount + event.first);
+    };
+    return (
+      <div className="app">
+        <Table
+          columns={columns}
+          data={data.slice(0, 2)}
+          selectKey="isSelected"
+          onSelected={log}
+          expandKey="expandContent"
+          sideMenuKey="sideMenuContent"
+          defaultSideMenu={defaultSideMenu}
+          rowCountDefault={2}
+          rowCountOptions={rowCountOptions}
+          onLazyLoad={loadData}
+          totalRows={data.length}
+        ></Table>
+      </div>
+    );
+  });
