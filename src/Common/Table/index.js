@@ -392,12 +392,11 @@ const ExpandRowContent = styled.div`
 `;
 
 const CheckboxContainer = styled.div`
-  flex: 0.2;
-  margin-right: 4px;
+  margin-right: 5px;
 `;
 
 const ExpandArrow = styled.div`
-  flex: 0.2;
+  margin-right: 15px;
   margin-bottom: 3px;
   svg {
     transition: all 0.5s ease;

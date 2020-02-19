@@ -238,6 +238,9 @@ const PageNumber = styled.span`
     color: #0d1975f0;
     background-color: #1975f00d;
   }
+  &::selection {
+    background: none;
+  }
 `;
 
 const ArrowContainer = styled.div`
