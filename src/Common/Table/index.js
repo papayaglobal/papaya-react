@@ -26,14 +26,15 @@ import { StyledActions } from "../../papaya-styled-components/contractorPaymentR
 export default function Table({
   columns,
   data,
-  selectKey,
+  selectable,
   onSelected,
-  expandKey,
-  sideMenuKey,
+  expandable,
+  sideMenu,
   defaultSideMenu,
   rowCountDefault,
   rowCountOptions,
   onLazyLoad,
+  lazyExpand,
   totalRows
 }) {
   // const expandRowEl = useRef();
@@ -61,7 +62,7 @@ export default function Table({
   const paginRef = useRef();
 
   useEffect(() => {
-    if (selectKey) {
+    if (selectable) {
       checkIfAllSelected();
     }
   }, [firstRowIndex, rowCountState]);
@@ -119,15 +120,15 @@ export default function Table({
           isExpanded={row.isExpanded}
         >
           <TableRow isExpanded={row.isExpanded}>
-            {selectKey && (
+            {selectable && (
               <CheckboxContainer>
                 <CheckBox
-                  checked={!!get(row, selectKey)}
+                  checked={!!get(row, "isSelected")}
                   onClick={() => toggleCheckbox(row.rowIndex)}
                 />
               </CheckboxContainer>
             )}
-            {expandKey && (
+            {expandable && (
               <ExpandArrow
                 onClick={() => expandRow(row.rowIndex, row)}
                 isExpanded={row.isExpanded}
@@ -145,9 +146,9 @@ export default function Table({
             })}
             {defaultSideMenu && renderSideMenu(row)}
           </TableRow>
-          {expandKey && (
+          {expandable && (
             <ExpandRowContent isExpanded={row.isExpanded} ref={row.expandRowEl}>
-              {row[expandKey] ? row[expandKey] : <div>Loading...</div>}
+              {row.expandContent ? row.expandContent : <div>Loading...</div>}
             </ExpandRowContent>
           )}
         </TableRowContainer>
@@ -157,9 +158,8 @@ export default function Table({
 
   const lazyRenderExpandContent = async (row, index) => {
     let currentData = customDataState;
-
-    const newContent = await row.expandContentLazy();
-    update(currentData, `[${index}][${expandKey}]`, () => newContent);
+    const newContent = await lazyExpand(row);
+    update(currentData, `[${index}].expandContent`, () => newContent);
 
     setCustomDataState([...currentData]);
   };
@@ -185,12 +185,9 @@ export default function Table({
 
   const renderSideMenu = row => {
     let list = [...defaultSideMenu];
-    if (!isNil(sideMenuKey)) {
-      if (!isNil(row[sideMenuKey])) {
-        list = row[sideMenuKey];
-      }
+    if (!isNil(row.sideMenuContent)) {
+      list = row.sideMenuContent;
     }
-
     list = map(list, sideMenu => ({
       ...sideMenu,
       action: () => {
@@ -240,7 +237,7 @@ export default function Table({
   const toggleCheckbox = rowIndex => {
     const updatedData = customDataState;
     const index = findIndex(updatedData, item => item.rowIndex === rowIndex);
-    update(updatedData, `[${index}]${selectKey}`, value => !value);
+    update(updatedData, `[${index}].isSelected`, value => !value);
     setCustomDataState([...updatedData]);
     if (onSelected) {
       onSelected(getSelected());
@@ -249,7 +246,7 @@ export default function Table({
   };
 
   const checkIfAllSelected = () => {
-    const unSelectedItems = filter(getRowsToShow(), [selectKey, false]);
+    const unSelectedItems = filter(getRowsToShow(), ["isSelected", false]);
 
     setCheckboxState(isEmpty(unSelectedItems));
   };
@@ -259,7 +256,7 @@ export default function Table({
   };
 
   const getSelected = () => {
-    let selectedRows = filter(customDataState, item => item[selectKey]);
+    let selectedRows = filter(customDataState, item => item.isSelected);
 
     return map(selectedRows, row =>
       omit(row, ["isExpanded", "expandRowEl", "rowIndex"])
@@ -269,7 +266,7 @@ export default function Table({
   const toggleAll = event => {
     const updatedData = map(customDataState, item => {
       if (includes(getRowsToShow(), item)) {
-        item[selectKey] = event.target.checked;
+        item.isSelected = event.target.checked;
       }
 
       return item;
@@ -289,8 +286,7 @@ export default function Table({
     const index = updatedData.findIndex(d => d.rowIndex === rowIndex);
     update(updatedData, `[${index}].isExpanded`, value => !value);
     setCustomDataState([...updatedData]);
-
-    if (!!row.expandContentLazy) {
+    if (lazyExpand) {
       lazyRenderExpandContent(row, rowIndex);
     }
   };
@@ -311,14 +307,14 @@ export default function Table({
     <>
       <TableContainer>
         <TableRow header>
-          {selectKey && (
+          {selectable && (
             <CheckboxContainer>
               <CheckBox checked={headerCheckboxState} onClick={toggleAll} />
             </CheckboxContainer>
           )}
-          {expandKey && <ExpandArrow></ExpandArrow>}
+          {expandable && <ExpandArrow></ExpandArrow>}
           {renderHeaders()}
-          {sideMenuKey && <SideMenuContainer></SideMenuContainer>}
+          {sideMenu && <SideMenuContainer></SideMenuContainer>}
         </TableRow>
         {renderBody()}
         {rowCountState && (

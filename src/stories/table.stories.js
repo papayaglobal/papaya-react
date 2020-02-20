@@ -351,10 +351,11 @@ storiesOf("Table", module)
       <Table
         columns={columns}
         data={data}
-        selectKey="isSelected"
+        selectable
         onSelected={log}
-        expandKey="expandContent"
-        sideMenuKey="sideMenuContent"
+        expandable
+        lazyExpand={getExpandContent}
+        sideMenu
         defaultSideMenu={defaultSideMenu}
         rowCountDefault={2}
         rowCountOptions={rowCountOptions}
@@ -371,10 +372,11 @@ storiesOf("Table", module)
         <Table
           columns={columns}
           data={data.slice(0, 2)}
-          selectKey="isSelected"
+          selectable
           onSelected={log}
-          expandKey="expandContent"
-          sideMenuKey="sideMenuContent"
+          expandable
+          lazyExpand={getExpandContent}
+          sideMenu
           defaultSideMenu={defaultSideMenu}
           rowCountDefault={2}
           rowCountOptions={rowCountOptions}
