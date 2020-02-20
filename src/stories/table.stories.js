@@ -351,7 +351,6 @@ storiesOf("Table", module)
       <Table
         columns={columns}
         data={data}
-        selectable
         onSelected={log}
         expandable
         lazyExpand={getExpandContent}
@@ -372,7 +371,6 @@ storiesOf("Table", module)
         <Table
           columns={columns}
           data={data.slice(0, 2)}
-          selectable
           onSelected={log}
           expandable
           lazyExpand={getExpandContent}

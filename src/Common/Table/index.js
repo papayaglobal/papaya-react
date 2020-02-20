@@ -26,7 +26,6 @@ import { StyledActions } from "../../papaya-styled-components/contractorPaymentR
 export default function Table({
   columns,
   data,
-  selectable,
   onSelected,
   expandable,
   sideMenu,
@@ -62,14 +61,14 @@ export default function Table({
   const paginRef = useRef();
 
   useEffect(() => {
-    if (selectable) {
-      checkIfAllSelected();
-    }
-  }, [firstRowIndex, rowCountState]);
-
-  useEffect(() => {
     emitLazyLoad();
   }, [customColumnState, firstRowIndex, rowCountState]);
+
+  useEffect(() => {
+    if (!isNil(customDataState[0].isSelected)) {
+      checkIfAllSelected();
+    }
+  }, [firstRowIndex, rowCountState, customDataState]);
 
   const emitLazyLoad = async () => {
     if (isNil(onLazyLoad)) {
@@ -120,7 +119,7 @@ export default function Table({
           isExpanded={row.isExpanded}
         >
           <TableRow isExpanded={row.isExpanded}>
-            {selectable && (
+            {!isNil(row.isSelected) && (
               <CheckboxContainer>
                 <CheckBox
                   checked={!!get(row, "isSelected")}
@@ -246,9 +245,8 @@ export default function Table({
   };
 
   const checkIfAllSelected = () => {
-    const unSelectedItems = filter(getRowsToShow(), ["isSelected", false]);
-
-    setCheckboxState(isEmpty(unSelectedItems));
+    const SelectedItems = filter(getRowsToShow(), ["isSelected", false]);
+    setCheckboxState(isEmpty(SelectedItems));
   };
 
   const collapseRows = () => {
@@ -307,7 +305,7 @@ export default function Table({
     <>
       <TableContainer>
         <TableRow header>
-          {selectable && (
+          {!isNil(customDataState[0].isSelected) && (
             <CheckboxContainer>
               <CheckBox checked={headerCheckboxState} onClick={toggleAll} />
             </CheckboxContainer>
