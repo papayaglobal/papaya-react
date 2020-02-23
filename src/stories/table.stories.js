@@ -15,7 +15,6 @@ export const actions = {
 const getExpandContent = row => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      console.log("TCL: row", row);
       resolve(<div>Lazy Expand Content row: {inspect(row)}</div>);
     }, 2500);
   });
