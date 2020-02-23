@@ -234,6 +234,7 @@ export default function Table({
         paginRef.current.goFirstPage();
       }
     }
+    collapseRows();
   };
 
   const toggleCheckbox = rowIndex => {
