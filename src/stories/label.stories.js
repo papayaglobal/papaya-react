@@ -34,7 +34,7 @@ storiesOf("Label", module)
         <LabelContainer>
           <Label
             title={text("title", "W")}
-            color={text("second color", "#976FED")}
+            color={text("small color", "#976FED")}
             squared
             small
           ></Label>

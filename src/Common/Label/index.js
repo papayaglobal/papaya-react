@@ -14,8 +14,9 @@ const Label = styled(LabelComponent)`
   color: #ffffff;
   border-radius: ${({ squared }) => (squared ? "4px" : "20px")};
   height: ${({ small }) => (small ? "14.5px" : "22px")};
-  min-width: ${({ squared, small }) => (squared ? "unset" : "50px")};
-  width: ${({ small }) => (small ? "14.5px" : "unset")};
+  min-width: ${({ squared }) => (squared ? "unset" : "50px")};
+  width: ${({ squared, small }) =>
+    squared ? (small ? "14.5px" : "22px") : "fit-content"};
   display: flex;
   justify-content: center;
   align-items: center;
