@@ -25,7 +25,7 @@ storiesOf("Label", module)
   ))
   .add("Sample", () => (
     <div className="app">
-      <div style={{ position: "absolute" }}>
+      <div style={{ position: "absolute", top: "15px" }}>
         <Label
           title={text("title", "P")}
           color={text("color", "#00C7D6")}
