@@ -20,6 +20,7 @@ import { ReactComponent as TableSortArrowIcon } from "../../assets/icons/table-s
 import { ReactComponent as TableArrow } from "../../assets/icons/tableArrow.svg";
 import Dropdown from "../../Common/Dropdown";
 import Paging from "../../Common/Paging";
+import Spinner from "../../Common/Spinner";
 import { CheckBox } from "../../Common/Checkbox";
 import { StyledActions } from "../../papaya-styled-components/contractorPaymentRowHelpers";
 
@@ -149,7 +150,13 @@ export default function Table({
           </TableRow>
           {expandable && (
             <ExpandRowContent isExpanded={row.isExpanded} ref={row.expandRowEl}>
-              {row.expandContent ? row.expandContent : <div>Loading...</div>}
+              {row.expandContent ? (
+                row.expandContent
+              ) : (
+                <SpinnerContainer>
+                  <Spinner width="34px" height="34px" color={DARK3} />
+                </SpinnerContainer>
+              )}
             </ExpandRowContent>
           )}
         </TableRowContainer>
@@ -424,4 +431,10 @@ const SortArrowContainer = styled.span`
     transform: ${({ sortorder }) =>
       sortorder === "desc" ? "rotate(0deg)" : "rotate(-180deg)"};
   }
+`;
+
+const SpinnerContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
 `;
