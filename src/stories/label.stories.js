@@ -25,7 +25,7 @@ storiesOf("Label", module)
   ))
   .add("Sample", () => (
     <div className="app">
-      <div style={{ position: "absolute", top: "15px" }}>
+      <div style={{ position: "relative" }}>
         <Label
           title={text("title", "P")}
           color={text("color", "#00C7D6")}
@@ -44,7 +44,7 @@ storiesOf("Label", module)
   ));
 
 const LabelContainer = styled.div`
-  position: relative;
-  bottom: 10px;
+  position: absolute;
+  bottom: -5px;
   left: 14px;
 `;
