@@ -59,7 +59,11 @@ export default function Table({
   const paginRef = useRef();
 
   useEffect(() => {
-    emitLazyLoad();
+    if (!isNil(onLazyLoad)) {
+      emitLazyLoad();
+    } else {
+      collapseRows();
+    }
   }, [firstRowIndex, rowCountState, customColumnState]);
 
   useEffect(() => {
@@ -84,14 +88,14 @@ export default function Table({
       sortColumnOrder: get(sortedColumn, "sortOrder")
     });
 
-    const slicedCostumData = map(slicedData, (item, index) => {
+    const slicedCustomData = map(slicedData, (item, index) => {
       return {
         ...item,
         isExpanded: false,
         rowIndex: index
       };
     });
-    setCustomDataState(slicedCostumData);
+    setCustomDataState(slicedCustomData);
   };
 
   const renderHeaders = () => {
@@ -231,7 +235,6 @@ export default function Table({
         paginRef.current.goFirstPage();
       }
     }
-    collapseRows();
   };
 
   const toggleCheckbox = rowIndex => {
@@ -242,16 +245,17 @@ export default function Table({
     if (onSelected) {
       onSelected(getSelected());
     }
-    checkIfAllSelected();
   };
 
   const checkIfAllSelected = () => {
-    const SelectedItems = filter(getRowsToShow(), ["isSelected", false]);
-    setCheckboxState(isEmpty(SelectedItems));
+    const selectedItems = filter(getRowsToShow(), ["isSelected", false]);
+    setCheckboxState(isEmpty(selectedItems));
   };
 
   const collapseRows = () => {
-    map(getRowsToShow(), row => (row.isExpanded = false));
+    setCustomDataState(
+      map(customDataState, row => ({ ...row, isExpanded: false }))
+    );
   };
 
   const getSelected = () => {
@@ -272,8 +276,6 @@ export default function Table({
     });
 
     setCustomDataState([...updatedData]);
-
-    checkIfAllSelected();
 
     if (onSelected) {
       onSelected(getSelected());
