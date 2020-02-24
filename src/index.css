@@ -1,3 +1,21 @@
+@font-face {
+  font-family: "Open Sans";
+  font-weight: regular;
+  src: url("assets/css/fonts/Open-Sans/OpenSans-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Open Sans";
+  font-weight: bold;
+  src: url("assets/css/fonts/Open-Sans/OpenSans-Bold.ttf");
+}
+
+@font-face {
+  font-family: "Open Sans";
+  font-weight: 600;
+  src: url("assets/css/fonts/Open-Sans/OpenSans-SemiBold.ttf");
+}
+
 html {
   font-family: "Open Sans", sans-serif;
   font-size: 16px;
