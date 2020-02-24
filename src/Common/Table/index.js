@@ -36,12 +36,10 @@ export default function Table({
   lazyExpand,
   totalRows
 }) {
-  // const expandRowEl = useRef();
   const customData = map(data, (item, index) => {
     return {
       ...item,
       isExpanded: false,
-      // expandRowEl: useRef(),
       rowIndex: index
     };
   });
@@ -90,7 +88,6 @@ export default function Table({
       return {
         ...item,
         isExpanded: false,
-        // expandRowEl,
         rowIndex: index
       };
     });

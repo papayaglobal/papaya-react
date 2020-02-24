@@ -7,6 +7,14 @@ import React, {
 import Select from "react-select";
 import styled from "styled-components";
 import { map } from "lodash";
+import {
+  WHITE,
+  BRIGHT1,
+  DARK4,
+  DARK1,
+  DARK2,
+  DARK3
+} from "../../Constants/colors";
 import { ReactComponent as TableSortArrowIcon } from "../../assets/icons/table-sorting-arrow.svg";
 import { ReactComponent as ArrowSolid } from "../../assets/icons/arrow-solid.svg";
 import { ReactComponent as LastPageArrow } from "../../assets/icons/arrow-solid-last-page.svg";
@@ -79,17 +87,23 @@ export default forwardRef(function Paging(
   };
 
   const isCurrPage = num => {
-    if (num === currPage) return true;
+    if (num === currPage) {
+      return true;
+    }
     return false;
   };
 
   const NextPage = () => {
-    if (currPage === pageCount) return;
+    if (currPage === pageCount) {
+      return;
+    }
     setCurrPage(currPage => currPage + 1);
   };
 
   const prevPage = () => {
-    if (currPage === 1) return;
+    if (currPage === 1) {
+      return;
+    }
     setCurrPage(currPage => currPage - 1);
   };
 
@@ -123,7 +137,7 @@ export default forwardRef(function Paging(
     container: (styles, { isFocused }) => {
       return {
         ...styles,
-        backgroundColor: "#ffffff",
+        backgroundColor: WHITE,
         border: "none",
         boxShadow: "0 1px 2px 0 rgba(0,0,0,0.15)",
         borderRadius: "4px",
@@ -138,13 +152,12 @@ export default forwardRef(function Paging(
         ...styles,
         border: "none",
         padding: "8px"
-        // width: "82px"
       };
     },
     option: (styles, { isFocused }) => {
       return {
         ...styles,
-        backgroundColor: isFocused ? "#F7F8FB" : "#ffffff",
+        backgroundColor: isFocused ? `${BRIGHT1}` : `${WHITE}`,
         borderColor: "transparent",
         color: "#212529",
         fontSize: 16,
@@ -160,7 +173,7 @@ export default forwardRef(function Paging(
   };
 
   const dropdownIndicatorStyle = {
-    color: "#C2C3C8",
+    color: DARK4,
     marginRight: 10
   };
 
@@ -210,7 +223,7 @@ const PagingNumbers = styled.div`
   align-items: center;
   margin-top: 30px;
   font-size: 14px;
-  color: #484d5b;
+  color: DARK1;
   letter-spacing: 0;
   svg {
     color: rgba(121, 124, 135, 1);
@@ -227,12 +240,11 @@ const PageNumber = styled.span`
   align-items: center;
   height: 30px;
   width: 30px;
-  /* transition: all 0.3s ease; */
   border-radius: 50%;
   background-color: ${({ currPage }) =>
     currPage ? "rgba(72,77,91,0.05)" : "transparent"};
   font-weight: ${({ currPage }) => (currPage ? "600" : "regular")};
-  color: ${({ currPage }) => (currPage ? "#484D5B" : "#797C87")};
+  color: ${({ currPage }) => (currPage ? `${DARK1}` : `${DARK2}`)};
   &:hover {
     cursor: pointer;
     color: #0d1975f0;
@@ -282,7 +294,7 @@ const LastPageArrowContainer = styled.div`
     }
   }
   svg {
-    color: #b5b7bd;
+    color: DARK3;
     transition: all 0.3s ease;
   }
 `;
