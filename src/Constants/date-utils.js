@@ -13,7 +13,6 @@ export const formatDateRange = (props) => {
     }
 
     const endString = moment(endedAt).format(format);
-    const startString = moment(startedAt).format(format);
 
     if (compact) {
         if (moment(startedAt).isSame(endedAt, "day")) {
@@ -27,7 +26,7 @@ export const formatDateRange = (props) => {
                     const dayMonthPart2 = moment(endedAt).format(_(format).replace(/M/g, "").trim());
                     return `${dayMonthPart1}–${dayMonthPart2}`;
                 case fullDateResponsive:
-                    const fullDatePart1 = moment(startString).format(_(format).replace(/Y/g, "").replace(/,/g, "").trim());
+                    const fullDatePart1 = moment(startedAt).format(_(format).replace(/Y/g, "").replace(/,/g, "").trim());
                     const fullDatePart2 = moment(endedAt).format(_(format).replace(/M/g, "").trim());
                     return `${fullDatePart1}–${fullDatePart2}`;
                 default:
