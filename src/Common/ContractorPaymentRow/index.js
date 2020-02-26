@@ -36,7 +36,7 @@ import {ReactComponent as RejectedProForma} from "../../assets/icons/rejected.sv
 import {ReactComponent as ApprovedProForma} from "../../assets/icons/approved.svg";
 import Button from "../../Common/Button";
 import {getValueWithCurrency} from "../../utils/currency";
-import { sizes } from "../../Constants/mediaQueries";
+import {sizes} from "../../Constants/mediaQueries";
 
 
 const PAYMENT_REQUEST_STATUS = {
@@ -102,7 +102,8 @@ const ContractorExpandedPaymentRow = (props) => {
         type: `pro_forma_approved`
     });
 
-    const result = [<RowWrapper key={"payment-expanded-item"} row className={"expanded-container"} margin={"0 0 20px 0"}>
+    const result = [<RowWrapper key={"payment-expanded-item"} row className={"expanded-container"}
+                                margin={"0 0 20px 0"}>
         <FirstCollWrapper>
             <DateWrapper column flex={2} padding={"5px 0"}>
                 <CreatedDate>{createdAtDate}</CreatedDate>
@@ -142,7 +143,8 @@ const ContractorExpandedPaymentRow = (props) => {
         const rejectedAtDate = moment(updatedAt).format("DD MMM YYYY");
         const createdAtDateTime = moment(updatedAt).format("hh:mm");
 
-        result.push(<RowWrapper key={"payment-expanded-item-rejected"} row className={"expanded-container-rejected"} margin={"0 0 20px 0"}>
+        result.push(<RowWrapper key={"payment-expanded-item-rejected"} row className={"expanded-container-rejected"}
+                                margin={"0 0 20px 0"}>
             <FirstCollWrapper>
                 <DateWrapper column flex={2} padding={"5px 0"}>
                     <CreatedDate>{rejectedAtDate}</CreatedDate>
@@ -155,9 +157,9 @@ const ContractorExpandedPaymentRow = (props) => {
                 <StyledSubmittedText><strong>{updatedBy}</strong> rejected your payment request.</StyledSubmittedText>
 
                 {isLastPaymentRequest && <Button
-                style={{width: "220px", margin: "15px 0 0 0"}}
-                size="medium"
-                onClick={() => onReviseClicked({payment})}
+                    style={{width: "220px", margin: "15px 0 0 0"}}
+                    size="medium"
+                    onClick={() => onReviseClicked({payment})}
                 >Revise Payment Request</Button>}
             </Flex>
         </RowWrapper>)
@@ -168,7 +170,7 @@ const ContractorExpandedPaymentRow = (props) => {
         const approvedAtDate = moment(updatedAt).format("DD MMM YYYY");
         const approvedAtDateTime = moment(updatedAt).format("hh:mm");
         result.push(<RowWrapper key={"payment-expanded-item-approved"} row className={"expanded-container-approved"}
-                          margin={"0 0 20px 0"}>
+                                margin={"0 0 20px 0"}>
             <FirstCollWrapper>
                 <DateWrapper column flex={2} padding={"5px 0"}>
                     <CreatedDate>{approvedAtDate}</CreatedDate>
@@ -329,7 +331,13 @@ class ContractorPaymentRow extends Component {
                     </StyledAttachmentIcon>
                     }
                     {!!contractorPaymentRequestInvoice && <StyledAttachments className="attachments md">
-                        <AttachmentIcon attachments={[contractorPaymentRequestInvoice]}/>
+                        <AttachmentIcon attachments={[contractorPaymentRequestInvoice]}
+                                        onClick={(e) => this.onInvoiceClicked({
+                                            e,
+                                            payment,
+                                            contractorPaymentRequestInvoice
+                                        })}
+                        />
                     </StyledAttachments>}
                     {!!createdAtAsText &&
                     <StyledReportedDate className="reportedDateWrapper">{createdAtAsText}</StyledReportedDate>}
