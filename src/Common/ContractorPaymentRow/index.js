@@ -28,7 +28,7 @@ import {CheckBox} from "../../Common/Checkbox";
 import Dropdown from "../../Common/Dropdown";
 import more from "../../assets/icons/More.svg";
 import AttachmentIcon from "../../Common/AttachmentIcon";
-import {formatDateRange, monYear, shortFullDate} from "../../Constants/date-utils";
+import {formatDateRange, fullDateResponsive, monYear, shortFullDate} from "../../Constants/date-utils";
 import {Flex} from "../../papaya-styled-components/flex-components";
 import {ReactComponent as SubmittedProForma} from "../../assets/icons/submitted-pro-forma.svg";
 import {DARK1, STATUSCRITICAL, STATUSOK} from "../../Constants";
@@ -275,7 +275,8 @@ class ContractorPaymentRow extends Component {
             selectable,
             selected,
             selectedAttachments = [],
-            payments
+            payments,
+            isMonthly
         } = this.props;
         const {isExpanded} = this.state;
         const orderedPayments = orderBy(payments, ["createdAt"], ["asc"]);
@@ -288,7 +289,7 @@ class ContractorPaymentRow extends Component {
         });
 
         const {startedAt, endedAt} = get(payment, "paymentPeriod") || {};
-        const dateRange = formatDateRange({startedAt, endedAt, format: monYear});
+        const dateRange = formatDateRange({startedAt, endedAt, format: isMonthly ? monYear : fullDateResponsive});
         const createdAtAsText = moment(createdAt).format(shortFullDate);
 
         return <StyledPaymentContainer>
@@ -298,9 +299,9 @@ class ContractorPaymentRow extends Component {
                         <CheckBox checked={selected} onClick={(e) => this.onSelectClicked({e, payment})}/>
                     </StyledSelectWrapper>}
                     <StyledRightArrow alt="Next" isExpanded={isExpanded} onClick={this.toggleCollapse}/>
-                    <StyledDates className={"date-range"} isMonthly={true}>{dateRange}</StyledDates>
+                    <StyledDates className={"date-range"} isMonthly={isMonthly}>{dateRange}</StyledDates>
                     {!isExpanded && <>
-                        {value && <StyledAmount justifyStart flex={1} className="amountWrapper">{getValueWithCurrency({
+                        {value && <StyledAmount justifyStart className="amountWrapper">{getValueWithCurrency({
                             currency,
                             value
                         })}</StyledAmount>}
@@ -363,6 +364,7 @@ ContractorPaymentRow.propTypes = {
     actions: PropTypes.array,
     selectable: PropTypes.bool,
     isExpanded: PropTypes.bool,
+    isMonthly: PropTypes.bool,
     selected: PropTypes.bool,
     onSelectClick: PropTypes.func,
     onProFormaClicked: PropTypes.func,

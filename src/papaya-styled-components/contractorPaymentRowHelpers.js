@@ -59,11 +59,12 @@ export const StyledRightArrow = styled(RightArrow)`
 `;
 
 export const StyledDates = styled(Flex)`
-  flex: 1.5;
+  flex: ${({isMonthly}) => isMonthly ? 1.5 : 2};
   flex-shrink: 0;  
   flex-basis: auto;
   @media (min-width: ${sizes.md}px) {
-    flex: 2;
+    flex: ${({isMonthly}) => isMonthly ? 2 : 3};
+    flex-shrink: 0;
   }
   cursor: pointer;  
   margin: 0 5px;  
@@ -73,10 +74,12 @@ export const StyledDates = styled(Flex)`
 `;
 
 export const StyledAmount = styled(Flex)`
-  flex-shrink: 0;  
+  flex-shrink: 0;
+  flex-grow: 1;  
   flex-basis: auto;
   @media (max-width: ${sizes.md}px) {
-    flex: 2;
+    flex-grow: 2;
+    flex-basis: auto;
   }
   font-size: 0.9rem;
   @media (max-width: ${sizes.sm}px) {

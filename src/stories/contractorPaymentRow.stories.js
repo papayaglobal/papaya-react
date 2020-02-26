@@ -202,6 +202,7 @@ storiesOf("Contractor Payment Row", module)
         <>
             <div className="app attachment" style={{width: "1260px"}}>
                 <ContractorPaymentRow
+                    isMonthly={false}
                     payments={payments}
                     actions={[]}
                     selectable={boolean("selectable", false)}
