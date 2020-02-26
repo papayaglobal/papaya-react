@@ -126,16 +126,18 @@ const ContractorExpandedPaymentRow = (props) => {
                 name={get(proforma, "file.name")}
             />
 
-            <StyledAttachmentTitle margin={"25px 0 5px 0 "}>Tax Invoice</StyledAttachmentTitle>
-            <ListItem
-                hideClose={true}
-                onClick={() => onInvoiceClicked({
-                    payment,
-                    contractorPaymentRequestInvoice
-                })}
-                bgColor={fileItemBackgroundColor}
-                name={get(contractorPaymentRequestInvoice, "file.name")}
-            />
+            {!!contractorPaymentRequestInvoice && <>
+                <StyledAttachmentTitle margin={"25px 0 5px 0 "}>Tax Invoice</StyledAttachmentTitle>
+                <ListItem
+                    hideClose={true}
+                    onClick={() => onInvoiceClicked({
+                        payment,
+                        contractorPaymentRequestInvoice
+                    })}
+                    bgColor={fileItemBackgroundColor}
+                    name={get(contractorPaymentRequestInvoice, "file.name")}
+                />
+            </>}
         </Flex>
     </RowWrapper>];
 
