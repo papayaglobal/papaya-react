@@ -21,6 +21,8 @@ export const formatDateRange = (props) => {
 
         if (moment(startedAt).isSame(endedAt, "month")) {
             switch (format) {
+                case monYear:
+                    return endString;
                 case dayMonthResponsive:
                     const dayMonthPart1 = moment(startedAt).format(format);
                     const dayMonthPart2 = moment(endedAt).format(_(format).replace(/M/g, "").trim());
