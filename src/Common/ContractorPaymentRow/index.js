@@ -196,16 +196,18 @@ const ContractorExpandedPaymentRow = (props) => {
                     name={get(approvedProforma, "file.name")}
                 />
 
-                <StyledAttachmentTitle margin={"25px 0 5px 0 "}>Tax Invoice</StyledAttachmentTitle>
-                <ListItem
-                    hideClose={true}
-                    onClick={() => onInvoiceClicked({
-                        payment,
-                        contractorPaymentRequestInvoice
-                    })}
-                    bgColor={listItemBackground}
-                    name={get(contractorPaymentRequestInvoice, "file.name")}
-                />
+                {!!contractorPaymentRequestInvoice && <>
+                    <StyledAttachmentTitle margin={"25px 0 5px 0 "}>Tax Invoice</StyledAttachmentTitle>
+                    <ListItem
+                        hideClose={true}
+                        onClick={() => onInvoiceClicked({
+                            payment,
+                            contractorPaymentRequestInvoice
+                        })}
+                        bgColor={listItemBackground}
+                        name={get(contractorPaymentRequestInvoice, "file.name")}
+                    />
+                </>}
             </Flex>
         </RowWrapper>)
     }
@@ -294,8 +296,8 @@ class ContractorPaymentRow extends Component {
         const dateRange = formatDateRange({startedAt, endedAt, format: isMonthly ? monYear : fullDateResponsive});
         const createdAtAsText = moment(createdAt).format(shortFullDate);
 
-        return <StyledPaymentContainer>
-            <StyledPaymentRow className={className} onClick={this.onPaymentClick} isExpanded>
+        return <StyledPaymentContainer className={className}>
+            <StyledPaymentRow onClick={this.onPaymentClick} isExpanded>
                 <StyledLeftWrapper className="leftWrapper">
                     {selectable && <StyledSelectWrapper className="selectWrapper">
                         <CheckBox checked={selected} onClick={(e) => this.onSelectClicked({e, payment})}/>
