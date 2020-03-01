@@ -300,7 +300,7 @@ class ContractorPaymentRow extends Component {
             <StyledPaymentRow onClick={this.onPaymentClick} isExpanded>
                 <StyledLeftWrapper className="leftWrapper">
                     {selectable && <StyledSelectWrapper className="selectWrapper">
-                        <CheckBox checked={selected} onClick={(e) => this.onSelectClicked({e, payment})}/>
+                        <CheckBox checked={selected} onClick={(e) => this.onSelectClicked({e, payment: payments})}/>
                     </StyledSelectWrapper>}
                     <StyledRightArrow alt="Next" isExpanded={isExpanded} onClick={this.toggleCollapse}/>
                     <StyledDates className={"date-range"} isMonthly={isMonthly}>{dateRange}</StyledDates>
