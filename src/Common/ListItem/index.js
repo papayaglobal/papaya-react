@@ -23,7 +23,8 @@ const StyledTextContainer = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
-
+  align-items: center;
+  
   > svg.icon {
     margin-right: 10px;
     fill: ${Color.ACCENT1};
