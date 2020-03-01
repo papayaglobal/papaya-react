@@ -2,7 +2,8 @@ import moment from "moment";
 import _ from "lodash";
 
 export const fullDateResponsive = window.matchMedia("(max-width: 767px)").matches ? "MMM D, YYYY" : "MMMM D, YYYY";
-export const monYear = "MMMM YYYY"; // December 2018
+export const dayMonthResponsive = window.matchMedia("(max-width: 767px)").matches ? "MMM D" : "MMMM D";
+export const monYear = window.matchMedia("(max-width: 767px)").matches ? "MMM YYYY" : "MMMM YYYY";
 export const shortFullDate = "MMM D, YYYY";
 
 export const formatDateRange = (props) => {
@@ -12,34 +13,37 @@ export const formatDateRange = (props) => {
     }
 
     const endString = moment(endedAt).format(format);
-    const startString = moment(startedAt).format(format);
 
     if (compact) {
-        if (moment(startString).isSame(endedAt, "day")) {
+        if (moment(startedAt).isSame(endedAt, "day")) {
             return endString;
         }
 
-        if (moment(startString).isSame(endedAt, "month")) {
-            if (format === monYear) {
-                return endString;
-            }
-            if (format === fullDateResponsive) {
-                const fullDatePart1 = moment(startString).format(_(format).replace(/Y/g, "").replace(/,/g, "").trim());
-                const fullDatePart2 = moment(endString).format(_(format).replace(/M/g, "").trim());
-                return `${fullDatePart1}–${fullDatePart2}`;
-            } else {
-                return `${moment(startedAt).format(_(format).replace(/Y/g, "").replace(/M/g, "").trim())}–${endString}`;
+        if (moment(startedAt).isSame(endedAt, "month")) {
+            switch (format) {
+                case monYear:
+                    return endString;
+                case dayMonthResponsive:
+                    const dayMonthPart1 = moment(startedAt).format(format);
+                    const dayMonthPart2 = moment(endedAt).format(_(format).replace(/M/g, "").trim());
+                    return `${dayMonthPart1}–${dayMonthPart2}`;
+                case fullDateResponsive:
+                    const fullDatePart1 = moment(startedAt).format(_(format).replace(/Y/g, "").replace(/,/g, "").trim());
+                    const fullDatePart2 = moment(endedAt).format(_(format).replace(/M/g, "").trim());
+                    return `${fullDatePart1}–${fullDatePart2}`;
+                default:
+                    return `${moment(startedAt).format(_(format).replace(/Y/g, "").replace(/M/g, "").trim())}–${endString}`;
             }
         }
 
-        if (moment(startString).isSame(endedAt, "year")) {
+        if (moment(startedAt).isSame(endedAt, "year")) {
             if (format === fullDateResponsive) {
-                return `${moment(startString).format(_(format).replace(/Y/g, "").replace(/,/g, "").trim())}–${endString}`;
+                return `${moment(startedAt).format(_(format).replace(/Y/g, "").replace(/,/g, "").trim())}–${endString}`;
             } else {
-                return `${moment(startString).format(_(format).replace(/Y/g, "").trim())} – ${endString}`;
+                return `${moment(startedAt).format(_(format).replace(/Y/g, "").trim())} – ${endString}`;
             }
         }
     }
 
-    return `${moment(startString).format(format)} – ${endString}`;
+    return `${moment(startedAt).format(format)} – ${endString}`;
 };

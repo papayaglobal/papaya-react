@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import is from "styled-is";
+import { sizes } from "../Constants/mediaQueries";
+
 
 export const Flex = styled.div`
   display: flex;
@@ -11,6 +13,17 @@ export const Flex = styled.div`
   border-top: ${({borderTop}) => borderTop};
   flex: ${({flex}) => flex};
   
+  ${is("hideOnMobile")`
+      @media (max-width: ${sizes.md}px) {
+        display: none;
+    }
+  `};
+  ${is("showOnMobile")`
+      @media (min-width: ${sizes.md}px) {
+        display: none;
+    }
+  `};
+
   ${is("pointer")`
     cursor: pointer;
   `};
