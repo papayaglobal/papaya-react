@@ -45,7 +45,7 @@ const getEndOffset = (end, text) => {
 // a Regular Expression to calculate these positions dynamically against the text itself.
 class MiddleTruncate extends PureComponent {
     static propTypes = {
-        forceReRender: PropTypes.bool,
+        forcererender: PropTypes.bool,
         className: PropTypes.string,
         ellipsis: PropTypes.string,
         end: PropTypes.oneOfType([PropTypes.number, PropTypes.instanceOf(RegExp), PropTypes.string]),
@@ -57,7 +57,7 @@ class MiddleTruncate extends PureComponent {
     };
 
     static defaultProps = {
-        forceReRender: false,
+        forcererender: false,
         className: '',
         ellipsis: '...',
         end: 0,
@@ -90,7 +90,7 @@ class MiddleTruncate extends PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.text !== this.props.text || this.props.forceReRender) {
+        if (nextProps.text !== this.props.text || this.props.forcererender) {
             this.parseTextForTruncation(nextProps.text);
         }
 

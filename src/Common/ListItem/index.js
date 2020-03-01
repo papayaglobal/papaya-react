@@ -69,7 +69,7 @@ const ListItemComponent = (props) => {
         <StyledTextContainer>
             <AttachmentIcon className="icon" style={{flexShrink: 0}}/>
             <StyledMiddleTruncate
-                forceReRender={true}
+                forcererender={true}
                 smartCopy={'all'}
                 onResizeDebounceMs={100}
                 text={name}
