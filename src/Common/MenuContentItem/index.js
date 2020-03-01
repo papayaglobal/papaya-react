@@ -3,7 +3,13 @@ import { map, isNil, includes } from "lodash";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { ReactComponent as ExpandArrowIcon } from "../../assets/icons/tableArrow.svg";
-import { ACCENT2, BLACK, DARK1, BRANDCOLOR } from "../../Constants/colors";
+import {
+  ACCENT2,
+  BLACK,
+  DARK1,
+  BRANDCOLOR,
+  ACCENT2HOVER
+} from "../../Constants/colors";
 
 export default function MenuContentItem({ list }) {
   const [expandState, setExpandState] = useState(null);
@@ -11,7 +17,9 @@ export default function MenuContentItem({ list }) {
   const expandLinksContainerEl = useRef();
 
   useEffect(() => {
-    if (!expandLinksContainerEl.current) return;
+    if (!expandLinksContainerEl.current) {
+      return;
+    }
     map(expandLinksContainerEl.current.firstElementChild.children, el => {
       if (includes(el.firstElementChild.classList, "active")) {
         setExpandState(true);
@@ -26,7 +34,7 @@ export default function MenuContentItem({ list }) {
     setExpandState(prevstate => !prevstate);
   };
 
-  if (listName.link) {
+  const renderListNameLink = () => {
     return (
       <ItemsContainer>
         <StyledNavLink
@@ -42,43 +50,47 @@ export default function MenuContentItem({ list }) {
         </StyledNavLink>
       </ItemsContainer>
     );
-  }
+  };
 
-  return (
-    <ItemsContainer>
-      <ExpandRow onClick={expandLinks} expanded={expandState}>
-        <div className="icon-container">{list.icon}</div>
-        <div className="link-name">{listName.output}</div>
+  const renderLinkList = () => {
+    return (
+      <ItemsContainer>
+        <ExpandRow onClick={expandLinks} expanded={expandState}>
+          <div className="icon-container">{list.icon}</div>
+          <div className="link-name">{listName.output}</div>
+          {links && (
+            <ExpandArrowIconContainer expanded={expandState}>
+              <ExpandArrowIcon />
+            </ExpandArrowIconContainer>
+          )}
+        </ExpandRow>
         {links && (
-          <ExpandArrowIconContainer expanded={expandState}>
-            <ExpandArrowIcon />
-          </ExpandArrowIconContainer>
+          <ExpandLinksContainer
+            ref={expandLinksContainerEl}
+            expanded={expandState}
+            element={expandLinksContainerEl}
+          >
+            <div>
+              {map(links, (link, index) => (
+                <ExpandNavLinkContainer key={index}>
+                  <ExpandNavLink
+                    exact
+                    activeClassName="active"
+                    className="link-name"
+                    to={link.link}
+                  >
+                    {link.output}
+                  </ExpandNavLink>
+                </ExpandNavLinkContainer>
+              ))}
+            </div>
+          </ExpandLinksContainer>
         )}
-      </ExpandRow>
-      {links && (
-        <ExpandLinksContainer
-          ref={expandLinksContainerEl}
-          expanded={expandState}
-          element={expandLinksContainerEl}
-        >
-          <div>
-            {map(links, (link, index) => (
-              <ExpandNavLinkContainer key={index}>
-                <ExpandNavLink
-                  exact
-                  activeClassName="active"
-                  className="link-name"
-                  to={link.link}
-                >
-                  {link.output}
-                </ExpandNavLink>
-              </ExpandNavLinkContainer>
-            ))}
-          </div>
-        </ExpandLinksContainer>
-      )}
-    </ItemsContainer>
-  );
+      </ItemsContainer>
+    );
+  };
+
+  return listName.link ? renderListNameLink() : renderLinkList();
 }
 
 const ExpandRow = styled.div`
@@ -93,7 +105,7 @@ const ExpandRow = styled.div`
   transition: all 0.25s ease-in-out;
 
   &:hover {
-    background: rgba(123, 124, 177, 0.07);
+    background-color: ${ACCENT2HOVER};
     cursor: pointer;
     color: ${BLACK};
   }
@@ -144,7 +156,7 @@ const StyledNavLink = styled(NavLink)`
   transition: all 0.25s ease-in-out;
 
   &:hover {
-    background: rgba(123, 124, 177, 0.07);
+    background-color: ${ACCENT2HOVER};
     cursor: pointer;
     color: ${BLACK};
   }
