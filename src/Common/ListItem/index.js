@@ -14,7 +14,7 @@ const StyledPillsWrapper = styled.div`
   align-items: center;
   border-radius: 20px; 
   padding: 5px 10px;
-  width: 100%;
+  width: fit-content;
   cursor: pointer;
   overflow: hidden;
 `;
@@ -22,7 +22,7 @@ const StyledPillsWrapper = styled.div`
 const StyledTextContainer = styled.div`
   display: flex;
   flex-direction: row;
-  width: 100%;
+  width: fit-content;
   align-items: center;
   
   > svg.icon {
