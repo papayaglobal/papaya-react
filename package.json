@@ -5,7 +5,11 @@
   "typings": "dist/index.d.ts",
   "module": "dist/index.es.js",
   "dependencies": {
+    "babel-eslint": "^10.1.0",
     "date-fns": "^2.0.0-alpha.27",
+    "eslint": "^6.8.0",
+    "eslint-plugin-babel": "^5.3.0",
+    "eslint-plugin-react": "^7.18.3",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "react-onclickoutside": "^6.8.0",

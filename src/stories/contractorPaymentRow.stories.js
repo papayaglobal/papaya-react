@@ -116,16 +116,15 @@ storiesOf("Contractor Payment Row", module)
     .addParameters({viewport: {viewports: INITIAL_VIEWPORTS}})
     .addDecorator(withKnobs)
     .add("iphone6", () => (
-        <div className="app attachment">
-            <ContractorPaymentRow
-                payments={payments}
-                actions={actions}
-                selectable={boolean("selectable", false)}
-                selected={true}
-                onProFormaClicked={({payment, contractorPaymentRequestProForma}) => alert("clicked attachment pro forma")}
-                onInvoiceClicked={({payment, contractorPaymentRequestProForma}) => alert("clicked attachment pro forma")}
-            />
-        </div>
+        <ContractorPaymentRow
+            payments={payments}
+            actions={actions}
+            isExpanded={false}
+            selectable={boolean("selectable", false)}
+            selected={true}
+            onProFormaClicked={({payment, contractorPaymentRequestProForma}) => alert("clicked attachment pro forma")}
+            onInvoiceClicked={({payment, contractorPaymentRequestProForma}) => alert("clicked attachment pro forma")}
+        />
     ), {viewport: {defaultViewport: "iphone6"}})
     .add("Desktop", () => (
         <>

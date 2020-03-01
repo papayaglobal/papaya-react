@@ -1,10 +1,10 @@
 import React from "react";
-import styled ,{css} from "styled-components";
+import styled from "styled-components";
 import {isFunction} from "lodash";
 import {ReactComponent as ListItemClose} from "../../assets/icons/ListItemClose.svg";
 import {ReactComponent as AttachmentIcon} from "../../assets/icons/attachment.svg";
 import * as Color from "../../Constants/colors";
-// import MiddleTruncate from './react-middle-truncate/middle-truncate';
+import MiddleTruncate from '../../react-middle-truncate/middle-truncate';
 
 const StyledPillsWrapper = styled.div`
   background-color: ${({bgColor}) => bgColor || "rgba(25, 117, 240, 0.05)"};
@@ -14,26 +14,17 @@ const StyledPillsWrapper = styled.div`
   align-items: center;
   border-radius: 20px; 
   padding: 5px 10px;
-  width: fit-content;
+  width: 100%;
   cursor: pointer;
   overflow: hidden;
-`;
-
-const FileName = styled.span`
-  ${props => props.limit ? css`
-      max-height: 15px;
-      max-width: calc(100% - 130px);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    `:''
-  }
 `;
 
 const StyledTextContainer = styled.div`
   display: flex;
   flex-direction: row;
-
+  width: 100%;
+  align-items: center;
+  
   > svg.icon {
     margin-right: 10px;
     fill: ${Color.ACCENT1};
@@ -53,6 +44,13 @@ const StyledCloseIcon = styled(ListItemClose)`
   }  
   cursor: pointer;
 `;
+
+const StyledMiddleTruncate = styled(MiddleTruncate)`
+  color: #1975f0;
+  min-width: 120px;
+  width: calc(100% - 26px);
+`;
+
 const ListItemComponent = (props) => {
     const {className, onClick, name, onCloseClick, hideClose = false, bgColor, limit} = props;
 
@@ -71,8 +69,14 @@ const ListItemComponent = (props) => {
                                onClick={onClickPills}>
         <StyledTextContainer>
             <AttachmentIcon className="icon" style={{flexShrink: 0}}/>
-            {/* <MiddleTruncate onResizeDebounceMs={300} text={name} style={{ minWidth: 400 }} /> */}
-            <FileName className="fileName" limit={limit}>{name}</FileName>
+            <StyledMiddleTruncate
+                forcererender={true}
+                smartCopy={'all'}
+                onResizeDebounceMs={100}
+                text={name}
+                start={10}
+                end={10}
+            />
         </StyledTextContainer>
 
         {!hideClose && <StyledCloseIcon className="closeIcon" alt="" onClick={onClosePillClick}/>}

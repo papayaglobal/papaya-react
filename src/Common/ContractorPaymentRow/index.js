@@ -64,10 +64,11 @@ const DateWrapper = styled(Flex)`
 
 const FirstCollWrapper = styled(Flex)`
     width: 150px;
-    margin: 0px 15px 0px 0px;
+    margin: 0 15px 0 0;
     @media (max-width: ${sizes.md}px) {
         flex-direction: row-reverse;
         width: initial;
+        margin: 0 0 15px 0;
     }
 `;
 
@@ -299,7 +300,7 @@ class ContractorPaymentRow extends Component {
             <StyledPaymentRow onClick={this.onPaymentClick} isExpanded>
                 <StyledLeftWrapper className="leftWrapper">
                     {selectable && <StyledSelectWrapper className="selectWrapper">
-                        <CheckBox checked={selected} onClick={(e) => this.onSelectClicked({e, payment})}/>
+                        <CheckBox checked={selected} onClick={(e) => this.onSelectClicked({e, payment: payments})}/>
                     </StyledSelectWrapper>}
                     <StyledRightArrow alt="Next" isExpanded={isExpanded} onClick={this.toggleCollapse}/>
                     <StyledDates className={"date-range"} isMonthly={isMonthly}>{dateRange}</StyledDates>
