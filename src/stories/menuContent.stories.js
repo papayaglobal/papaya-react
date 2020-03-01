@@ -1,6 +1,6 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { text, withKnobs } from "@storybook/addon-knobs";
+import { withKnobs } from "@storybook/addon-knobs";
 
 import { BrowserRouter as Router } from "react-router-dom";
 import { ReactComponent as Dashboard } from "../assets/icons/Dashboard.svg";
@@ -11,58 +11,54 @@ import "./stories.css";
 const lists = [
   {
     listName: { output: "User Managment", link: "/rolesAndPermissions" },
-    icon: <Dashboard />,
-    links: [
-      { output: "Roles & Permissions", link: "/rolesAndPermissions" },
-      { output: "Platform Users", link: "/platformUsers" }
-    ]
+    icon: <Dashboard />
   },
   {
     listName: { output: "Data Tables", link: "" },
     icon: <Dashboard />,
     links: [
-      { output: "Roles & Permissions", link: "/rolesAndPermissions" },
-      { output: "Platform Users", link: "/platformUsers" }
+      { output: "Popo", link: "/popo" },
+      { output: "Momo", link: "/momo" }
     ]
   },
   {
     listName: { output: "Reports", link: "" },
     icon: <Dashboard />,
     links: [
-      { output: "Roles & Permissions", link: "/rolesAndPermissions" },
-      { output: "Platform Users", link: "/platformUsers" }
+      { output: "Toto", link: "/toto" },
+      { output: "Dodo", link: "/dodo" }
     ]
   },
   {
     listName: { output: "Notifications", link: "" },
     icon: <Dashboard />,
     links: [
-      { output: "Roles & Permissions", link: "/rolesAndPermissions" },
-      { output: "Platform Users", link: "/platformUsers" }
+      { output: "Koko", link: "/koko" },
+      { output: "Lolo", link: "/lolo" }
     ]
   },
   {
     listName: { output: "WorkFlows", link: "" },
     icon: <Dashboard />,
     links: [
-      { output: "Roles & Permissions", link: "/rolesAndPermissions" },
-      { output: "Platform Users", link: "/platformUsers" }
+      { output: "Soso", link: "/soso" },
+      { output: "Coco", link: "/coco" }
     ]
   },
   {
     listName: { output: "Integrations", link: "" },
     icon: <Dashboard />,
     links: [
-      { output: "Roles & Permissions", link: "/rolesAndPermissions" },
-      { output: "Platform Users", link: "/platformUsers" }
+      { output: "Koko", link: "/koko" },
+      { output: "Yoyo", link: "/yoyo" }
     ]
   },
   {
     listName: { output: "Configurations", link: "" },
     icon: <Dashboard />,
     links: [
-      { output: "Roles & Permissions", link: "/rolesAndPermissions" },
-      { output: "Platform Users", link: "/platformUsers" }
+      { output: "Roro", link: "/roro" },
+      { output: "Wowo", link: "/wowo" }
     ]
   }
 ];
