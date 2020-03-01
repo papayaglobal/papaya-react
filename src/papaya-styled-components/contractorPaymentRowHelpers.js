@@ -50,6 +50,7 @@ export const StyledRightWrapper = styled.div`
 `;
 
 export const StyledRightArrow = styled(RightArrow)`
+  flex-shrink: 0;
   :hover, :hover .oval, .oval, .oval:hover {
     fill: transparent;    
   } 

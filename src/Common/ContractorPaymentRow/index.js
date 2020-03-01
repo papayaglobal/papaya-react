@@ -278,7 +278,6 @@ class ContractorPaymentRow extends Component {
             actions,
             selectable,
             selected,
-            selectedAttachments = [],
             payments,
             isMonthly
         } = this.props;
