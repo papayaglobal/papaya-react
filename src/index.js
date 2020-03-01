@@ -27,6 +27,8 @@ import ListItem from "./Common/ListItem";
 import ContractorPaymentRow from "./Common/ContractorPaymentRow";
 import { CheckBox } from "./Common/Checkbox/index";
 import Table from "./Common/Table";
+import MenuContent from "./Common/MenuContent";
+import MenuContentItem from "./Common/MenuContentItem";
 
 export {
   Alert,
@@ -50,7 +52,9 @@ export {
   ToolTip,
   ContractorPaymentRow,
   ListItem,
-  Table
+  Table,
+  MenuContent,
+  MenuContentItem
 };
 
 ReactDOM.render(<App />, document.getElementById("root"));
