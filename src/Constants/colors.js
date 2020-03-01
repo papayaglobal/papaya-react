@@ -26,6 +26,7 @@ export const STATUSWARNINGDARK = "#e28700";
 export const ACCENT1 = "#1975f0";
 export const ACCENT1DARK = "#0b5ac3";
 export const ACCENT2 = "#7b7cb1";
+export const ACCENT2HOVER = "#7b7cb112";
 export const ACCENT2DARK = "#575994";
 export const ACCENT3 = "#976fed";
 export const ACCENT3DARK = "#734cc6";
