@@ -166,7 +166,7 @@ export const StyledExpandedContainer = styled(Flex)`
     font-style: italic;
   }
   @media (max-width: ${sizes.md}px) {
-        padding: 10px 10px 25px;
+        padding: 25px 15px;
     }
 `;
 
@@ -190,6 +190,7 @@ export const CreatedDateTime = styled.span`
 
 export const StyledAttachmentTitle = styled.span`
   display: inline-block;
+  font-size: 14px;
   margin: ${({margin}) => margin};
   padding: ${({padding}) => padding};
   font-family: "Open Sans", sans-serif;
@@ -203,4 +204,5 @@ export const StyledSubmittedText = styled.span`
   font-size: 14px;
   color: #1E0000;
   margin-top: 5px;
+  line-height: 21px;
 `;
