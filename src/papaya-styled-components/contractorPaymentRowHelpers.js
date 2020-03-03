@@ -11,6 +11,7 @@ export const StyledPaymentContainer = styled.div`
   flex-direction: column;
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
   background-color: ${WHITE};  
+  width: 100%;
   &:hover {
     box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1);
   }

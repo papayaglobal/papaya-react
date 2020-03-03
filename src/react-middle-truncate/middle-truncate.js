@@ -227,7 +227,7 @@ class MiddleTruncate extends PureComponent {
 
     render() {
         // eslint-disable-next-line no-unused-vars
-        const {text, ellipsis, style, onResizeDebounceMs, smartCopy, ...otherProps} = this.props;
+        const {text, ellipsis, style, onResizeDebounceMs, smartCopy, forcereRender, ...otherProps} = this.props;
         const {truncatedText, hiddenStyle, truncatedTextStyle} = this.state;
 
         const componentStyle = {
