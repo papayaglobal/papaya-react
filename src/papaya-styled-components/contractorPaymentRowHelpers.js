@@ -3,6 +3,7 @@ import {BLACK, DARK1, DARK2, DARK3, WHITE} from "../Constants";
 import {RightArrow} from "../papaya-styled-components";
 import {Flex} from "../papaya-styled-components/flex-components";
 import {sizes} from "../Constants/mediaQueries";
+import ListItem from "../Common/ListItem";
 
 export const StyledPaymentContainer = styled.div`
   display: flex;
@@ -90,14 +91,14 @@ export const StyledAmount = styled(Flex)`
   font-weight: 600;
 `;
 
-export const StyledAttachment = styled.div`
-  display: none;
+export const StyledListItem = styled(ListItem)`
   max-height: 36px;
   overflow: hidden;
-  @media (min-width: ${sizes.md}px) {
-    display: flex;
-    flex: 10;
-    flex-shrink: 1;
+  flex: 10;
+  display: flex;
+  flex-shrink: 0;
+  @media (max-width: ${sizes.md}px) {
+    display: none;
   }
 `;
 export const StyledAttachmentIcon = styled.div`

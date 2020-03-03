@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import measureText from './measure-text';
 import units from 'units-css';
 
+const DEBUG_MODE = false;
+
 const getStartOffset = (start, text) => {
     if (start === '' || start === null) {
         return 0;
@@ -45,7 +47,7 @@ const getEndOffset = (end, text) => {
 // a Regular Expression to calculate these positions dynamically against the text itself.
 class MiddleTruncate extends PureComponent {
     static propTypes = {
-        forcererender: PropTypes.bool,
+        forcereRender: PropTypes.bool,
         className: PropTypes.string,
         ellipsis: PropTypes.string,
         end: PropTypes.oneOfType([PropTypes.number, PropTypes.instanceOf(RegExp), PropTypes.string]),
@@ -57,7 +59,7 @@ class MiddleTruncate extends PureComponent {
     };
 
     static defaultProps = {
-        forcererender: false,
+        forcereRender: false,
         className: '',
         ellipsis: '...',
         end: 0,
@@ -81,7 +83,9 @@ class MiddleTruncate extends PureComponent {
     state = {
         truncatedText: this.props.text,
         start: getStartOffset(this.props.start, this.props.text),
-        end: getEndOffset(this.props.end, this.props.text)
+        end: getEndOffset(this.props.end, this.props.text),
+        hiddenStyle: {visibility: "hidden"},
+        truncatedTextStyle: {display: "none"}
     };
 
     componentDidMount() {
@@ -90,7 +94,9 @@ class MiddleTruncate extends PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.text !== this.props.text || this.props.forcererender) {
+        if (nextProps.text !== this.props.text || this.props.forcereRender) {
+            this.setState({hiddenStyle: {visibility: "hidden"}});
+            this.setState({truncatedTextStyle: {display: "none"}});
             this.parseTextForTruncation(nextProps.text);
         }
 
@@ -129,7 +135,7 @@ class MiddleTruncate extends PureComponent {
 
             clipboardData.setData('text/plain', this.props.text);
         }
-    }
+    };
 
     onResize() {
         this.parseTextForTruncation(this.props.text);
@@ -156,19 +162,18 @@ class MiddleTruncate extends PureComponent {
         });
 
         return {width, height};
-    }
+    };
 
     getComponentMeasurement = () => {
         const node = findDOMNode(this.refs.component);
 
         const offsetWidth = node && node.offsetWidth ? node.offsetWidth : 0;
         const offsetHeight = node && node.offsetHeight ? node.offsetHeight : 0;
-
         return {
             width: units.parse(offsetWidth, 'px'),
             height: units.parse(offsetHeight, 'px')
         };
-    }
+    };
 
     calculateMeasurements() {
         return {
@@ -186,8 +191,13 @@ class MiddleTruncate extends PureComponent {
             return ellipsis;
         }
 
+        DEBUG_MODE && console.log("truncateText:  measurements.text.width.value =>", measurements.text.width.value);
+        DEBUG_MODE && console.log("truncateText: measurements.component.width.value =>", measurements.component.width.value);
+
         const delta = Math.ceil(measurements.text.width.value - measurements.component.width.value);
+        DEBUG_MODE && console.log("truncateText: delta =>", delta);
         const totalLettersToRemove = Math.ceil(delta / measurements.ellipsis.width.value);
+        DEBUG_MODE && console.log("truncateText: totalLettersToRemove =>", totalLettersToRemove);
         const middleIndex = Math.round(text.length / 2);
 
         const preserveLeftSide = text.slice(0, start);
@@ -196,33 +206,35 @@ class MiddleTruncate extends PureComponent {
         const preserveRightSide = text.slice(text.length - end, text.length);
 
         return `${preserveLeftSide}${leftSide}${ellipsis}${rightSide}${preserveRightSide}`;
-    }
+    };
 
     parseTextForTruncation(text) {
         const measurements = this.calculateMeasurements();
 
+        DEBUG_MODE && console.log("parseTextForTruncation: measurements.component.width.value =>", measurements.component.width.value);
+        DEBUG_MODE && console.log("parseTextForTruncation: measurements.text.width.value =>", measurements.text.width.value);
         const truncatedText =
             Math.round(measurements.text.width.value) > Math.round(measurements.component.width.value)
                 ? this.truncateText(measurements)
                 : text;
 
-        this.setState(() => ({truncatedText}));
+        this.setState(() => ({
+            truncatedText,
+            hiddenStyle: {display: "none"},
+            truncatedTextStyle: {display: "inline-block"}
+        }));
     }
 
     render() {
         // eslint-disable-next-line no-unused-vars
         const {text, ellipsis, style, onResizeDebounceMs, smartCopy, ...otherProps} = this.props;
-        const {truncatedText} = this.state;
+        const {truncatedText, hiddenStyle, truncatedTextStyle} = this.state;
 
         const componentStyle = {
             ...style,
             display: 'block',
-            overflow: 'hidden',
+            // overflow: 'hidden',
             whiteSpace: 'nowrap'
-        };
-
-        const hiddenStyle = {
-            display: 'none'
         };
 
         return (
@@ -234,7 +246,7 @@ class MiddleTruncate extends PureComponent {
                 <span ref="text" style={hiddenStyle}>{text}</span>
                 <span ref="ellipsis" style={hiddenStyle}>{ellipsis}</span>
 
-                {truncatedText}
+                <span className={"truncated"} style={truncatedTextStyle}>{truncatedText}</span>
             </div>
         );
     }

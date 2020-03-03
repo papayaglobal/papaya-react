@@ -5,6 +5,7 @@ import {ReactComponent as ListItemClose} from "../../assets/icons/ListItemClose.
 import {ReactComponent as AttachmentIcon} from "../../assets/icons/attachment.svg";
 import * as Color from "../../Constants/colors";
 import MiddleTruncate from '../../react-middle-truncate/middle-truncate';
+import {sizes} from "../../Constants/mediaQueries";
 
 const StyledPillsWrapper = styled.div`
   background-color: ${({bgColor}) => bgColor || "rgba(25, 117, 240, 0.05)"};
@@ -14,15 +15,17 @@ const StyledPillsWrapper = styled.div`
   align-items: center;
   border-radius: 20px; 
   padding: 5px 10px;
-  width: 100%;
+  width: fit-content;
+  max-width: 100%;
   cursor: pointer;
-  overflow: hidden;
+  overflow: hidden;  
 `;
 
 const StyledTextContainer = styled.div`
   display: flex;
   flex-direction: row;
-  width: 100%;
+  width: fit-content;
+  max-width: 100%;
   align-items: center;
   
   > svg.icon {
@@ -42,17 +45,20 @@ const StyledCloseIcon = styled(ListItemClose)`
     width: 10px;
     height: 10px;
   }  
-  cursor: pointer;
+  cursor: pointer;  
 `;
 
 const StyledMiddleTruncate = styled(MiddleTruncate)`
   color: #1975f0;
-  min-width: 120px;
   width: calc(100% - 26px);
+  @media (max-width: ${sizes.md}px) {
+    min-width: calc(100% - 26px);
+    width: 100%;
+  }
 `;
 
 const ListItemComponent = (props) => {
-    const {className, onClick, name, onCloseClick, hideClose = false, bgColor, limit} = props;
+    const {className, onClick, name, onCloseClick, hideClose = false, bgColor} = props;
 
     const onClickPills = (e) => {
         e.stopPropagation();
@@ -70,12 +76,12 @@ const ListItemComponent = (props) => {
         <StyledTextContainer>
             <AttachmentIcon className="icon" style={{flexShrink: 0}}/>
             <StyledMiddleTruncate
-                forcererender={true}
+                forcereRender={true}
                 smartCopy={'all'}
                 onResizeDebounceMs={100}
                 text={name}
-                start={10}
-                end={10}
+                start={8}
+                end={8}
             />
         </StyledTextContainer>
 

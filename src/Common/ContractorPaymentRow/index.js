@@ -8,13 +8,13 @@ import {
     CreatedDateTime,
     StyledActions,
     StyledAmount,
-    StyledAttachment,
     StyledAttachmentIcon,
     StyledAttachments,
     StyledAttachmentTitle,
     StyledDates,
     StyledExpandedContainer,
     StyledLeftWrapper,
+    StyledListItem,
     StyledPaymentContainer,
     StyledPaymentRow,
     StyledReportedDate,
@@ -309,17 +309,14 @@ class ContractorPaymentRow extends Component {
                             currency,
                             value
                         })}</StyledAmount>}
-                        {proforma && <StyledAttachment className="attachments">
-                            <ListItem
-                                limit={true}
-                                hideClose={true}
-                                onClick={() => this.onProFormaClicked({
-                                    payment,
-                                    contractorPaymentRequestProForma: proforma
-                                })}
-                                name={get(proforma, "file.name")}
-                            />
-                        </StyledAttachment>
+                        {proforma && <StyledListItem
+                            hideClose={true}
+                            onClick={() => this.onProFormaClicked({
+                                payment,
+                                contractorPaymentRequestProForma: proforma
+                            })}
+                            name={get(proforma, "file.name")}
+                        />
                         }
                     </>}
                 </StyledLeftWrapper>
