@@ -11,7 +11,7 @@ import {
   ACCENT2HOVER
 } from "../../Constants/colors";
 
-export default function MenuContentItem({ list }) {
+export default function MenuContentItem({ list, onClickItem }) {
   const [expandState, setExpandState] = useState(null);
   const { listName, links } = list;
   const expandLinksContainerEl = useRef();
@@ -42,6 +42,7 @@ export default function MenuContentItem({ list }) {
           exact
           activeClassName="active"
           expanded={expandState}
+          onClick={onClickItem}
         >
           <div className="icon-container">{list.icon}</div>
           <div className="link-name" to={listName.link}>
@@ -78,6 +79,7 @@ export default function MenuContentItem({ list }) {
                     activeClassName="active"
                     className="link-name"
                     to={link.link}
+                    onClick={onClickItem}
                   >
                     {link.output}
                   </ExpandNavLink>
