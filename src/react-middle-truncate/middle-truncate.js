@@ -213,7 +213,6 @@ class MiddleTruncate extends PureComponent {
 
         DEBUG_MODE && console.log("parseTextForTruncation: measurements.component.width.value =>", measurements.component.width.value);
         DEBUG_MODE && console.log("parseTextForTruncation: measurements.text.width.value =>", measurements.text.width.value);
-        debugger;
         const truncatedText =
             Math.round(measurements.text.width.value) > Math.round(measurements.component.width.value)
                 ? this.truncateText(measurements)
