@@ -21,7 +21,7 @@ export default function MenuContentItem({ list, onClickItem }) {
       return;
     }
     map(expandLinksContainerEl.current.firstElementChild.children, el => {
-      if (includes(el.firstElementChild.classList, "active")) {
+      if (includes(el.classList, "active")) {
         setExpandState(true);
       }
     });
@@ -73,16 +73,15 @@ export default function MenuContentItem({ list, onClickItem }) {
           >
             <div>
               {map(links, (link, index) => (
-                <ExpandNavLinkContainer key={index}>
-                  <ExpandNavLink
-                    exact
-                    activeClassName="active"
-                    className="link-name"
-                    to={link.link}
-                    onClick={onClickItem}
-                  >
-                    {link.output}
-                  </ExpandNavLink>
+                <ExpandNavLinkContainer
+                  key={index}
+                  exact
+                  activeClassName="active"
+                  className="link-name"
+                  to={link.link}
+                  onClick={onClickItem}
+                >
+                  <ExpandNavLink>{link.output}</ExpandNavLink>
                 </ExpandNavLinkContainer>
               ))}
             </div>
@@ -140,6 +139,7 @@ const ItemsContainer = styled.div`
   display: flex;
   flex-direction: column;
   color: ${ACCENT2};
+  margin-bottom: 5px;
   a {
     text-decoration: none;
     color: inherit;
@@ -199,8 +199,9 @@ const ExpandArrowIconContainer = styled.div`
   position: absolute;
   right: 11px;
   svg {
+    height: 9px;
     transform: ${({ expanded }) =>
-      expanded ? "rotate(90deg)" : "rotate(0deg)"};
+      expanded ? "rotate(-90deg)" : "rotate(90deg)"};
     transition: 0.5s ease;
   }
 `;
@@ -209,7 +210,6 @@ const ExpandLinksContainer = styled.div`
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  margin-left: 56px;
   height: ${({ expanded, element }) =>
     expanded
       ? element
@@ -219,28 +219,35 @@ const ExpandLinksContainer = styled.div`
   transition: 0.5s ease;
 `;
 
-const ExpandNavLinkContainer = styled.div`
+const ExpandNavLinkContainer = styled(NavLink)`
   display: flex;
   align-items: center;
   margin-bottom: 5px;
   color: ${ACCENT2};
-  height: 32px;
-`;
-
-const ExpandNavLink = styled(NavLink)`
-  border-radius: 4px;
-  padding: 10px;
+  height: 40px;
+  width: 100%;
+  padding-left: 57px;
   transition: all 0.25s ease-in-out;
-
   &:hover {
     cursor: pointer;
     background-color: rgba(123, 124, 177, 0.07);
-    color: ${DARK1};
-    font-weight: 600;
   }
   &.active {
-    background-color: rgba(123, 124, 177, 0.07);
-    color: ${DARK1};
-    font-weight: 600;
+    div {
+      background-color: rgba(123, 124, 177, 0.07);
+      color: ${DARK1};
+      font-weight: 600;
+    }
+    &:hover {
+      div {
+        background-color: transparent;
+      }
+    }
   }
+`;
+
+const ExpandNavLink = styled.div`
+  border-radius: 4px;
+  padding: 10px;
+  transition: all 0.25s ease-in-out;
 `;
