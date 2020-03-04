@@ -199,7 +199,6 @@ const ExpandArrowIconContainer = styled.div`
   position: absolute;
   right: 11px;
   svg {
-    height: 9px;
     transform: ${({ expanded }) =>
       expanded ? "rotate(-90deg)" : "rotate(90deg)"};
     transition: 0.5s ease;
