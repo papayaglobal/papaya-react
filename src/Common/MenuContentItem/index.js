@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { map, isNil, includes } from "lodash";
+import { map, isNil, includes, filter } from "lodash";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
-import { ReactComponent as ExpandArrowIcon } from "../../assets/icons/tableArrow.svg";
+import { ReactComponent as ExpandArrowIcon } from "../../assets/icons/Menu-content-arrow.svg";
 import {
   ACCENT2,
   BLACK,
