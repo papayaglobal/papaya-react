@@ -49,7 +49,7 @@ const lists = [
     listName: { output: "Integrations", link: "" },
     icon: <Dashboard />,
     links: [
-      { output: "Koko", link: "/koko" },
+      { output: "Jojo", link: "/jojo" },
       { output: "Yoyo", link: "/yoyo" }
     ]
   },

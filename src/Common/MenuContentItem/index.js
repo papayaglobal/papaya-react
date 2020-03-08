@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { map, isNil, includes, filter } from "lodash";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
@@ -15,7 +15,6 @@ export default function MenuContentItem({ list, onClickItem }) {
   const [expandState, setExpandState] = useState(null);
   const { listName, links } = list;
   const expandLinksContainerEl = useRef();
-
   useEffect(() => {
     if (!expandLinksContainerEl.current) {
       return;
@@ -23,6 +22,7 @@ export default function MenuContentItem({ list, onClickItem }) {
     map(expandLinksContainerEl.current.firstElementChild.children, el => {
       if (includes(el.classList, "active")) {
         setExpandState(true);
+        list.isSubLinkActive = true;
       }
     });
   }, []);
@@ -42,7 +42,7 @@ export default function MenuContentItem({ list, onClickItem }) {
           exact
           activeClassName="active"
           expanded={expandState}
-          onClick={onClickItem}
+          onClick={() => onClickItem(null)}
         >
           <div className="icon-container">{list.icon}</div>
           <div className="link-name" to={listName.link}>
@@ -56,7 +56,7 @@ export default function MenuContentItem({ list, onClickItem }) {
   const renderLinkList = () => {
     return (
       <ItemsContainer>
-        <ExpandRow onClick={expandLinks} expanded={expandState}>
+        <ExpandRow onClick={expandLinks} isSublinkActive={list.isSubLinkActive}>
           <div className="icon-container">{list.icon}</div>
           <div className="link-name">{listName.output}</div>
           {links && (
@@ -79,7 +79,7 @@ export default function MenuContentItem({ list, onClickItem }) {
                   activeClassName="active"
                   className="link-name"
                   to={link.link}
-                  onClick={onClickItem}
+                  onClick={() => onClickItem(list.listIndex)}
                 >
                   <ExpandNavLink>{link.output}</ExpandNavLink>
                 </ExpandNavLinkContainer>
@@ -101,7 +101,7 @@ const ExpandRow = styled.div`
   justify-content: flex-start;
   width: 240px;
   height: 50px;
-  color: ${({ expanded }) => (expanded ? BLACK : ACCENT2)};
+  color: ${({ isSublinkActive }) => (isSublinkActive ? BLACK : ACCENT2)};
   border-radius: 0px 3.41px 3.41px 0px;
   transition: all 0.25s ease-in-out;
 
@@ -113,7 +113,7 @@ const ExpandRow = styled.div`
 
   svg {
     margin-left: 27px;
-    fill: ${({ expanded }) => (expanded ? BRANDCOLOR : ACCENT2)};
+    fill: ${({ isSublinkActive }) => (isSublinkActive ? BRANDCOLOR : ACCENT2)};
   }
 
   .link-name {
@@ -127,8 +127,8 @@ const ExpandRow = styled.div`
     top: 0;
     width: 4px;
     height: 50px;
-    background-color: ${({ expanded }) =>
-      expanded ? BRANDCOLOR : "transperent"};
+    background-color: ${({ isSublinkActive }) =>
+      isSublinkActive ? BRANDCOLOR : "transperent"};
     border-radius: 0 5px 5px 0;
     opacity: 1;
     transition: all 0.25s ease-in-out;
