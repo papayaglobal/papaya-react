@@ -49,7 +49,7 @@ const lists = [
     listName: { output: "Integrations", link: "" },
     icon: <Dashboard />,
     links: [
-      { output: "Koko", link: "/koko" },
+      { output: "Jojo", link: "/jojo" },
       { output: "Yoyo", link: "/yoyo" }
     ]
   },
@@ -63,12 +63,14 @@ const lists = [
   }
 ];
 
+const onClick = () => alert("OnClick");
+
 storiesOf("Menu Content", module)
   .addDecorator(withKnobs)
   .add("Default", () => (
     <Router>
       <div className="app">
-        <MenuContent lists={lists} />
+        <MenuContent lists={lists} onClickItem={onClick} />
       </div>
     </Router>
   ));

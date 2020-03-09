@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
-import { map, isNil, includes } from "lodash";
+import React, { useState, useRef, useEffect, useMemo } from "react";
+import { map, isNil, includes, filter } from "lodash";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
-import { ReactComponent as ExpandArrowIcon } from "../../assets/icons/tableArrow.svg";
+import { ReactComponent as ExpandArrowIcon } from "../../assets/icons/Menu-content-arrow.svg";
 import {
   ACCENT2,
   BLACK,
@@ -11,18 +11,18 @@ import {
   ACCENT2HOVER
 } from "../../Constants/colors";
 
-export default function MenuContentItem({ list }) {
+export default function MenuContentItem({ list, onClickItem }) {
   const [expandState, setExpandState] = useState(null);
   const { listName, links } = list;
   const expandLinksContainerEl = useRef();
-
   useEffect(() => {
     if (!expandLinksContainerEl.current) {
       return;
     }
     map(expandLinksContainerEl.current.firstElementChild.children, el => {
-      if (includes(el.firstElementChild.classList, "active")) {
+      if (includes(el.classList, "active")) {
         setExpandState(true);
+        list.isSubLinkActive = true;
       }
     });
   }, []);
@@ -42,6 +42,7 @@ export default function MenuContentItem({ list }) {
           exact
           activeClassName="active"
           expanded={expandState}
+          onClick={() => onClickItem(null)}
         >
           <div className="icon-container">{list.icon}</div>
           <div className="link-name" to={listName.link}>
@@ -55,7 +56,7 @@ export default function MenuContentItem({ list }) {
   const renderLinkList = () => {
     return (
       <ItemsContainer>
-        <ExpandRow onClick={expandLinks} expanded={expandState}>
+        <ExpandRow onClick={expandLinks} isSublinkActive={list.isSubLinkActive}>
           <div className="icon-container">{list.icon}</div>
           <div className="link-name">{listName.output}</div>
           {links && (
@@ -72,15 +73,15 @@ export default function MenuContentItem({ list }) {
           >
             <div>
               {map(links, (link, index) => (
-                <ExpandNavLinkContainer key={index}>
-                  <ExpandNavLink
-                    exact
-                    activeClassName="active"
-                    className="link-name"
-                    to={link.link}
-                  >
-                    {link.output}
-                  </ExpandNavLink>
+                <ExpandNavLinkContainer
+                  key={index}
+                  exact
+                  activeClassName="active"
+                  className="link-name"
+                  to={link.link}
+                  onClick={() => onClickItem(list.listIndex)}
+                >
+                  <ExpandNavLink>{link.output}</ExpandNavLink>
                 </ExpandNavLinkContainer>
               ))}
             </div>
@@ -100,7 +101,7 @@ const ExpandRow = styled.div`
   justify-content: flex-start;
   width: 240px;
   height: 50px;
-  color: ${({ expanded }) => (expanded ? BLACK : ACCENT2)};
+  color: ${({ isSublinkActive }) => (isSublinkActive ? BLACK : ACCENT2)};
   border-radius: 0px 3.41px 3.41px 0px;
   transition: all 0.25s ease-in-out;
 
@@ -112,7 +113,7 @@ const ExpandRow = styled.div`
 
   svg {
     margin-left: 27px;
-    fill: ${({ expanded }) => (expanded ? BRANDCOLOR : ACCENT2)};
+    fill: ${({ isSublinkActive }) => (isSublinkActive ? BRANDCOLOR : ACCENT2)};
   }
 
   .link-name {
@@ -126,8 +127,8 @@ const ExpandRow = styled.div`
     top: 0;
     width: 4px;
     height: 50px;
-    background-color: ${({ expanded }) =>
-      expanded ? BRANDCOLOR : "transperent"};
+    background-color: ${({ isSublinkActive }) =>
+      isSublinkActive ? BRANDCOLOR : "transperent"};
     border-radius: 0 5px 5px 0;
     opacity: 1;
     transition: all 0.25s ease-in-out;
@@ -138,6 +139,7 @@ const ItemsContainer = styled.div`
   display: flex;
   flex-direction: column;
   color: ${ACCENT2};
+  margin-bottom: 5px;
   a {
     text-decoration: none;
     color: inherit;
@@ -198,7 +200,7 @@ const ExpandArrowIconContainer = styled.div`
   right: 11px;
   svg {
     transform: ${({ expanded }) =>
-      expanded ? "rotate(90deg)" : "rotate(0deg)"};
+      expanded ? "rotate(-90deg)" : "rotate(90deg)"};
     transition: 0.5s ease;
   }
 `;
@@ -207,7 +209,6 @@ const ExpandLinksContainer = styled.div`
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  margin-left: 56px;
   height: ${({ expanded, element }) =>
     expanded
       ? element
@@ -217,28 +218,35 @@ const ExpandLinksContainer = styled.div`
   transition: 0.5s ease;
 `;
 
-const ExpandNavLinkContainer = styled.div`
+const ExpandNavLinkContainer = styled(NavLink)`
   display: flex;
   align-items: center;
   margin-bottom: 5px;
   color: ${ACCENT2};
-  height: 32px;
-`;
-
-const ExpandNavLink = styled(NavLink)`
-  border-radius: 4px;
-  padding: 10px;
+  height: 40px;
+  width: 100%;
+  padding-left: 57px;
   transition: all 0.25s ease-in-out;
-
   &:hover {
     cursor: pointer;
     background-color: rgba(123, 124, 177, 0.07);
-    color: ${DARK1};
-    font-weight: 600;
   }
   &.active {
-    background-color: rgba(123, 124, 177, 0.07);
-    color: ${DARK1};
-    font-weight: 600;
+    div {
+      background-color: rgba(123, 124, 177, 0.07);
+      color: ${DARK1};
+      font-weight: 600;
+    }
+    &:hover {
+      div {
+        background-color: transparent;
+      }
+    }
   }
+`;
+
+const ExpandNavLink = styled.div`
+  border-radius: 4px;
+  padding: 10px;
+  transition: all 0.25s ease-in-out;
 `;
