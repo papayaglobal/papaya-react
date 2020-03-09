@@ -21,7 +21,12 @@ export default function MenuContent({ lists, onClickItem }) {
         }))
       );
     } else {
-      setListsState(initialListsState);
+      setListsState(
+        map(listsState, list => ({
+          ...list,
+          isSubLinkActive: false
+        }))
+      );
     }
   };
 
