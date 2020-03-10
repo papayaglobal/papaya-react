@@ -17,7 +17,7 @@ const payments = [{
     "currency": "eur",
     "comment": "dfgdfg",
     "rejectReason": null,
-    "status": "approved",
+    "status": "rejected",
     "createdAt": "2020-02-26T13:53:14.000Z",
     "updatedAt": "2020-02-26T13:53:51.000Z",
     "updatedBy": "papaya admin",
@@ -137,7 +137,7 @@ storiesOf("Contractor Payment Row", module)
                     selected={false}
                     onProFormaClicked={({payment, contractorPaymentRequestProForma}) => alert("clicked attachment pro forma")}
                     onInvoiceClicked={({payment, contractorPaymentRequestProForma}) => alert("clicked attachment pro forma")}
-                    onReviseClicked={({payment}) => alert("")}
+                    onReviseClicked={({payment}) => alert("revise")}
                 />
             </div>
         </>
