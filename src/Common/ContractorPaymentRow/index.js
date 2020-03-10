@@ -219,8 +219,8 @@ const ContractorExpandedPaymentRow = (props) => {
 const ContractorPaymentRowExpandedContainer = (props) => {
     const {payments, isExpanded, ...otherProps} = props;
 
-    const lastTwoPayments = payments.length > 2 ? takeRight(payments, 2) : payments;
-    
+    const lastTwoPayments = payments.length > 3 ? takeRight(payments, 3) : payments;
+
     return <StyledExpandedContainer column isExpanded={isExpanded}>
         {map(lastTwoPayments, (payment, key) => <ContractorExpandedPaymentRow key={key} payment={payment}
                                                                               isLastPaymentRequest={payments.length === (key + 1)} {...otherProps}/>)}
