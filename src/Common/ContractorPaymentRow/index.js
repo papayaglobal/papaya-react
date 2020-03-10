@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import PropTypes from 'prop-types';
 import styled from "styled-components";
-import {find, get, isFunction, map, orderBy} from "lodash";
+import {find, get, isFunction, map, orderBy, takeRight} from "lodash";
 import moment from "moment";
 import {
     CreatedDate,
@@ -162,7 +162,7 @@ const ContractorExpandedPaymentRow = (props) => {
                 {isLastPaymentRequest && <Button
                     style={{width: "220px", margin: "15px 0 0 0"}}
                     size="medium"
-                    onClick={() => onReviseClicked({payment})}
+                    onClick={(e) => onReviseClicked({e, payment})}
                 >Revise Payment Request</Button>}
             </Flex>
         </RowWrapper>)
@@ -219,9 +219,11 @@ const ContractorExpandedPaymentRow = (props) => {
 const ContractorPaymentRowExpandedContainer = (props) => {
     const {payments, isExpanded, ...otherProps} = props;
 
+    const lastTwoPayments = payments.length > 3 ? takeRight(payments, 3) : payments;
+
     return <StyledExpandedContainer column isExpanded={isExpanded}>
-        {map(payments, (payment, key) => <ContractorExpandedPaymentRow key={key} payment={payment}
-                                                                       isLastPaymentRequest={payments.length === (key + 1)} {...otherProps}/>)}
+        {map(lastTwoPayments, (payment, key) => <ContractorExpandedPaymentRow key={key} payment={payment}
+                                                                              isLastPaymentRequest={payments.length === (key + 1)} {...otherProps}/>)}
     </StyledExpandedContainer>
 };
 
