@@ -114,7 +114,7 @@ export const StyledReportedDate = styled.div`
   font-weight: normal;
   font-style: italic;
   margin: 0 20px;
-  width: 96px;
+  width: 98px;
   display: none;
   @media (min-width: ${sizes.md}px) {
     display: inline-block;
