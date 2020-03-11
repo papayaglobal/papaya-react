@@ -31,13 +31,25 @@ export default function MenuContentItem({
                 updateActiveItem(list);
             }
         });
-    }, []);
+    }, [expandLinksContainerEl]);
 
     const expandLinks = () => {
         if (isNil(links)) {
             return;
         }
         setExpandState(prevstate => !prevstate);
+    };
+
+    const isLinkActive = (match, location) => {
+        const isActive = !!match;
+
+        if (isActive) {
+            setImmediate(() => {
+                updateActiveItem(list);
+            });
+        }
+
+        return isActive;
     };
 
     const renderListNameLink = () => {
@@ -47,6 +59,7 @@ export default function MenuContentItem({
                     to={listName.link}
                     exact
                     activeClassName='active'
+                    isActive={(match, location) => isLinkActive(match, location)}
                     expanded={expandState}
                     onClick={() => onClickItem()}
                 >
@@ -83,6 +96,7 @@ export default function MenuContentItem({
                                     key={index}
                                     exact
                                     activeClassName='active'
+                                    isActive={(match, location) => isLinkActive(match, location)}
                                     className='link-name'
                                     to={link.link}
                                     onClick={() => onClickItem()}
@@ -134,7 +148,7 @@ const ExpandRow = styled.div`
         width: 4px;
         height: 50px;
         background-color: ${({ active }) =>
-            active ? BRANDCOLOR : "transperent"};
+        active ? BRANDCOLOR : "transperent"};
         border-radius: 0 5px 5px 0;
         opacity: 1;
         transition: all 0.25s ease-in-out;
@@ -206,7 +220,7 @@ const ExpandArrowIconContainer = styled.div`
     right: 11px;
     svg {
         transform: ${({ expanded }) =>
-            expanded ? "rotate(-90deg)" : "rotate(90deg)"};
+        expanded ? "rotate(-90deg)" : "rotate(90deg)"};
         transition: 0.5s ease;
     }
 `;
