@@ -1,40 +1,30 @@
 import React, { useState } from "react";
-import { map } from "lodash";
+import { map, isEqual } from "lodash";
 import MenuContentItem from "../../Common/MenuContentItem";
 
 export default function MenuContent({ lists, onClickItem }) {
-  const initialListsState = map(lists, (list, index) => ({
-    ...list,
-    isSubLinkActive: false,
-    listIndex: index
-  }));
+    const [activeItem, setActiveItem] = useState(null);
 
-  const [listsState, setListsState] = useState(initialListsState);
+    const itemClicked = ({ item }) => {
+        onClickItem();
+        updateActiveItem(item);
+    };
 
-  const itemClicked = index => {
-    onClickItem();
-    if (index) {
-      setListsState(
-        map(listsState, list => ({
-          ...list,
-          isSubLinkActive: list.listIndex === index
-        }))
-      );
-    } else {
-      setListsState(
-        map(listsState, list => ({
-          ...list,
-          isSubLinkActive: false
-        }))
-      );
-    }
-  };
+    const updateActiveItem = item => setActiveItem(item);
 
-  return (
-    <div>
-      {map(listsState, (item, index) => (
-        <MenuContentItem list={item} key={index} onClickItem={itemClicked} />
-      ))}
-    </div>
-  );
+    return (
+        <div>
+            {map(lists, (item, index) => {
+                return (
+                    <MenuContentItem
+                        list={item}
+                        active={isEqual(item, activeItem)}
+                        key={index}
+                        onClickItem={props => itemClicked({ ...props, item })}
+                        updateActiveItem={updateActiveItem}
+                    />
+                );
+            })}
+        </div>
+    );
 }
