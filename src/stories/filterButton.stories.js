@@ -22,6 +22,16 @@ storiesOf("Filter Button", module)
       />
     </div>
   ))
+  .add("Active", () => (
+    <div className="app">
+      <FilterButton
+        text="Projects"
+        OnClick={OnFilterButtonClick}
+        selected={false}
+        active={true}
+      />
+    </div>
+  ))
 
   .add("Selected", () => (
     <div className="app">

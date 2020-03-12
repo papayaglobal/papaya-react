@@ -1,28 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { BRIGHT4, DARK1, ACCENT1 } from "../../Constants/colors";
 
-export default function FilterButton({ text, selected, OnClick }) {
-  const [activeState, setActiveState] = useState(false);
-
+export default function FilterButton({ text, active, selected, OnClick }) {
   const handleClick = () => {
-    setActiveState(prev => !prev);
     OnClick();
   };
 
   return (
-    <>
-      {activeState && (
-        <ActiveLabel onClick={() => setActiveState(prev => !prev)} />
-      )}
-      <StyledFilterButton
-        active={activeState}
-        selected={selected}
-        onClick={handleClick}
-      >
-        {text}
-      </StyledFilterButton>
-    </>
+    <StyledFilterButton
+      active={active}
+      selected={selected}
+      onClick={handleClick}
+    >
+      {text}
+    </StyledFilterButton>
   );
 }
 
@@ -44,12 +36,4 @@ const StyledFilterButton = styled.div`
     border: 1px solid ${ACCENT1};
     color: ${ACCENT1};
   }
-`;
-
-const ActiveLabel = styled.div`
-  position: fixed;
-  height: 100vh;
-  width: 100vw;
-  opacity: 0;
-  z-index: -1;
 `;
