@@ -9,6 +9,7 @@ export const DARK3 = "#b5b7bd";
 export const BRIGHT3 = "#ebebec";
 export const DARK4 = "#c2c3c8";
 export const BRIGHT4 = "#d4d5d8";
+export const BRIGHT5 = "#e4e5e7;";
 
 // Brand
 export const BRANDCOLOR = "#f74141";
