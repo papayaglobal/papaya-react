@@ -68,7 +68,7 @@ export default function Table({
     }, [firstRowIndex, rowCountState, customColumnState]);
 
     useEffect(() => {
-        if (!isNil(customDataState[0].isSelected)) {
+        if (!isNil(get(customDataState, "[0].isSelected"))) {
             checkIfAllSelected();
         }
     }, [firstRowIndex, rowCountState, customDataState]);
@@ -344,7 +344,7 @@ export default function Table({
         <>
             <TableContainer>
                 <TableRow header>
-                    {!isNil(customDataState[0].isSelected) && (
+                    {!isNil(get(customDataState, "[0].isSelected")) && (
                         <CheckboxContainer>
                             <CheckBox
                                 checked={headerCheckboxState}
