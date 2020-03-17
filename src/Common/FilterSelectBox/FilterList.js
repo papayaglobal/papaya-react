@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { map } from "lodash";
+import { map, get } from "lodash";
 import { CheckBox } from "../Checkbox";
 import { DARK1, BRIGHT1 } from "../../Constants/colors";
 
@@ -25,7 +25,7 @@ export default function FilterList({ filters, toggleIsSelected }) {
                       checked={item.isSelected}
                       onClick={() => toggleIsSelected(item, filter.listName)}
                     />
-                    {item.data.output}
+                    {get(item, "data.output")}
                   </FilterItem>
                 );
               })}
@@ -39,7 +39,7 @@ export default function FilterList({ filters, toggleIsSelected }) {
               checked={filter.isSelected}
               onClick={() => toggleIsSelected(filter)}
             />
-            {filter.data.output}
+            {get(filter, "data.output")}
           </FilterItem>
         );
       })}
