@@ -1,8 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { map, isEqual, compact, flatten } from "lodash";
+import {
+  map,
+  isEqual,
+  compact,
+  flatten,
+  includes,
+  filter,
+  isEmpty
+} from "lodash";
 import { BRIGHT5, DARK2, ACCENT1DARK } from "../../Constants/colors";
 import FilterList from "./FilterList";
+import SearchInput from "./SearchInput";
 import Button from "../Button";
 
 export default function FilterSelectBox({ filters, onSave }) {
@@ -26,6 +35,11 @@ export default function FilterSelectBox({ filters, onSave }) {
   });
 
   const [filtersState, setFiltersState] = useState(customFilters);
+  const [filtersToShow, setFiltersToShow] = useState(customFilters);
+
+  useEffect(() => {
+    setFiltersToShow(filtersState);
+  }, [filtersState]);
 
   const toggleIsSelected = (item, listName) => {
     const updatedFilters = map(filtersState, filterItem => {
@@ -81,9 +95,37 @@ export default function FilterSelectBox({ filters, onSave }) {
     setFiltersState(customFilters);
   };
 
+  const handleSearch = value => {
+    if (!value) {
+      return setFiltersToShow(filtersState);
+    }
+    const SearchedFilters = compact(
+      map(filtersState, filterItem => {
+        if (filterItem.listName) {
+          const filterdItemList = filter(filterItem.filtersList, item =>
+            includes(item.data.output.toLowerCase(), value)
+          );
+          return isEmpty(filterdItemList)
+            ? null
+            : {
+                ...filterItem,
+                filtersList: filterdItemList
+              };
+        } else {
+          return (
+            includes(filterItem.data.output.toLowerCase(), value) && filterItem
+          );
+        }
+      })
+    );
+    console.log(flatten(SearchedFilters));
+    setFiltersToShow(flatten(SearchedFilters));
+  };
+
   return (
     <SelectBox>
-      <FilterList filters={filtersState} toggleIsSelected={toggleIsSelected} />
+      <SearchInput onChange={handleSearch} />
+      <FilterList filters={filtersToShow} toggleIsSelected={toggleIsSelected} />
       <ActionButtons>
         <span onClick={clearSelections}>Clear Selection</span>
         <Button size="medium" onClick={handleSave}>
