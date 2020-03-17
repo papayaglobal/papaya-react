@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { map, isEqual } from "lodash";
-import { BRIGHT5 } from "../../Constants/colors";
+import { map, isEqual, compact, flatten } from "lodash";
+import { BRIGHT5, DARK2, ACCENT1DARK } from "../../Constants/colors";
 import FilterList from "./FilterList";
 import Button from "../Button";
 
-export default function FilterSelectBox({ filters }) {
+export default function FilterSelectBox({ filters, onSave }) {
   const customFilters = map(filters, filter => {
     if (!filter.listName) {
       return {
@@ -53,12 +53,42 @@ export default function FilterSelectBox({ filters }) {
     setFiltersState(updatedFilters);
   };
 
+  const handleSave = () => {
+    if (!onSave) {
+      return;
+    }
+
+    const selectedFilters = compact(
+      map(filtersState, filterItem => {
+        if (filterItem.listName) {
+          return compact(
+            map(
+              filterItem.filtersList,
+              item => item.isSelected === true && item.data
+            )
+          );
+        }
+        if (filterItem.isSelected === true) {
+          return filterItem.data;
+        }
+      })
+    );
+
+    onSave(flatten(selectedFilters));
+  };
+
+  const clearSelections = () => {
+    setFiltersState(customFilters);
+  };
+
   return (
-    <SelectBox onClick={() => console.log(filtersState)}>
+    <SelectBox>
       <FilterList filters={filtersState} toggleIsSelected={toggleIsSelected} />
       <ActionButtons>
-        <span>Clear Selection</span>
-        <Button size="medium">Save</Button>
+        <span onClick={clearSelections}>Clear Selection</span>
+        <Button size="medium" onClick={handleSave}>
+          Save
+        </Button>
       </ActionButtons>
     </SelectBox>
   );
@@ -82,9 +112,19 @@ const ActionButtons = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 16px;
-  bottom: 0;
+  padding: 15px;
+  /* bottom: 0; */
+  border-top: 1px solid rgba(52, 57, 73, 0.1);
+  span {
+    font-size: 14px;
+    color: ${DARK2};
+    &:hover {
+      cursor: pointer;
+      color: ${ACCENT1DARK};
+    }
+  }
   button {
+    width: 60px;
     margin: 0;
   }
 `;

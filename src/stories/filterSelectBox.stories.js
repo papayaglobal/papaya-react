@@ -35,15 +35,19 @@ const filterGroups = [
   }
 ];
 
+const onSave = filters => {
+  console.log("Selected filters", filters);
+};
+
 storiesOf("Filter Select Box", module)
   .addDecorator(withKnobs)
   .add("Default", () => (
     <div className="app">
-      <FilterSelectBox filters={filters} />
+      <FilterSelectBox filters={filters} onSave={onSave} />
     </div>
   ))
   .add("With Groups", () => (
     <div className="app">
-      <FilterSelectBox filters={filterGroups} />
+      <FilterSelectBox filters={filterGroups} onSave={onSave} />
     </div>
   ));

@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { map } from "lodash";
 import { CheckBox } from "../Checkbox";
-import { DARK1 } from "../../Constants/colors";
+import { DARK1, BRIGHT1 } from "../../Constants/colors";
 
 export default function FilterList({ filters, toggleIsSelected }) {
   return (
@@ -11,7 +11,9 @@ export default function FilterList({ filters, toggleIsSelected }) {
         if (filter.listName) {
           return (
             <FilterListContainer key={`filter-list-${index}`}>
-              <FilterListName>{filter.listName}</FilterListName>
+              <FilterListName filterIndex={index}>
+                {filter.listName}
+              </FilterListName>
               {map(filter.filtersList, (item, itemIndex) => {
                 return (
                   <FilterItem
@@ -59,18 +61,24 @@ const FilterItem = styled.div`
     margin-left: 24px;
     margin-right: 12px;
   }
+  &:hover {
+    cursor: pointer;
+    background-color: ${BRIGHT1};
+  }
 `;
 
 const FilterListContainer = styled.div`
-  border-bottom: 1px solid rgba(52, 57, 73, 0.1);
+  /* border-bottom: 1px solid rgba(52, 57, 73, 0.1); */
 `;
 
 const FilterListName = styled.div`
-  width: 100%;
+  width: 90%;
   padding-top: 14px;
   padding-bottom: 14px;
   padding-left: 24px;
   font-size: 12px;
   font-weight: bold;
   color: ${DARK1};
+  border-top: ${({ filterIndex }) =>
+    filterIndex === 0 ? "none" : "1px solid rgba(52, 57, 73, 0.1)"};
 `;
