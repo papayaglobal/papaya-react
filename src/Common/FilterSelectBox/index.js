@@ -19,7 +19,7 @@ export default function FilterSelectBox({ filters, onSave }) {
     if (!filter.listName) {
       return {
         data: filter,
-        isSelected: false
+        isSelected: filter.isSelected || false
       };
     } else {
       return {
@@ -27,7 +27,7 @@ export default function FilterSelectBox({ filters, onSave }) {
         filtersList: map(filter.filtersList, item => {
           return {
             data: item,
-            isSelected: false
+            isSelected: item.isSelected || false
           };
         })
       };
@@ -36,9 +36,14 @@ export default function FilterSelectBox({ filters, onSave }) {
 
   const [filtersState, setFiltersState] = useState(customFilters);
   const [filtersToShow, setFiltersToShow] = useState(customFilters);
+  const [searchTermState, setSearchTermState] = useState(null);
 
   useEffect(() => {
-    setFiltersToShow(filtersState);
+    setFiltersState(customFilters);
+  }, [filters]);
+
+  useEffect(() => {
+    handleSearch(searchTermState);
   }, [filtersState]);
 
   const toggleIsSelected = (item, listName) => {
@@ -96,6 +101,7 @@ export default function FilterSelectBox({ filters, onSave }) {
   };
 
   const handleSearch = value => {
+    setSearchTermState(value);
     if (!value) {
       return setFiltersToShow(filtersState);
     }
@@ -118,7 +124,6 @@ export default function FilterSelectBox({ filters, onSave }) {
         }
       })
     );
-    console.log(flatten(SearchedFilters));
     setFiltersToShow(flatten(SearchedFilters));
   };
 

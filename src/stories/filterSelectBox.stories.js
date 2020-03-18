@@ -7,9 +7,9 @@ import FilterSelectBox from "../Common/FilterSelectBox";
 
 import "./stories.css";
 
-const filters = [
+let filters = [
   { output: "Blue Bird", data: ["Blue Bird Data"] },
-  { output: "CyberArk", data: ["CyberArk Data"] },
+  { output: "CyberArk", data: ["CyberArk Data"], isSelected: true },
   { output: "Dropbox", data: ["Dropbox Data"] }
 ];
 
@@ -19,7 +19,7 @@ const filterGroups = [
     filtersList: [
       { output: "Papaya Admin", data: ["Papaya Admin Data"] },
       { output: "Worker", data: ["Worker Data"] },
-      { output: "Contractor", data: ["Contractor Data"] }
+      { output: "Contractor", data: ["Contractor Data"], isSelected: true }
     ]
   },
   {

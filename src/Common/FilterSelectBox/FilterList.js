@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import { map, get } from "lodash";
 import { CheckBox } from "../Checkbox";
 import { DARK1, BRIGHT1 } from "../../Constants/colors";
 
 export default function FilterList({ filters, toggleIsSelected }) {
+  const lastFilterEl = useCallback(node => {
+    console.log(node);
+  });
+
   return (
     <FiltersContainer>
       {map(filters, (filter, index) => {
@@ -15,33 +19,70 @@ export default function FilterList({ filters, toggleIsSelected }) {
                 {filter.listName}
               </FilterListName>
               {map(filter.filtersList, (item, itemIndex) => {
-                return (
-                  <FilterItem
-                    key={`item-Index-${itemIndex}`}
-                    onClick={() => toggleIsSelected(item, filter.listName)}
-                  >
-                    <CheckBox
-                      className="check-box"
-                      checked={item.isSelected}
+                if (
+                  filter.filtersList.length === itemIndex + 1 &&
+                  filters.length === index + 1
+                ) {
+                  return (
+                    <FilterItem
+                      key={`item-Index-${itemIndex}`}
+                      ref={lastFilterEl}
                       onClick={() => toggleIsSelected(item, filter.listName)}
-                    />
-                    {get(item, "data.output")}
-                  </FilterItem>
-                );
+                    >
+                      <CheckBox
+                        className="check-box"
+                        checked={item.isSelected}
+                        onClick={() => toggleIsSelected(item, filter.listName)}
+                      />
+                      {get(item, "data.output")}
+                    </FilterItem>
+                  );
+                } else {
+                  return (
+                    <FilterItem
+                      key={`item-Index-${itemIndex}`}
+                      onClick={() => toggleIsSelected(item, filter.listName)}
+                    >
+                      <CheckBox
+                        className="check-box"
+                        checked={item.isSelected}
+                        onClick={() => toggleIsSelected(item, filter.listName)}
+                      />
+                      {get(item, "data.output")}
+                    </FilterItem>
+                  );
+                }
               })}
             </FilterListContainer>
           );
         }
-        return (
-          <FilterItem key={index} onClick={() => toggleIsSelected(filter)}>
-            <CheckBox
-              className="check-box"
-              checked={filter.isSelected}
+        if (filters.length === index + 1) {
+          return (
+            <FilterItem
+              key={index}
+              ref={lastFilterEl}
               onClick={() => toggleIsSelected(filter)}
-            />
-            {get(filter, "data.output")}
-          </FilterItem>
-        );
+            >
+              <CheckBox
+                className="check-box"
+                checked={filter.isSelected}
+                onClick={() => toggleIsSelected(filter)}
+              />
+              {get(filter, "data.output")}
+            </FilterItem>
+          );
+        } else {
+          return (
+            <FilterItem key={index} onClick={() => toggleIsSelected(filter)}>
+              <CheckBox
+                className="check-box"
+                checked={filter.isSelected}
+                onClick={() => toggleIsSelected(filter)}
+              />
+              {get(filter, "data.output")}
+            </FilterItem>
+          );
+        }
       })}
     </FiltersContainer>
   );
