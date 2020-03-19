@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import { toLower } from "lodash";
 import { ReactComponent as SearchIcon } from "../../assets/icons/Search.svg";
-import { ACCENT1 } from "../../Constants/colors";
+import { ACCENT1, LIGHTBLUE } from "../../Constants/colors";
 
 export default function SearchInput({ onChange }) {
   return (
@@ -11,7 +12,7 @@ export default function SearchInput({ onChange }) {
         <input
           type="text"
           placeholder="Search"
-          onChange={event => onChange(event.target.value.toLowerCase())}
+          onChange={event => onChange(toLower(event.target.value))}
         />
       </StyledSearchInput>
     </SearchInputContainer>
@@ -21,7 +22,7 @@ export default function SearchInput({ onChange }) {
 const StyledSearchInput = styled.div`
   display: flex;
   align-items: center;
-  border: 1px solid rgba(55, 133, 250, 0.5);
+  border: 1px solid ${LIGHTBLUE};
   border-radius: 4px;
   height: 30px;
   width: 92%;

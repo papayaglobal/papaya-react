@@ -4,6 +4,7 @@ import { text, withKnobs } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
 import { ReactComponent as Dashboard } from "../assets/icons/Dashboard.svg";
 import FilterSelectBox from "../Common/FilterSelectBox";
+import FilterSelectBoxLazyLoad from "../Common/FilterSelectBoxLazyLoad";
 
 import "./stories.css";
 
@@ -43,11 +44,26 @@ storiesOf("Filter Select Box", module)
   .addDecorator(withKnobs)
   .add("Default", () => (
     <div className="app">
-      <FilterSelectBox filters={filters} onSave={onSave} />
+      <FilterSelectBox
+        filters={filters}
+        onSave={onSave}
+        saveLabel="Save"
+        clearLabel="Clear Selection"
+      />
     </div>
   ))
   .add("With Groups", () => (
     <div className="app">
-      <FilterSelectBox filters={filterGroups} onSave={onSave} />
+      <FilterSelectBox
+        filters={filterGroups}
+        onSave={onSave}
+        saveLabel="Save"
+        clearLabel="Clear Selection"
+      />
+    </div>
+  ))
+  .add("With Lazy Load", () => (
+    <div className="app">
+      <FilterSelectBoxLazyLoad filters={filters} onSave={onSave} />
     </div>
   ));

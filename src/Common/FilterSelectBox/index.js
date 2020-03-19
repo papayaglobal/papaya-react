@@ -7,16 +7,32 @@ import {
   flatten,
   includes,
   filter,
-  isEmpty
+  isEmpty,
+  toLower
 } from "lodash";
 import { BRIGHT5, DARK2, ACCENT1DARK } from "../../Constants/colors";
 import FilterList from "./FilterList";
 import SearchInput from "./SearchInput";
 import Button from "../Button";
 
-export default function FilterSelectBox({ filters, onSave }) {
+export const checkIfList = filter => {
+  if (filter.listName && filter.filtersList.length > 0) {
+    return true;
+  }
+  return false;
+};
+
+export default function FilterSelectBox({
+  filters,
+  onSave,
+  onLazy,
+  loading,
+  hasMore,
+  saveLabel,
+  clearLabel
+}) {
   const customFilters = map(filters, filter => {
-    if (!filter.listName) {
+    if (!checkIfList(filter)) {
       return {
         data: filter,
         isSelected: filter.isSelected || false
@@ -53,23 +69,23 @@ export default function FilterSelectBox({ filters, onSave }) {
           return {
             ...filterItem,
             filtersList: map(filterItem.filtersList, filterListItem => {
-              return isEqual(filterListItem.data, item.data)
-                ? { ...filterListItem, isSelected: !filterListItem.isSelected }
-                : filterListItem;
+              return checkIfEqual(filterListItem, item);
             })
           };
         } else {
-          return isEqual(filterItem.data, item.data)
-            ? { ...filterItem, isSelected: !filterItem.isSelected }
-            : filterItem;
+          return checkIfEqual(filterItem, item);
         }
       } else {
-        return isEqual(filterItem.data, item.data)
-          ? { ...filterItem, isSelected: !filterItem.isSelected }
-          : filterItem;
+        return checkIfEqual(filterItem, item);
       }
     });
     setFiltersState(updatedFilters);
+  };
+
+  const checkIfEqual = (filterListItem, item) => {
+    return isEqual(filterListItem.data, item.data)
+      ? { ...filterListItem, isSelected: !filterListItem.isSelected }
+      : filterListItem;
   };
 
   const handleSave = () => {
@@ -87,9 +103,7 @@ export default function FilterSelectBox({ filters, onSave }) {
             )
           );
         }
-        if (filterItem.isSelected === true) {
-          return filterItem.data;
-        }
+        return filterItem.isSelected === true && filterItem.data;
       })
     );
 
@@ -97,19 +111,39 @@ export default function FilterSelectBox({ filters, onSave }) {
   };
 
   const clearSelections = () => {
-    setFiltersState(customFilters);
+    const updatedFilters = map(filters, filter => {
+      if (!checkIfList(filter)) {
+        return {
+          data: filter,
+          isSelected: false
+        };
+      } else {
+        return {
+          ...filter,
+          filtersList: map(filter.filtersList, item => {
+            return {
+              data: item,
+              isSelected: false
+            };
+          })
+        };
+      }
+    });
+    setFiltersState(updatedFilters);
   };
 
   const handleSearch = value => {
     setSearchTermState(value);
     if (!value) {
-      return setFiltersToShow(filtersState);
+      setFiltersToShow(filtersState);
+
+      return;
     }
-    const SearchedFilters = compact(
+    const searchedFilters = compact(
       map(filtersState, filterItem => {
-        if (filterItem.listName) {
+        if (checkIfList(filterItem)) {
           const filterdItemList = filter(filterItem.filtersList, item =>
-            includes(item.data.output.toLowerCase(), value)
+            includes(toLower(item.data.output), value)
           );
           return isEmpty(filterdItemList)
             ? null
@@ -118,23 +152,27 @@ export default function FilterSelectBox({ filters, onSave }) {
                 filtersList: filterdItemList
               };
         } else {
-          return (
-            includes(filterItem.data.output.toLowerCase(), value) && filterItem
-          );
+          return includes(toLower(filterItem.data.output), value) && filterItem;
         }
       })
     );
-    setFiltersToShow(flatten(SearchedFilters));
+    setFiltersToShow(flatten(searchedFilters));
   };
 
   return (
     <SelectBox>
       <SearchInput onChange={handleSearch} />
-      <FilterList filters={filtersToShow} toggleIsSelected={toggleIsSelected} />
+      <FilterList
+        filters={filtersToShow}
+        toggleIsSelected={toggleIsSelected}
+        onLazy={onLazy}
+        loading={loading}
+        hasMore={hasMore}
+      />
       <ActionButtons>
-        <span onClick={clearSelections}>Clear Selection</span>
+        <span onClick={clearSelections}>{clearLabel}</span>
         <Button size="medium" onClick={handleSave}>
-          Save
+          {saveLabel}
         </Button>
       </ActionButtons>
     </SelectBox>
@@ -154,13 +192,11 @@ const SelectBox = styled.div`
 `;
 
 const ActionButtons = styled.div`
-  /* position: absolute; */
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
   padding: 15px;
-  /* bottom: 0; */
   border-top: 1px solid rgba(52, 57, 73, 0.1);
   span {
     font-size: 14px;
