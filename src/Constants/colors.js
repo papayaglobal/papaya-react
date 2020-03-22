@@ -1,5 +1,6 @@
 // Greys
 export const BLACK = "#343949";
+export const BRIGHTERBLACK = "#3439491a";
 export const WHITE = "#ffffff";
 export const DARK1 = "#484d5b";
 export const BRIGHT1 = "#f7f8fb";
@@ -9,6 +10,7 @@ export const DARK3 = "#b5b7bd";
 export const BRIGHT3 = "#ebebec";
 export const DARK4 = "#c2c3c8";
 export const BRIGHT4 = "#d4d5d8";
+export const BRIGHT5 = "#e4e5e7;";
 
 // Brand
 export const BRANDCOLOR = "#f74141";
@@ -32,3 +34,4 @@ export const ACCENT3 = "#976fed";
 export const ACCENT3DARK = "#734cc6";
 export const ACCENT4 = "#e24c84";
 export const ACCENT4DARK = "#c5396e";
+export const LIGHTBLUE = "#3785fa80";
