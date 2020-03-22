@@ -68,7 +68,7 @@ export default function Table({
     }, [firstRowIndex, rowCountState, customColumnState]);
 
     useEffect(() => {
-        if (!isNil(customDataState[0].isSelected)) {
+        if (!isNil(get(customDataState, "[0].isSelected"))) {
             checkIfAllSelected();
         }
     }, [firstRowIndex, rowCountState, customDataState]);
@@ -101,10 +101,22 @@ export default function Table({
 
     const renderHeaders = () => {
         return map(customColumnState, (column, headerIdx) => {
-            const { output, flex, sortOrder } = column;
+            const { output, flex, sortOrder, notSortable } = column;
+            const isSortable = isNil(notSortable) || !notSortable;
+
             return (
-                <TableText key={`header-table-text-${headerIdx}`} flex={flex} header>
-                    <span onClick={() => sortColumn(column, headerIdx)}>{output}</span>
+                <TableText
+                    key={`header-table-text-${headerIdx}`}
+                    flex={flex}
+                    header
+                >
+                    <span
+                        onClick={() =>
+                            isSortable && sortColumn(column, headerIdx)
+                        }
+                    >
+                        {output}
+                    </span>
                     <SortArrowContainer sortorder={sortOrder}>
                         <TableSortArrowIcon />
                     </SortArrowContainer>
@@ -141,7 +153,10 @@ export default function Table({
                         {map(customColumnState, (column, colKey) => {
                             const { colId, flex } = column;
                             return (
-                                <TableText key={`body-table-text-${colKey}`} flex={flex}>
+                                <TableText
+                                    key={`body-table-text-${colKey}`}
+                                    flex={flex}
+                                >
                                     {get(row, colId)}
                                 </TableText>
                             );
@@ -149,14 +164,21 @@ export default function Table({
                         {defaultSideMenu && renderSideMenu(row)}
                     </TableRow>
                     {expandable && (
-                        <ExpandRowContent isExpanded={row.isExpanded} ref={row.expandRowEl}>
+                        <ExpandRowContent
+                            isExpanded={row.isExpanded}
+                            ref={row.expandRowEl}
+                        >
                             {row.expandContent ? (
                                 row.expandContent
                             ) : (
-                                    <SpinnerContainer>
-                                        <Spinner width="34px" height="34px" color={DARK3} />
-                                    </SpinnerContainer>
-                                )}
+                                <SpinnerContainer>
+                                    <Spinner
+                                        width='34px'
+                                        height='34px'
+                                        color={DARK3}
+                                    />
+                                </SpinnerContainer>
+                            )}
                         </ExpandRowContent>
                     )}
                 </TableRowContainer>
@@ -225,7 +247,11 @@ export default function Table({
         }));
 
         const updatedSortOrder = sortOrder === "asc" ? "desc" : "asc";
-        update(updatedColumns, `[${headerIdx}].sortOrder`, () => updatedSortOrder);
+        update(
+            updatedColumns,
+            `[${headerIdx}].sortOrder`,
+            () => updatedSortOrder
+        );
 
         setCustomColumnState([...updatedColumns]);
 
@@ -246,7 +272,10 @@ export default function Table({
 
     const toggleCheckbox = rowIndex => {
         const updatedData = customDataState;
-        const index = findIndex(updatedData, item => item.rowIndex === rowIndex);
+        const index = findIndex(
+            updatedData,
+            item => item.rowIndex === rowIndex
+        );
         update(updatedData, `[${index}].isSelected`, value => !value);
         setCustomDataState([...updatedData]);
         if (onSelected) {
@@ -315,9 +344,12 @@ export default function Table({
         <>
             <TableContainer>
                 <TableRow header>
-                    {!isNil(customDataState[0].isSelected) && (
+                    {!isNil(get(customDataState, "[0].isSelected")) && (
                         <CheckboxContainer>
-                            <CheckBox checked={headerCheckboxState} onClick={toggleAll} />
+                            <CheckBox
+                                checked={headerCheckboxState}
+                                onClick={toggleAll}
+                            />
                         </CheckboxContainer>
                     )}
                     {expandable && <ExpandArrow></ExpandArrow>}
@@ -348,93 +380,93 @@ export default function Table({
 }
 
 const TableContainer = styled.div`
-  margin: 0px 25px;
-  border-top: 1px solid rgba(52, 57, 73, 0.1);
-  width: inherit;
+    margin: 0px 25px;
+    border-top: 1px solid rgba(52, 57, 73, 0.1);
+    width: inherit;
 `;
 
 const TableRow = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  margin-bottom: 7px;
-  color: ${props => (props.header ? `${DARK3}` : `${DARK1}`)};
-  box-shadow: ${props =>
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 7px;
+    color: ${props => (props.header ? `${DARK3}` : `${DARK1}`)};
+    box-shadow: ${props =>
         props.header || props.isExpanded
             ? "none"
             : "0 1px 4px 0 rgba(0, 0, 0, 0.1)"};
-  border-radius: ${props => (props.header ? "none" : "4px")};
-  transition: ${props =>
+    border-radius: ${props => (props.header ? "none" : "4px")};
+    transition: ${props =>
         props.isExpanded ? "none" : "box-shadow 1.2s ease-out"};
 `;
 
 const TableRowContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  box-shadow: ${props =>
+    display: flex;
+    flex-direction: column;
+    box-shadow: ${props =>
         props.isExpanded ? "0 1px 4px 0 rgba(0, 0, 0, 0.1)" : "none"};
-  transition: box-shadow 0.5s ease-out;
+    transition: box-shadow 0.5s ease-out;
 `;
 
 const TableText = styled.div`
-  flex: ${props => props.flex};
-  font-weight: ${({ header }) => (header ? "bold" : "regular")};
-  span {
-    &:hover {
-      cursor: pointer;
+    flex: ${props => props.flex};
+    font-weight: ${({ header }) => (header ? "bold" : "regular")};
+    span {
+        &:hover {
+            cursor: pointer;
+        }
     }
-  }
 `;
 
 const ExpandRowContent = styled.div`
-  overflow: hidden;
-  max-height: ${({ isExpanded, expandEl }) =>
+    overflow: hidden;
+    max-height: ${({ isExpanded, expandEl }) =>
         isExpanded ? "fit-content" : "0px"};
-  transition: max-height 0.5s ease-out;
+    transition: max-height 0.5s ease-out;
 
-  > *:first-of-type {
-    padding: 10px;
-  }
+    > *:first-of-type {
+        padding: 10px;
+    }
 `;
 
 const CheckboxContainer = styled.div`
-  margin-right: 5px;
+    margin-right: 5px;
 `;
 
 const ExpandArrow = styled.div`
-  margin-right: 15px;
-  margin-bottom: 3px;
-  svg {
-    transition: all 0.5s ease;
-    transform: ${({ isExpanded }) => (isExpanded ? "rotate(90deg)" : "")};
-    &:hover {
-      cursor: pointer;
+    margin-right: 15px;
+    margin-bottom: 3px;
+    svg {
+        transition: all 0.5s ease;
+        transform: ${({ isExpanded }) => (isExpanded ? "rotate(90deg)" : "")};
+        &:hover {
+            cursor: pointer;
+        }
     }
-  }
 `;
 
 const SideMenuContainer = styled.div`
-  flex: 0.4;
-  svg {
-    &:hover {
-      cursor: pointer;
+    flex: 0.4;
+    svg {
+        &:hover {
+            cursor: pointer;
+        }
     }
-  }
 `;
 
 const SortArrowContainer = styled.span`
-  margin-left: 5px;
-  svg {
-    transition: transform 0.5s, height 0.1s;
-    height: ${({ sortorder }) => (sortorder ? "5px" : "0px")};
-    transform: ${({ sortorder }) =>
-        sortorder === "desc" ? "rotate(0deg)" : "rotate(-180deg)"};
-  }
+    margin-left: 5px;
+    svg {
+        transition: transform 0.5s, height 0.1s;
+        height: ${({ sortorder }) => (sortorder ? "5px" : "0px")};
+        transform: ${({ sortorder }) =>
+            sortorder === "desc" ? "rotate(0deg)" : "rotate(-180deg)"};
+    }
 `;
 
 const SpinnerContainer = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
 `;
