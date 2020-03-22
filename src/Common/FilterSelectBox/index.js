@@ -103,14 +103,15 @@ export default function FilterSelectBox({
 
   const handleSearch = value => {
     setSearchTermState(value);
-    if (!value) {
-      setFiltersToShow(filtersState);
+    if (onLazy) {
+      onLazy(value);
 
       return;
     }
 
-    if (onLazy) {
-      onLazy(value);
+    if (!value) {
+      console.log(filtersState);
+      setFiltersToShow(filtersState);
 
       return;
     }
