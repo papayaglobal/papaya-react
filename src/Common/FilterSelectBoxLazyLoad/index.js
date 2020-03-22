@@ -1,20 +1,35 @@
 import React, { useState, useEffect } from "react";
+import { filter, includes, toLower, times, random } from "lodash";
 import FilterSelectBox from "../FilterSelectBox";
+
+const faker = require("faker");
 
 export default function FilterSelectBoxLazyLoad({ filters, onSave }) {
   const [filterState, setFilterState] = useState(filters);
   const [loadingState, setLoadingState] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
-  const changeFilters = () => {
+  const changeFilters = value => {
     setLoadingState(true);
     setTimeout(() => {
       setFilterState(prev => {
-        return [
+        const total = random(0, 10);
+        const newFilterss = [
           ...prev,
-          { output: "Blue Bird", data: ["Blue Bird Data"] },
-          { output: "CyberArk", data: ["CyberArk Data"], isSelected: true },
-          { output: "Dropbox", data: ["Dropbox Data"] }
+          ...times(3, () => ({
+            output: faker.company.companyName(),
+            data: faker.company.catchPhrase()
+          }))
         ];
+        const res = value
+          ? filter(newFilterss, filter => {
+              return includes(toLower(filter.output), toLower(value));
+            })
+          : newFilterss;
+
+        setHasMore(res.length < total);
+
+        return res;
       });
       setLoadingState(false);
     }, 2000);
@@ -27,7 +42,7 @@ export default function FilterSelectBoxLazyLoad({ filters, onSave }) {
         onSave={onSave}
         onLazy={changeFilters}
         loading={loadingState}
-        hasMore={true}
+        hasMore={hasMore}
         saveLabel="Save"
         clearLabel="Clear Selection"
       />

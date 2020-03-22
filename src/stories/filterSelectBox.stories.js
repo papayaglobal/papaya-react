@@ -1,6 +1,6 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
-import { text, withKnobs } from "@storybook/addon-knobs";
+import { number, withKnobs } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
 import { ReactComponent as Dashboard } from "../assets/icons/Dashboard.svg";
 import FilterSelectBox from "../Common/FilterSelectBox";
@@ -49,6 +49,7 @@ storiesOf("Filter Select Box", module)
         onSave={onSave}
         saveLabel="Save"
         clearLabel="Clear Selection"
+        inputDelay={number("input delay", 1500)}
       />
     </div>
   ))

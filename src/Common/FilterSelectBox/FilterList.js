@@ -22,9 +22,9 @@ export default function FilterList({
       if (observer.current) {
         observer.current.disconnect();
       }
-      observer.current = new IntersectionObserver(async entries => {
+      observer.current = new IntersectionObserver(entries => {
         if (entries[0].isIntersecting && onLazy && hasMore) {
-          await onLazy();
+          onLazy();
         }
       });
       if (node) {
@@ -49,9 +49,8 @@ export default function FilterList({
                   filters.length === index + 1
                 ) {
                   return (
-                    <>
+                    <span key={`item-Index-${itemIndex}`}>
                       <FilterItem
-                        key={`item-Index-${itemIndex}`}
                         ref={lastFilterEl}
                         onClick={() => toggleIsSelected(item, filter.listName)}
                       >
@@ -69,7 +68,7 @@ export default function FilterList({
                           <Spinner width="34px" height="34px" color={DARK3} />
                         </SpinerContainer>
                       )}
-                    </>
+                    </span>
                   );
                 } else {
                   return (
@@ -92,9 +91,8 @@ export default function FilterList({
         }
         if (filters.length === index + 1) {
           return (
-            <>
+            <span key={`filter-item-${index}`}>
               <FilterItem
-                key={`filter-item-${index}`}
                 ref={lastFilterEl}
                 onClick={() => toggleIsSelected(filter)}
               >
@@ -110,7 +108,7 @@ export default function FilterList({
                   <Spinner width="34px" height="34px" color={DARK3} />
                 </SpinerContainer>
               )}
-            </>
+            </span>
           );
         } else {
           return (

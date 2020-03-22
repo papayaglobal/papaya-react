@@ -1,10 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-import { toLower } from "lodash";
+import { toLower, debounce } from "lodash";
 import { ReactComponent as SearchIcon } from "../../assets/icons/Search.svg";
 import { ACCENT1, LIGHTBLUE } from "../../Constants/colors";
 
-export default function SearchInput({ onChange }) {
+export default function SearchInput({ onChange, delay = 1500 }) {
+  const onInputChange = debounce(value => {
+    onChange(toLower(value));
+  }, delay);
+
   return (
     <SearchInputContainer>
       <StyledSearchInput>
@@ -12,7 +16,7 @@ export default function SearchInput({ onChange }) {
         <input
           type="text"
           placeholder="Search"
-          onChange={event => onChange(toLower(event.target.value))}
+          onChange={event => onInputChange(event.target.value)}
         />
       </StyledSearchInput>
     </SearchInputContainer>

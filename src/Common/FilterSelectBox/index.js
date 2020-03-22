@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import {
   map,
@@ -22,6 +22,52 @@ export const checkIfList = filter => {
   return false;
 };
 
+const unSelectAll = filters => {
+  return map(filters, filter => {
+    if (!checkIfList(filter)) {
+      return {
+        ...filter,
+        isSelected: false
+      };
+    } else {
+      return {
+        ...filter,
+        filtersList: map(filter.filtersList, item => {
+          return {
+            ...item,
+            isSelected: false
+          };
+        })
+      };
+    }
+  });
+};
+
+const checkIfEqual = (filterListItem, item) => {
+  return isEqual(filterListItem.data, item.data)
+    ? { ...filterListItem, isSelected: !filterListItem.isSelected }
+    : filterListItem;
+};
+
+const toggleFilter = (filters, { item, listName }) => {
+  return map(filters, filterItem => {
+    if (listName) {
+      if (listName === filterItem.listName) {
+        return {
+          ...filterItem,
+          filtersList: map(filterItem.filtersList, filterListItem => {
+            return checkIfEqual(filterListItem, item);
+          })
+        };
+      } else {
+        return checkIfEqual(filterItem, item);
+      }
+    } else {
+      return checkIfEqual(filterItem, item);
+    }
+  });
+};
+
 export default function FilterSelectBox({
   filters,
   onSave,
@@ -29,7 +75,8 @@ export default function FilterSelectBox({
   loading,
   hasMore,
   saveLabel,
-  clearLabel
+  clearLabel,
+  inputDelay
 }) {
   const customFilters = map(filters, filter => {
     if (!checkIfList(filter)) {
@@ -54,38 +101,48 @@ export default function FilterSelectBox({
   const [filtersToShow, setFiltersToShow] = useState(customFilters);
   const [searchTermState, setSearchTermState] = useState(null);
 
-  useEffect(() => {
-    setFiltersState(customFilters);
-  }, [filters]);
+  const handleSearch = value => {
+    setSearchTermState(value);
+    if (!value) {
+      setFiltersToShow(filtersState);
 
-  useEffect(() => {
-    handleSearch(searchTermState);
-  }, [filtersState]);
+      return;
+    }
 
-  const toggleIsSelected = (item, listName) => {
-    const updatedFilters = map(filtersState, filterItem => {
-      if (listName) {
-        if (listName === filterItem.listName) {
-          return {
-            ...filterItem,
-            filtersList: map(filterItem.filtersList, filterListItem => {
-              return checkIfEqual(filterListItem, item);
-            })
-          };
+    if (onLazy) {
+      onLazy(value);
+
+      return;
+    }
+
+    const searchedFilters = compact(
+      map(filtersState, filterItem => {
+        if (checkIfList(filterItem)) {
+          const filterdItemList = filter(filterItem.filtersList, item =>
+            includes(toLower(item.data.output), value)
+          );
+          return isEmpty(filterdItemList)
+            ? null
+            : {
+                ...filterItem,
+                filtersList: filterdItemList
+              };
         } else {
-          return checkIfEqual(filterItem, item);
+          return includes(toLower(filterItem.data.output), value) && filterItem;
         }
-      } else {
-        return checkIfEqual(filterItem, item);
-      }
-    });
-    setFiltersState(updatedFilters);
+      })
+    );
+    setFiltersToShow(flatten(searchedFilters));
   };
 
-  const checkIfEqual = (filterListItem, item) => {
-    return isEqual(filterListItem.data, item.data)
-      ? { ...filterListItem, isSelected: !filterListItem.isSelected }
-      : filterListItem;
+  useEffect(() => {
+    setFiltersState(customFilters);
+    setFiltersToShow(customFilters);
+  }, [filters]);
+
+  const toggleIsSelected = (item, listName) => {
+    setFiltersState(toggleFilter(filtersState, { item, listName }));
+    setFiltersToShow(toggleFilter(filtersToShow, { item, listName }));
   };
 
   const handleSave = () => {
@@ -111,61 +168,17 @@ export default function FilterSelectBox({
   };
 
   const clearSelections = () => {
-    const updatedFilters = map(filters, filter => {
-      if (!checkIfList(filter)) {
-        return {
-          data: filter,
-          isSelected: false
-        };
-      } else {
-        return {
-          ...filter,
-          filtersList: map(filter.filtersList, item => {
-            return {
-              data: item,
-              isSelected: false
-            };
-          })
-        };
-      }
-    });
-    setFiltersState(updatedFilters);
-  };
-
-  const handleSearch = value => {
-    setSearchTermState(value);
-    if (!value) {
-      setFiltersToShow(filtersState);
-
-      return;
-    }
-    const searchedFilters = compact(
-      map(filtersState, filterItem => {
-        if (checkIfList(filterItem)) {
-          const filterdItemList = filter(filterItem.filtersList, item =>
-            includes(toLower(item.data.output), value)
-          );
-          return isEmpty(filterdItemList)
-            ? null
-            : {
-                ...filterItem,
-                filtersList: filterdItemList
-              };
-        } else {
-          return includes(toLower(filterItem.data.output), value) && filterItem;
-        }
-      })
-    );
-    setFiltersToShow(flatten(searchedFilters));
+    setFiltersState(unSelectAll(filtersState));
+    setFiltersToShow(unSelectAll(filtersToShow));
   };
 
   return (
     <SelectBox>
-      <SearchInput onChange={handleSearch} />
+      <SearchInput onChange={handleSearch} delay={inputDelay} />
       <FilterList
         filters={filtersToShow}
         toggleIsSelected={toggleIsSelected}
-        onLazy={onLazy}
+        onLazy={() => onLazy(searchTermState)}
         loading={loading}
         hasMore={hasMore}
       />
