@@ -390,7 +390,6 @@ const TableRow = styled.div`
     display: flex;
     align-items: center;
     padding: 10px;
-    margin-bottom: 7px;
     color: ${props => (props.header ? `${DARK3}` : `${DARK1}`)};
     box-shadow: ${props =>
         props.header || props.isExpanded
@@ -407,6 +406,7 @@ const TableRowContainer = styled.div`
     box-shadow: ${props =>
         props.isExpanded ? "0 1px 4px 0 rgba(0, 0, 0, 0.1)" : "none"};
     transition: box-shadow 0.5s ease-out;
+    margin-bottom: 7px;
 `;
 
 const TableText = styled.div`
@@ -421,13 +421,8 @@ const TableText = styled.div`
 
 const ExpandRowContent = styled.div`
     overflow: hidden;
-    max-height: ${({ isExpanded, expandEl }) =>
-        isExpanded ? "fit-content" : "0px"};
+    max-height: ${({ isExpanded }) => (isExpanded ? "fit-content" : "0px")};
     transition: max-height 0.5s ease-out;
-
-    > *:first-of-type {
-        padding: 10px;
-    }
 `;
 
 const CheckboxContainer = styled.div`
