@@ -16,7 +16,7 @@ export default function FilterButtonExample() {
       )}
       <FilterButton
         text="Projects"
-        OnClick={OnFilterButtonClick}
+        onClick={OnFilterButtonClick}
         selected={false}
         active={activeState}
       />

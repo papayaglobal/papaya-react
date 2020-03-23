@@ -2,9 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import { BRIGHT4, DARK1, ACCENT1 } from "../../Constants/colors";
 
-export default function FilterButton({ text, active, selected, OnClick }) {
+export default function FilterButton({ text, active, selected, onClick }) {
   const handleClick = () => {
-    OnClick();
+    onClick();
   };
 
   return (
