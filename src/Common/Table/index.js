@@ -108,6 +108,7 @@ export default function Table({
                 <TableText
                     key={`header-table-text-${headerIdx}`}
                     flex={flex}
+                    isSortable={isSortable}
                     header
                 >
                     <span
@@ -414,7 +415,7 @@ const TableText = styled.div`
     font-weight: ${({ header }) => (header ? "bold" : "regular")};
     span {
         &:hover {
-            cursor: pointer;
+            cursor: ${props => (props.isSortable ? "pointer" : "regular")};
         }
     }
 `;
