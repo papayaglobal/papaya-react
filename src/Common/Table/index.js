@@ -135,12 +135,12 @@ export default function Table({
                 >
                     <TableRow isExpanded={row.isExpanded}>
                         {!isNil(row.isSelected) && (
-                            <CheckboxContainer>
+                            <div>
                                 <CheckBox
                                     checked={!!get(row, "isSelected")}
                                     onClick={() => toggleCheckbox(row.rowIndex)}
                                 />
-                            </CheckboxContainer>
+                            </div>
                         )}
                         {expandable && (
                             <ExpandArrow
@@ -345,12 +345,12 @@ export default function Table({
             <TableContainer>
                 <TableRow header>
                     {!isNil(get(customDataState, "[0].isSelected")) && (
-                        <CheckboxContainer>
+                        <div>
                             <CheckBox
                                 checked={headerCheckboxState}
                                 onClick={toggleAll}
                             />
-                        </CheckboxContainer>
+                        </div>
                     )}
                     {expandable && <ExpandArrow></ExpandArrow>}
                     {renderHeaders()}
@@ -424,8 +424,6 @@ const ExpandRowContent = styled.div`
     max-height: ${({ isExpanded }) => (isExpanded ? "fit-content" : "0px")};
     transition: max-height 0.5s ease-out;
 `;
-
-const CheckboxContainer = styled.div;
 
 const ExpandArrow = styled.div`
     flex-basis: 35px;
