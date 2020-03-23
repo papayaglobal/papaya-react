@@ -425,12 +425,12 @@ const ExpandRowContent = styled.div`
     transition: max-height 0.5s ease-out;
 `;
 
-const CheckboxContainer = styled.div`
-    margin-right: 5px;
-`;
+const CheckboxContainer = styled.div;
 
 const ExpandArrow = styled.div`
-    margin-right: 15px;
+    flex-basis: 35px;
+    text-align: center;
+    margin-right: 3px;
     margin-bottom: 3px;
     svg {
         transition: all 0.5s ease;
