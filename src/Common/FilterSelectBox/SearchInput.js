@@ -15,7 +15,6 @@ export default function SearchInput({ onChange, delay = 1500 }) {
         <SearchIcon />
         <input
           type="text"
-          placeholder="Search"
           onChange={event => onInputChange(event.target.value)}
         />
       </StyledSearchInput>
@@ -37,6 +36,7 @@ const StyledSearchInput = styled.div`
   input {
     border: none;
     width: 100%;
+    margin-left: 7px;
     &:focus {
       outline: none;
     }
