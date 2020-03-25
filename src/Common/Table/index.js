@@ -1,4 +1,18 @@
-import { filter, get, includes, map, omit, orderBy, slice, update, findIndex, isEmpty, isNil, find } from "lodash";
+import {
+    filter,
+    get,
+    includes,
+    map,
+    omit,
+    orderBy,
+    slice,
+    update,
+    findIndex,
+    isEmpty,
+    isNil,
+    find,
+    isEqual
+} from "lodash";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { DARK3, DARK1 } from "../../Constants/colors";
