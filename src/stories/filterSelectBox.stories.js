@@ -2,6 +2,7 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 import { number, withKnobs } from "@storybook/addon-knobs";
 import FilterSelectBox from "../Common/FilterSelectBox";
+import UserTypeFilter from "../Common/FilterSelectBox/UserTypeFilter";
 import FilterSelectBoxLazyLoad from "../Common/FilterSelectBoxLazyLoad";
 
 import "./stories.css";
@@ -34,6 +35,27 @@ const filterGroups = [
     }
 ];
 
+const userTypeFilters = [
+    {
+        output: <UserTypeFilter iconTitle="C" color="#00c7d6" text="Customer" />,
+        data: {},
+        isSelected: false,
+        searchTerm: "Customer"
+    },
+    {
+        output: <UserTypeFilter iconTitle="P" color="#00c7d6" text="Papaya" />,
+        data: {},
+        isSelected: false,
+        searchTerm: "Papaya"
+    },
+    {
+        output: <UserTypeFilter iconTitle="S" color="#00c7d6" text="Supplier" />,
+        data: {},
+        isSelected: false,
+        searchTerm: "Supplier"
+    }
+];
+
 const onSave = (filters) => {
     console.log("Selected filters", filters);
 };
@@ -54,6 +76,11 @@ storiesOf("Filter Select Box", module)
     .add("With Groups", () => (
         <div className="app">
             <FilterSelectBox filters={filterGroups} onSave={onSave} saveLabel="Save" clearLabel="Clear Selection" />
+        </div>
+    ))
+    .add("With Search Term", () => (
+        <div className="app">
+            <FilterSelectBox filters={userTypeFilters} onSave={onSave} saveLabel="Save" clearLabel="Clear Selection" />
         </div>
     ))
     .add("With Lazy Load", () => (
