@@ -61,7 +61,7 @@ function tablenameInput(name, email) {
 }
 
 const columns = [
-    { colId: "type", output: "Type", flex: 1 },
+    { colId: "type", output: "Type", flex: 1, notSortable: true },
     { colId: "id", output: "ID", flex: 1 },
     {
         colId: "nameAndEmailOutput",
@@ -92,7 +92,8 @@ const data = [
             },
             {
                 name: "Itay",
-                action: context => console.log("we use the row context!", context)
+                action: context =>
+                    console.log("we use the row context!", context)
             }
         ]
     },
@@ -103,15 +104,15 @@ const data = [
                 Expand Content 2
                 <div>
                     hello
-          <div>
+                    <div>
                         popo
-            <div>
+                        <div>
                             momo
-              <div>
+                            <div>
                                 lolo
-                <div>
+                                <div>
                                     dodo
-                  <div>
+                                    <div>
                                         gogo<div>soso</div>
                                     </div>
                                 </div>
@@ -136,15 +137,15 @@ const data = [
                 Expand Content 2
                 <div>
                     hello
-          <div>
+                    <div>
                         popo
-            <div>
+                        <div>
                             momo
-              <div>
+                            <div>
                                 lolo
-                <div>
+                                <div>
                                     dodo
-                  <div>
+                                    <div>
                                         gogo<div>soso</div>
                                     </div>
                                 </div>
@@ -169,15 +170,15 @@ const data = [
                 Expand Content 2
                 <div>
                     hello
-          <div>
+                    <div>
                         popo
-            <div>
+                        <div>
                             momo
-              <div>
+                            <div>
                                 lolo
-                <div>
+                                <div>
                                     dodo
-                  <div>
+                                    <div>
                                         gogo<div>soso</div>
                                     </div>
                                 </div>
@@ -202,15 +203,15 @@ const data = [
                 Expand Content 2
                 <div>
                     hello
-          <div>
+                    <div>
                         popo
-            <div>
+                        <div>
                             momo
-              <div>
+                            <div>
                                 lolo
-                <div>
+                                <div>
                                     dodo
-                  <div>
+                                    <div>
                                         gogo<div>soso</div>
                                     </div>
                                 </div>
@@ -235,15 +236,15 @@ const data = [
                 Expand Content 2
                 <div>
                     hello
-          <div>
+                    <div>
                         popo
-            <div>
+                        <div>
                             momo
-              <div>
+                            <div>
                                 lolo
-                <div>
+                                <div>
                                     dodo
-                  <div>
+                                    <div>
                                         gogo<div>soso</div>
                                     </div>
                                 </div>
@@ -268,15 +269,15 @@ const data = [
                 Expand Content 2
                 <div>
                     hello
-          <div>
+                    <div>
                         popo
-            <div>
+                        <div>
                             momo
-              <div>
+                            <div>
                                 lolo
-                <div>
+                                <div>
                                     dodo
-                  <div>
+                                    <div>
                                         gogo<div>soso</div>
                                     </div>
                                 </div>
@@ -348,7 +349,7 @@ function sortNameColumnBy(data, sortOrder) {
 storiesOf("Table", module)
     .addDecorator(withKnobs)
     .add("Default", () => (
-        <div className="app" style={{ width: "-webkit-fill-available" }}>
+        <div className='app' style={{ width: "-webkit-fill-available" }}>
             <Table
                 columns={columns}
                 data={data}
@@ -376,12 +377,15 @@ storiesOf("Table", module)
                     );
                 }
 
-                return orderedData.slice(event.first, event.rowCount + event.first);
+                return orderedData.slice(
+                    event.first,
+                    event.rowCount + event.first
+                );
             }
             return data.slice(event.first, event.rowCount + event.first);
         };
         return (
-            <div className="app" style={{ width: "-webkit-fill-available" }}>
+            <div className='app' style={{ width: "-webkit-fill-available" }}>
                 <Table
                     columns={columns}
                     data={data.slice(0, 2)}
@@ -416,7 +420,7 @@ storiesOf("Table", module)
                 id: i + 1,
                 name: `${Math.random() > 0.5 ? "A" : "B"}${
                     Math.random() > 0.5 ? "c" : "d"
-                    }${Math.random() > 0.5 ? "e" : "f"}`,
+                }${Math.random() > 0.5 ? "e" : "f"}`,
                 date: {
                     createdAt: new Date(`200${random(0, 9)}`),
                     updatedAt: new Date()
@@ -433,7 +437,7 @@ storiesOf("Table", module)
         });
 
         return (
-            <div className="app" style={{ width: "-webkit-fill-available" }}>
+            <div className='app' style={{ width: "-webkit-fill-available" }}>
                 <Table
                     columns={columns}
                     data={data}

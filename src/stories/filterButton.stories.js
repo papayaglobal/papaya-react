@@ -2,7 +2,6 @@ import React from "react";
 import { storiesOf } from "@storybook/react";
 import { text, withKnobs } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
-import { ReactComponent as Dashboard } from "../assets/icons/Dashboard.svg";
 import FilterButton from "../Common/FilterButton";
 
 import "./stories.css";
@@ -17,7 +16,7 @@ storiesOf("Filter Button", module)
     <div className="app">
       <FilterButton
         text="Projects"
-        OnClick={OnFilterButtonClick}
+        onClick={OnFilterButtonClick}
         selected={false}
       />
     </div>
@@ -26,7 +25,7 @@ storiesOf("Filter Button", module)
     <div className="app">
       <FilterButton
         text="Projects"
-        OnClick={OnFilterButtonClick}
+        onClick={OnFilterButtonClick}
         selected={false}
         active={true}
       />
@@ -37,7 +36,7 @@ storiesOf("Filter Button", module)
     <div className="app">
       <FilterButton
         text="Projects"
-        OnClick={OnFilterButtonClick}
+        onClick={OnFilterButtonClick}
         selected={true}
       />
     </div>
