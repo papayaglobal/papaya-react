@@ -14,7 +14,7 @@ export default function FilterButton({ text, active, selected, onClick }) {
     );
 }
 
-const StyledFilterButton = styled.div`
+const StyledFilterButton = styled.button`
     display: flex;
     align-items: center;
     border: ${({ active, selected }) =>
@@ -31,5 +31,8 @@ const StyledFilterButton = styled.div`
         cursor: pointer;
         border: 1px solid ${ACCENT1};
         color: ${ACCENT1};
+    }
+    &:focus {
+        outline: none;
     }
 `;
