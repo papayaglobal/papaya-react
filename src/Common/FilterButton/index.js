@@ -4,7 +4,9 @@ import { BRIGHT4, DARK1, ACCENT1 } from "../../Constants/colors";
 
 export default function FilterButton({ text, active, selected, onClick }) {
     const handleClick = () => {
-        onClick();
+        if (onClick) {
+            onClick();
+        }
     };
 
     return (
