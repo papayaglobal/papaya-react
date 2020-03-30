@@ -67,6 +67,7 @@ export default function FilterSelectBox({
     hasMore,
     saveLabel,
     clearLabel,
+    searchTerm,
     inputDelay
 }) {
     const customFilters = map(filters, (filter) => {
@@ -88,12 +89,17 @@ export default function FilterSelectBox({
         }
     });
 
+    const customSearchTerm = searchTerm ? searchTerm : "";
+
     const [filtersState, setFiltersState] = useState(customFilters);
     const [filtersToShow, setFiltersToShow] = useState(customFilters);
-    const [searchTermState, setSearchTermState] = useState(null);
+    const [searchTermState, setSearchTermState] = useState(customSearchTerm);
+
+    const setTerm = (term) => {
+        setSearchTermState(term);
+    };
 
     const handleSearch = (value) => {
-        setSearchTermState(value);
         if (onLazy) {
             onLazy(value);
 
@@ -164,7 +170,7 @@ export default function FilterSelectBox({
 
     return (
         <SelectBox>
-            <SearchInput onChange={handleSearch} delay={inputDelay} />
+            <SearchInput onChange={handleSearch} delay={inputDelay} searchTerm={searchTermState} setTerm={setTerm} />
             <FilterList
                 filters={filtersToShow}
                 toggleIsSelected={toggleIsSelected}
