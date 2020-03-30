@@ -12,7 +12,7 @@ export const actions = {
     onClick: action("onClick")
 };
 
-const getExpandContent = row => {
+const getExpandContent = (row) => {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             resolve(<div>Lazy Expand Content row: {inspect(row)}</div>);
@@ -23,31 +23,31 @@ const getExpandContent = row => {
 const defaultSideMenu = [
     {
         name: "View Profile",
-        action: context => {
+        action: (context) => {
             console.log(context, "Viewing profile...");
         }
     },
     {
         name: "Edit",
-        action: context => {
+        action: (context) => {
             console.log(context, "Editing...");
         }
     },
     {
         name: "Re-Invite",
-        action: context => console.log(context, "Re-inviting...")
+        action: (context) => console.log(context, "Re-inviting...")
     },
     {
         name: "Suspend User",
-        action: context => console.log(context, "Suspending...")
+        action: (context) => console.log(context, "Suspending...")
     },
     {
         name: "Block User",
-        action: context => console.log(context, "Blocking...")
+        action: (context) => console.log(context, "Blocking...")
     },
     {
         name: "Send Change Pasword",
-        action: context => console.log(context, "Change pass...")
+        action: (context) => console.log(context, "Change pass...")
     }
 ];
 
@@ -92,8 +92,7 @@ const data = [
             },
             {
                 name: "Itay",
-                action: context =>
-                    console.log("we use the row context!", context)
+                action: (context) => console.log("we use the row context!", context)
             }
         ]
     },
@@ -349,7 +348,7 @@ function sortNameColumnBy(data, sortOrder) {
 storiesOf("Table", module)
     .addDecorator(withKnobs)
     .add("Default", () => (
-        <div className='app' style={{ width: "-webkit-fill-available" }}>
+        <div className="app" style={{ width: "-webkit-fill-available" }}>
             <Table
                 columns={columns}
                 data={data}
@@ -364,28 +363,21 @@ storiesOf("Table", module)
         </div>
     ))
     .add("LazyLoad", () => {
-        const loadData = event => {
+        const loadData = (event) => {
             if (event.sortColumnId) {
                 let orderedData = [];
                 if (event.sortColumnId === "nameAndEmailOutput") {
                     orderedData = orderBy(data, "name", event.sortColumnOrder);
                 } else {
-                    orderedData = orderBy(
-                        data,
-                        event.sortColumnId,
-                        event.sortColumnOrder
-                    );
+                    orderedData = orderBy(data, event.sortColumnId, event.sortColumnOrder);
                 }
 
-                return orderedData.slice(
-                    event.first,
-                    event.rowCount + event.first
-                );
+                return orderedData.slice(event.first, event.rowCount + event.first);
             }
             return data.slice(event.first, event.rowCount + event.first);
         };
         return (
-            <div className='app' style={{ width: "-webkit-fill-available" }}>
+            <div className="app" style={{ width: "-webkit-fill-available" }}>
                 <Table
                     columns={columns}
                     data={data.slice(0, 2)}
@@ -410,17 +402,16 @@ storiesOf("Table", module)
                 colId: "startedAt",
                 output: "Date",
                 flex: 3,
-                sortMethod: (data, sortOrder) =>
-                    orderBy(data, "date.createdAt", sortOrder)
+                sortMethod: (data, sortOrder) => orderBy(data, "date.createdAt", sortOrder)
             }
         ];
 
-        const serverData = times(2000, i => {
+        const serverData = times(2000, (i) => {
             return {
                 id: i + 1,
-                name: `${Math.random() > 0.5 ? "A" : "B"}${
-                    Math.random() > 0.5 ? "c" : "d"
-                }${Math.random() > 0.5 ? "e" : "f"}`,
+                name: `${Math.random() > 0.5 ? "A" : "B"}${Math.random() > 0.5 ? "c" : "d"}${
+                    Math.random() > 0.5 ? "e" : "f"
+                }`,
                 date: {
                     createdAt: new Date(`200${random(0, 9)}`),
                     updatedAt: new Date()
@@ -428,7 +419,7 @@ storiesOf("Table", module)
             };
         });
 
-        const data = map(serverData, item => {
+        const data = map(serverData, (item) => {
             return {
                 ...item,
                 startedAt: <div>{item.date.createdAt.toString()}</div>,
@@ -437,7 +428,7 @@ storiesOf("Table", module)
         });
 
         return (
-            <div className='app' style={{ width: "-webkit-fill-available" }}>
+            <div className="app" style={{ width: "-webkit-fill-available" }}>
                 <Table
                     columns={columns}
                     data={data}
