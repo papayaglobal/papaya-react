@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { storiesOf } from "@storybook/react";
 import { withKnobs } from "@storybook/addon-knobs";
 import { action } from "@storybook/addon-actions";
@@ -376,9 +376,20 @@ storiesOf("Table", module)
             }
             return data.slice(event.first, event.rowCount + event.first);
         };
+
+        const tableEl = useRef(null);
+
+        const resetTable = () => {
+            tableEl.current.reset();
+        };
+
         return (
-            <div className="app" style={{ width: "-webkit-fill-available" }}>
+            <div style={{ width: "-webkit-fill-available" }}>
+                <div style={{ marginBlockEnd: "2em" }}>
+                    <button onClick={resetTable}>Reset Table</button>
+                </div>
                 <Table
+                    ref={tableEl}
                     columns={columns}
                     data={data.slice(0, 2)}
                     onSelected={log}
@@ -426,10 +437,19 @@ storiesOf("Table", module)
                 isSelected: false
             };
         });
+        const tableEl = useRef(null);
+
+        const resetTable = () => {
+            tableEl.current.reset();
+        };
 
         return (
-            <div className="app" style={{ width: "-webkit-fill-available" }}>
+            <div style={{ width: "-webkit-fill-available" }}>
+                <div style={{ marginBlockEnd: "2em" }}>
+                    <button onClick={resetTable}>Reset Table</button>
+                </div>
                 <Table
+                    ref={tableEl}
                     columns={columns}
                     data={data}
                     expandable
