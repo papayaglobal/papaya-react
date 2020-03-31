@@ -49,5 +49,4 @@ const SearchInputContainer = styled.div`
     display: flex;
     justify-content: center;
     width: 100%;
-    margin-top: 14.5px;
 `;

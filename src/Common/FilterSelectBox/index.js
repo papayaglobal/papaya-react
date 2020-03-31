@@ -169,21 +169,25 @@ export default function FilterSelectBox({
     };
 
     return (
-        <SelectBox>
+        <SelectBox filtersCount={filtersToShow.length}>
             <SearchInput onChange={handleSearch} delay={inputDelay} searchTerm={searchTermState} setTerm={setTerm} />
-            <FilterList
-                filters={filtersToShow}
-                toggleIsSelected={toggleIsSelected}
-                onLazy={() => onLazy(searchTermState)}
-                loading={loading}
-                hasMore={hasMore}
-            />
-            <ActionButtons>
-                <span onClick={clearSelections}>{clearLabel}</span>
-                <Button size="medium" onClick={handleSave}>
-                    {saveLabel}
-                </Button>
-            </ActionButtons>
+            {filtersToShow.length > 0 && (
+                <>
+                    <FilterList
+                        filters={filtersToShow}
+                        toggleIsSelected={toggleIsSelected}
+                        onLazy={() => onLazy(searchTermState)}
+                        loading={loading}
+                        hasMore={hasMore}
+                    />
+                    <ActionButtons>
+                        <span onClick={clearSelections}>{clearLabel}</span>
+                        <Button size="medium" onClick={handleSave}>
+                            {saveLabel}
+                        </Button>
+                    </ActionButtons>
+                </>
+            )}
         </SelectBox>
     );
 }
@@ -196,8 +200,10 @@ const SelectBox = styled.div`
     border: 1px solid ${BRIGHT5};
     box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
     border-radius: 4px;
-    height: 430px;
+    height: ${({ filtersCount }) => (filtersCount > 0 ? "430px" : "unset")};
     width: 350px;
+    padding-top: 14.5px;
+    padding-bottom: ${({ filtersCount }) => (filtersCount > 0 ? "opx" : "14.5px")};
 `;
 
 const ActionButtons = styled.div`
