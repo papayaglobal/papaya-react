@@ -13,7 +13,7 @@ import {
     find,
     isEqual
 } from "lodash";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } from "react";
 import styled from "styled-components";
 import { DARK3, DARK1 } from "../../Constants/colors";
 import SideMenuIcon from "../../assets/icons/context-menu.svg";
@@ -25,19 +25,22 @@ import Spinner from "../../Common/Spinner";
 import { CheckBox } from "../../Common/Checkbox";
 import { StyledActions } from "../../papaya-styled-components/contractorPaymentRowHelpers";
 
-export default function Table({
-    columns,
-    data,
-    onSelected,
-    expandable,
-    sideMenu,
-    defaultSideMenu,
-    rowCountDefault,
-    rowCountOptions,
-    onLazyLoad,
-    lazyExpand,
-    totalRows
-}) {
+function Table(
+    {
+        columns,
+        data,
+        onSelected,
+        expandable,
+        sideMenu,
+        defaultSideMenu,
+        rowCountDefault,
+        rowCountOptions,
+        onLazyLoad,
+        lazyExpand,
+        totalRows
+    },
+    ref
+) {
     const customData = map(data, (item, index) => {
         return {
             ...item,
@@ -58,7 +61,17 @@ export default function Table({
     const [firstRowIndex, setFirstRowIndex] = useState(0);
     const [rowCountState, setRowCountState] = useState(rowCountDefault);
     const [headerCheckboxState, setCheckboxState] = useState(false);
-    const paginRef = useRef();
+    const paginationRef = useRef();
+
+    useImperativeHandle(ref, () => ({
+        reset: () => {
+            setCustomColumnState(customColumns);
+            setCustomDataState(customData);
+
+            setFirstRowIndex(0);
+            paginationRef.current.goFirstPage();
+        }
+    }));
 
     useEffect(() => {
         if (!isEqual(customData, customDataState)) {
@@ -223,7 +236,7 @@ export default function Table({
 
         if (!isNil(onLazyLoad)) {
             setFirstRowIndex(0);
-            paginRef.current.goFirstPage();
+            paginationRef.current.goFirstPage();
         } else {
             const updatedData = column.sortMethod
                 ? column.sortMethod(customDataState, updatedSortOrder)
@@ -231,7 +244,7 @@ export default function Table({
             setCustomDataState([...updatedData]);
             if (!isNil(rowCountDefault)) {
                 setFirstRowIndex(0);
-                paginRef.current.goFirstPage();
+                paginationRef.current.goFirstPage();
             }
         }
     };
@@ -315,7 +328,7 @@ export default function Table({
                 {renderBody()}
                 {rowCountState && (
                     <Paging
-                        ref={paginRef}
+                        ref={paginationRef}
                         pageCount={Math.ceil(
                             onLazyLoad ? totalRows / rowCountState : customDataState.length / rowCountState
                         )}
@@ -332,6 +345,8 @@ export default function Table({
         </>
     );
 }
+
+export default forwardRef(Table);
 
 const TableContainer = styled.div`
     margin: 0px 25px;
