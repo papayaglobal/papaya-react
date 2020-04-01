@@ -192,6 +192,9 @@ function FilterSelectBox(
     const clearSelections = () => {
         setFiltersState(unSelectAll(filtersState));
         setFiltersToShow(unSelectAll(filtersToShow));
+        if (!!onLazy) {
+            setDraftLazyLoadSelected([]);
+        }
     };
 
     return (
