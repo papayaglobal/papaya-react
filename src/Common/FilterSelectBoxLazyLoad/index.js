@@ -28,7 +28,7 @@ export default function FilterSelectBoxLazyLoad({ filters, onSave }) {
                     : newFilterss;
 
                 setHasMore(res.length < total);
-
+                // console.log(res);
                 return res;
             });
             setLoadingState(false);
