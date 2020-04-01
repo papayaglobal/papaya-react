@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { storiesOf } from "@storybook/react";
 import { number, withKnobs } from "@storybook/addon-knobs";
 import FilterSelectBox from "../Common/FilterSelectBox";
@@ -62,17 +62,27 @@ const onSave = (filters) => {
 
 storiesOf("Filter Select Box", module)
     .addDecorator(withKnobs)
-    .add("Default", () => (
-        <div className="app">
-            <FilterSelectBox
-                filters={filters}
-                onSave={onSave}
-                saveLabel="Save"
-                clearLabel="Clear Selection"
-                inputDelay={number("input delay", 1500)}
-            />
-        </div>
-    ))
+    .add("Default", () => {
+        const selectBoxEl = useRef(null);
+
+        const clearFilters = () => {
+            selectBoxEl.current.clearFilters();
+        };
+
+        return (
+            <div className="app">
+                <button onClick={clearFilters}>Clear Filters</button>
+                <FilterSelectBox
+                    ref={selectBoxEl}
+                    filters={filters}
+                    onSave={onSave}
+                    saveLabel="Save"
+                    clearLabel="Clear Selection"
+                    inputDelay={number("input delay", 1500)}
+                />
+            </div>
+        );
+    })
     .add("With Groups", () => (
         <div className="app">
             <FilterSelectBox filters={filterGroups} onSave={onSave} saveLabel="Save" clearLabel="Clear Selection" />
