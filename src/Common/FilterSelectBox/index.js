@@ -1,11 +1,10 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import styled from "styled-components";
-import { map, isEqual, compact, flatten, includes, filter, isEmpty, toLower, slice, size } from "lodash";
+import { map, isEqual, compact, flatten, includes, filter, isEmpty, toLower, slice, size, flatMap } from "lodash";
 import { BRIGHT5, DARK2, ACCENT1DARK } from "../../Constants/colors";
 import FilterList from "./FilterList";
 import SearchInput from "./SearchInput";
 import Button from "../Button";
-import { is } from "date-fns/locale";
 
 export const checkIfList = (filter) => {
     if (filter.listName && filter.filtersList.length > 0) {
@@ -68,7 +67,7 @@ const mapFilters = (filters, draftFilters) => {
     return map(filters, (filter) => {
         if (!checkIfList(filter)) {
             return {
-                data: filter,
+                ...filter,
                 isSelected: checkIfInDraft(filter, draftFilters) || filter.isSelected || false
             };
         } else {
@@ -76,7 +75,7 @@ const mapFilters = (filters, draftFilters) => {
                 ...filter,
                 filtersList: map(filter.filtersList, (item) => {
                     return {
-                        data: item,
+                        ...item,
                         isSelected: checkIfInDraft(item, draftFilters) || item.isSelected || false
                     };
                 })
@@ -90,6 +89,7 @@ const getCustomFilters = (newFilters, prevFilters, isLazyLoad, draftFilters) => 
         return mapFilters(newFilters);
     }
     const diff = mapFilters(slice(newFilters, size(prevFilters) ? size(prevFilters) : 0), draftFilters);
+
     return size(prevFilters) ? [...prevFilters, ...diff] : diff;
 };
 
@@ -132,9 +132,9 @@ function FilterSelectBox(
             map(filtersState, (filterItem) => {
                 if (checkIfList(filterItem)) {
                     const filterdItemList = filter(filterItem.filtersList, (item) =>
-                        item.data.searchTerm
-                            ? includes(toLower(item.data.searchTerm), value)
-                            : includes(toLower(item.data.output), value)
+                        item.searchTerm
+                            ? includes(toLower(item.searchTerm), value)
+                            : includes(toLower(item.output), value)
                     );
                     return isEmpty(filterdItemList)
                         ? null
@@ -143,9 +143,9 @@ function FilterSelectBox(
                               filtersList: filterdItemList
                           };
                 } else {
-                    return filterItem.data.searchTerm
-                        ? includes(toLower(filterItem.data.searchTerm), value) && filterItem
-                        : includes(toLower(filterItem.data.output), value) && filterItem;
+                    return filterItem.searchTerm
+                        ? includes(toLower(filterItem.searchTerm), value) && filterItem
+                        : includes(toLower(filterItem.output), value) && filterItem;
                 }
             })
         );
@@ -160,11 +160,12 @@ function FilterSelectBox(
 
     const getSelectedFilters = (givenFilters) =>
         compact(
-            map(givenFilters, (filterItem) => {
+            flatMap(givenFilters, (filterItem) => {
                 if (filterItem.listName) {
-                    return compact(map(filterItem.filtersList, (item) => item.isSelected === true && item.data));
+                    return compact(map(filterItem.filtersList, (item) => item.isSelected === true && item));
                 }
-                return filterItem.isSelected === true && filterItem.data;
+
+                return filterItem.isSelected === true && filterItem;
             })
         );
 
@@ -172,9 +173,8 @@ function FilterSelectBox(
         const updatedFilters = toggleFilter(filtersState, { item, listName });
         setFiltersState(updatedFilters);
         setFiltersToShow(updatedFilters);
-        if (!!onLazy) {
-            setDraftLazyLoadSelected(getSelectedFilters(updatedFilters));
-        }
+
+        setDraftLazyLoadSelected(getSelectedFilters(updatedFilters));
     };
 
     const handleSave = () => {
@@ -183,18 +183,39 @@ function FilterSelectBox(
         }
 
         const selectedFilters = !!onLazy ? draftLazyLoadSelected : getSelectedFilters(filtersState);
+        console.log("handleSave -> selectedFilters", selectedFilters);
         onSave(selectedFilters);
-        if (!!onLazy) {
-            setDraftLazyLoadSelected([]);
-        }
+
+        // update filterState with selected as a list on top
+        const noSelectedFilters = filter(filtersState, (filter) => {
+            return !includes(selectedFilters, filter);
+        });
+        console.log("handleSave -> noSelectedFilters", noSelectedFilters);
+
+        const newFilterState = isEmpty(selectedFilters)
+            ? flatMap(noSelectedFilters, (filter) => {
+                  return filter.listName === "Selected" ? filter.filtersList : filter;
+              })
+            : [
+                  {
+                      listName: "Selected",
+                      filtersList: selectedFilters
+                  },
+                  ...noSelectedFilters
+              ];
+        console.log("handleSave -> newFilterState", newFilterState);
+
+        setFiltersState(newFilterState);
+        setFiltersToShow(newFilterState);
+
+        setDraftLazyLoadSelected([]);
     };
 
     const clearSelections = () => {
         setFiltersState(unSelectAll(filtersState));
         setFiltersToShow(unSelectAll(filtersToShow));
-        if (!!onLazy) {
-            setDraftLazyLoadSelected([]);
-        }
+
+        setDraftLazyLoadSelected([]);
     };
 
     return (
