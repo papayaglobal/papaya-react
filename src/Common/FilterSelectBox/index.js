@@ -1,13 +1,13 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import styled from "styled-components";
-import { map, isEqual, compact, flatten, includes, filter, isEmpty, toLower, slice, size, flatMap } from "lodash";
+import { map, isEqual, compact, flatten, includes, filter, isEmpty, toLower, slice, size, flatMap, omit } from "lodash";
 import { BRIGHT5, DARK2, ACCENT1DARK } from "../../Constants/colors";
 import FilterList from "./FilterList";
 import SearchInput from "./SearchInput";
 import Button from "../Button";
 
 export const checkIfList = (filter) => {
-    if (filter.listName && filter.filtersList.length > 0) {
+    if (filter.listName && filter.filtersList && filter.filtersList.length > 0) {
         return true;
     }
     return false;
@@ -35,7 +35,7 @@ const unSelectAll = (filters) => {
 };
 
 const checkIfEqualAndToggle = (filterListItem, item) => {
-    return isEqual(filterListItem.data, item.data)
+    return isEqual(filterListItem, item)
         ? { ...filterListItem, isSelected: !filterListItem.isSelected }
         : filterListItem;
 };
@@ -60,7 +60,7 @@ const toggleFilter = (filters, { item, listName }) => {
 };
 
 const checkIfInDraft = (filterItem, draftFilters) => {
-    return !isEmpty(filter(draftFilters, (draft) => isEqual(draft, filterItem)));
+    return !isEmpty(filter(draftFilters, (draft) => isEqual(omit(draft, "isSelected"), filterItem)));
 };
 
 const mapFilters = (filters, draftFilters) => {
@@ -76,7 +76,7 @@ const mapFilters = (filters, draftFilters) => {
                 filtersList: map(filter.filtersList, (item) => {
                     return {
                         ...item,
-                        isSelected: checkIfInDraft(item, draftFilters) || item.isSelected || false
+                        isSelected: checkIfInDraft(filter, draftFilters) || item.isSelected || false
                     };
                 })
             };
@@ -84,13 +84,13 @@ const mapFilters = (filters, draftFilters) => {
     });
 };
 
-const getCustomFilters = (newFilters, prevFilters, isLazyLoad, draftFilters) => {
+const getCustomFilters = (newFilters, prevFilters, isLazyLoad, override, draftFilters) => {
     if (!isLazyLoad) {
         return mapFilters(newFilters);
     }
-    const diff = mapFilters(slice(newFilters, size(prevFilters) ? size(prevFilters) : 0), draftFilters);
+    const diff = mapFilters(slice(newFilters, override ? 0 : size(prevFilters) ? size(prevFilters) : 0), draftFilters);
 
-    return size(prevFilters) ? [...prevFilters, ...diff] : diff;
+    return override ? diff : size(prevFilters) ? [...prevFilters, ...diff] : diff;
 };
 
 function FilterSelectBox(
@@ -101,7 +101,7 @@ function FilterSelectBox(
 
     const [filtersState, setFiltersState] = useState([]);
     const [filtersToShow, setFiltersToShow] = useState([]);
-    const [draftLazyLoadSelected, setDraftLazyLoadSelected] = useState([]);
+    const [draftSelected, setDraftSelected] = useState([]);
     const [searchTermState, setSearchTermState] = useState(customSearchTerm);
 
     useImperativeHandle(ref, () => ({
@@ -114,7 +114,7 @@ function FilterSelectBox(
         setSearchTermState(term);
     };
 
-    const handleSearch = (value) => {
+    const handleSearch = (value, givenFilters = filtersState) => {
         if (onLazy) {
             onLazy(value);
             setFiltersState([]);
@@ -129,7 +129,7 @@ function FilterSelectBox(
         }
 
         const searchedFilters = compact(
-            map(filtersState, (filterItem) => {
+            map(givenFilters, (filterItem) => {
                 if (checkIfList(filterItem)) {
                     const filterdItemList = filter(filterItem.filtersList, (item) =>
                         item.searchTerm
@@ -149,17 +149,14 @@ function FilterSelectBox(
                 }
             })
         );
+        if (givenFilters !== filtersState) {
+            return searchedFilters;
+        }
         setFiltersToShow(flatten(searchedFilters));
     };
 
-    useEffect(() => {
-        const customFilters = getCustomFilters(filters, filtersState, !!onLazy, draftLazyLoadSelected);
-        setFiltersState(customFilters);
-        setFiltersToShow(customFilters);
-    }, [filters]);
-
-    const getSelectedFilters = (givenFilters) =>
-        compact(
+    const getSelectedFilters = (givenFilters) => {
+        return compact(
             flatMap(givenFilters, (filterItem) => {
                 if (filterItem.listName) {
                     return compact(map(filterItem.filtersList, (item) => item.isSelected === true && item));
@@ -168,13 +165,67 @@ function FilterSelectBox(
                 return filterItem.isSelected === true && filterItem;
             })
         );
+    };
+
+    const removeSelectedFilters = (givenFilters) => {
+        return compact(
+            flatMap(givenFilters, (filterItem) => {
+                const selectedFilters = compact(
+                    map(filterItem.filtersList, (item) => item.isSelected === false && item)
+                );
+                if (filterItem.listName && !isEmpty(selectedFilters)) {
+                    return {
+                        ...filterItem,
+                        filtersList: selectedFilters
+                    };
+                }
+
+                return filterItem.isSelected === false && filterItem;
+            })
+        );
+    };
+
+    useEffect(() => {
+        setGivenFilters(filters);
+    }, [filters]);
+
+    const setGivenFilters = (givenFilters, override) => {
+        const customFilters = getCustomFilters(givenFilters, filtersState, !!onLazy, override, draftSelected);
+        const selectedFilters = getSelectedFilters(customFilters);
+        const orderedfilters = removeSelectedFilters(customFilters);
+        if (!isEmpty(selectedFilters)) {
+            setFiltersState([
+                {
+                    listName: "Selected",
+                    filtersList: selectedFilters
+                },
+                ...orderedfilters
+            ]);
+            setFiltersToShow([
+                {
+                    listName: "Selected",
+                    filtersList: selectedFilters
+                },
+                ...orderedfilters
+            ]);
+        } else {
+            setFiltersState(customFilters);
+            setFiltersToShow(customFilters);
+        }
+        setDraftSelected(selectedFilters);
+    };
 
     const toggleIsSelected = (item, listName) => {
         const updatedFilters = toggleFilter(filtersState, { item, listName });
         setFiltersState(updatedFilters);
-        setFiltersToShow(updatedFilters);
+        if (!onLazy) {
+            const searchedFilters = searchTermState ? handleSearch(searchTermState, updatedFilters) : updatedFilters;
+            setFiltersToShow(searchedFilters);
+        } else {
+            setFiltersToShow(updatedFilters);
+        }
 
-        setDraftLazyLoadSelected(getSelectedFilters(updatedFilters));
+        setDraftSelected(getSelectedFilters(updatedFilters));
     };
 
     const handleSave = () => {
@@ -182,40 +233,15 @@ function FilterSelectBox(
             return;
         }
 
-        const selectedFilters = !!onLazy ? draftLazyLoadSelected : getSelectedFilters(filtersState);
-        console.log("handleSave -> selectedFilters", selectedFilters);
-        onSave(selectedFilters);
+        onSave(draftSelected);
 
-        // update filterState with selected as a list on top
-        const noSelectedFilters = filter(filtersState, (filter) => {
-            return !includes(selectedFilters, filter);
-        });
-        console.log("handleSave -> noSelectedFilters", noSelectedFilters);
-
-        const newFilterState = isEmpty(selectedFilters)
-            ? flatMap(noSelectedFilters, (filter) => {
-                  return filter.listName === "Selected" ? filter.filtersList : filter;
-              })
-            : [
-                  {
-                      listName: "Selected",
-                      filtersList: selectedFilters
-                  },
-                  ...noSelectedFilters
-              ];
-        console.log("handleSave -> newFilterState", newFilterState);
-
-        setFiltersState(newFilterState);
-        setFiltersToShow(newFilterState);
-
-        setDraftLazyLoadSelected([]);
+        setDraftSelected([]);
     };
 
     const clearSelections = () => {
-        setFiltersState(unSelectAll(filtersState));
-        setFiltersToShow(unSelectAll(filtersToShow));
-
-        setDraftLazyLoadSelected([]);
+        setDraftSelected([]);
+        setGivenFilters(unSelectAll(filters), true);
+        setSearchTermState("");
     };
 
     return (

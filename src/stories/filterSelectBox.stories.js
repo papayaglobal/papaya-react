@@ -101,6 +101,6 @@ storiesOf("Filter Select Box", module)
     ))
     .add("With Lazy Load", () => (
         <div className="app">
-            <FilterSelectBoxLazyLoad filters={filters} onSave={onSave} />
+            <FilterSelectBoxLazyLoad onSave={onSave} />
         </div>
     ));

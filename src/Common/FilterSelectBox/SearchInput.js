@@ -4,21 +4,17 @@ import { toLower, debounce } from "lodash";
 import { ReactComponent as SearchIcon } from "../../assets/icons/Search.svg";
 import { ACCENT1, LIGHTBLUE } from "../../Constants/colors";
 
-export default function SearchInput({ onChange, setTerm, searchTerm, delay = 1000 }) {
+export default function SearchInput({ onChange, setTerm, searchTerm, delay = 2000 }) {
     const onInputChange = debounce((value) => {
+        setTerm(value);
         onChange(toLower(value));
     }, delay);
-
-    const handleInputChange = (value) => {
-        setTerm(value);
-        onInputChange(value);
-    };
 
     return (
         <SearchInputContainer>
             <StyledSearchInput>
                 <SearchIcon />
-                <input type="text" onChange={(event) => handleInputChange(event.target.value)} value={searchTerm} />
+                <input type="text" onChange={(event) => onInputChange(event.target.value)} />
             </StyledSearchInput>
         </SearchInputContainer>
     );
