@@ -33,7 +33,12 @@ export default function FilterList({ filters, toggleIsSelected, onLazy, loading,
             {map(filters, (filter, index) => {
                 if (checkIfList(filter)) {
                     return (
-                        <div key={`filter-list-${index}`}>
+                        <FiltersGroupContainer
+                            key={`filter-list-${index}`}
+                            listName={filter.listName}
+                            filterIndex={index}
+                            listLength={filters.length}
+                        >
                             <FilterListName filterIndex={index}>{filter.listName}</FilterListName>
                             {map(filter.filtersList, (item, itemIndex) => {
                                 if (filter.filtersList.length === itemIndex + 1 && filters.length === index + 1) {
@@ -73,7 +78,7 @@ export default function FilterList({ filters, toggleIsSelected, onLazy, loading,
                                     );
                                 }
                             })}
-                        </div>
+                        </FiltersGroupContainer>
                     );
                 }
                 if (filters.length === index + 1) {
@@ -116,6 +121,12 @@ const FiltersContainer = styled.div`
     overflow: auto;
 `;
 
+const FiltersGroupContainer = styled.div`
+    width: 90%;
+    border-bottom: ${({ filterIndex, listLength }) =>
+        filterIndex === listLength - 1 ? "none" : `1px solid ${BRIGHTERBLACK}`};
+`;
+
 const FilterItem = styled.div`
     display: flex;
     align-items: center;
@@ -139,7 +150,6 @@ const FilterListName = styled.div`
     font-size: 12px;
     font-weight: bold;
     color: ${DARK1};
-    border-top: ${({ filterIndex }) => (filterIndex === 0 ? "none" : `1px solid ${BRIGHTERBLACK}`)};
 `;
 
 const SpinerContainer = styled.div`
