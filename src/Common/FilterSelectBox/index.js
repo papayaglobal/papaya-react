@@ -191,25 +191,20 @@ function FilterSelectBox(
         setGivenFilters(filters);
     }, [filters]);
 
-    const setGivenFilters = (givenFilters, override) => {
-        const customFilters = getCustomFilters(givenFilters, filtersState, !!onLazy, override, draftSelected);
+    const setGivenFilters = (givenFilters, override, draftFilters = draftSelected) => {
+        const customFilters = getCustomFilters(givenFilters, filtersState, !!onLazy, override, draftFilters);
         const selectedFilters = getSelectedFilters(customFilters);
-        const orderedfilters = removeSelectedFilters(customFilters);
+        const orderedFilters = removeSelectedFilters(customFilters);
+        const filterStateContent = [
+            {
+                listName: "Selected",
+                filtersList: selectedFilters
+            },
+            ...orderedFilters
+        ];
         if (!isEmpty(selectedFilters)) {
-            setFiltersState([
-                {
-                    listName: "Selected",
-                    filtersList: selectedFilters
-                },
-                ...orderedfilters
-            ]);
-            setFiltersToShow([
-                {
-                    listName: "Selected",
-                    filtersList: selectedFilters
-                },
-                ...orderedfilters
-            ]);
+            setFiltersState(filterStateContent);
+            setFiltersToShow(filterStateContent);
         } else {
             setFiltersState(customFilters);
             setFiltersToShow(customFilters);
@@ -243,7 +238,7 @@ function FilterSelectBox(
 
     const clearSelections = () => {
         setDraftSelected([]);
-        setGivenFilters(unSelectAll(filters), true);
+        setGivenFilters(unSelectAll(filters), true, []);
         setSearchTermState("");
     };
 

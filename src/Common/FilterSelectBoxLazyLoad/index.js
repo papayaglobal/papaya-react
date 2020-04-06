@@ -19,9 +19,8 @@ const lazyLoad = (value, prevList, prevSearchTerm) => {
         return { filters: filters.slice(0, pageSize), hasMore: filters.slice(0, pageSize).length < filters.length };
     }
     const newFilters = [...prevList, ...filters.slice(prevList.length, prevList.length + pageSize)];
+
     return { filters: newFilters, hasMore: newFilters.length < filters.length };
-    // const newFilters = value ? filters.slice(0, pageSize) : filters.slice(prevList.length - 1, pageSize);
-    // return value ? newFilters : [...prevList, ...newFilters];
 };
 
 export default function FilterSelectBoxLazyLoad({ onSave }) {
@@ -34,23 +33,8 @@ export default function FilterSelectBoxLazyLoad({ onSave }) {
         setLoadingState(true);
         setTimeout(() => {
             setFiltersState((prev) => {
-                // const total = 20;
-                // const newFilterss = [
-                //     ...prev,
-                //     ...times(3, () => ({
-                //         output: faker.company.companyName(),
-                //         data: faker.company.catchPhrase()
-                //     }))
-                // ];
-                // const res = value
-                //     ? filter(newFilterss, (filter) => {
-                //           return includes(toLower(filter.output), toLower(value));
-                //       })
-                //     : newFilterss;
-
                 const { filters, hasMore } = lazyLoad(value, prev, searchTerm);
                 setHasMore(hasMore);
-                // console.log(newFilterss);
                 return filters;
             });
             setLoadingState(false);
