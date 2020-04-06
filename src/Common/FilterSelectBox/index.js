@@ -220,14 +220,15 @@ function FilterSelectBox(
     const toggleIsSelected = (item, listName) => {
         const updatedFilters = toggleFilter(filtersState, { item, listName });
         setFiltersState(updatedFilters);
+        if (!item.isSelected) {
+            setDraftSelected((prev) => [...prev, { ...item, isSelected: true }]);
+        }
         if (!onLazy) {
             const searchedFilters = searchTermState ? handleSearch(searchTermState, updatedFilters) : updatedFilters;
             setFiltersToShow(searchedFilters);
         } else {
             setFiltersToShow(updatedFilters);
         }
-
-        setDraftSelected((prev) => [...prev, { ...item, isSelected: true }]);
     };
 
     const handleSave = () => {
