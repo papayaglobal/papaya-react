@@ -60,7 +60,9 @@ const toggleFilter = (filters, { item, listName }) => {
 };
 
 const checkIfInDraft = (filterItem, draftFilters) => {
-    return !isEmpty(filter(draftFilters, (draft) => isEqual(omit(draft, "isSelected"), filterItem)));
+    return !isEmpty(
+        filter(draftFilters, (draft) => isEqual(omit(draft, "isSelected"), omit(filterItem, "isSelected")))
+    );
 };
 
 const mapFilters = (filters, draftFilters) => {
@@ -212,7 +214,7 @@ function FilterSelectBox(
             setFiltersState(customFilters);
             setFiltersToShow(customFilters);
         }
-        setDraftSelected(selectedFilters);
+        setDraftSelected((prev) => [...prev, ...selectedFilters]);
     };
 
     const toggleIsSelected = (item, listName) => {
@@ -225,7 +227,7 @@ function FilterSelectBox(
             setFiltersToShow(updatedFilters);
         }
 
-        setDraftSelected(getSelectedFilters(updatedFilters));
+        setDraftSelected((prev) => [...prev, { ...item, isSelected: true }]);
     };
 
     const handleSave = () => {
