@@ -64,6 +64,7 @@ const DateWrapper = styled(Flex)`
 
 const FirstCollWrapper = styled(Flex)`
     width: 150px;
+    flex-shrink: 0;
     margin: 0 15px 0 0;
     @media (max-width: ${sizes.md}px) {
         flex-direction: row-reverse;
@@ -113,7 +114,7 @@ const ContractorExpandedPaymentRow = (props) => {
             <SubmittedProForma style={{color: DARK1}}/>
         </FirstCollWrapper>
 
-        <Flex column flex={12}>
+        <Flex column width={"calc(100% - 165px)"}>
             <StyledSubmittedText><strong>You</strong>'ve submitted a payment request for the {dateRange} payment period</StyledSubmittedText>
             <StyledAttachmentTitle margin={"25px 0 5px 0 "}>Pro Forma Invoice</StyledAttachmentTitle>
 
@@ -223,7 +224,7 @@ const ContractorPaymentRowExpandedContainer = (props) => {
 
     return <StyledExpandedContainer column isExpanded={isExpanded}>
         {map(lastTwoPayments, (payment, key) => <ContractorExpandedPaymentRow key={key} payment={payment}
-                                                                              isLastPaymentRequest={payments.length === (key + 1)} {...otherProps}/>)}
+                                                                              isLastPaymentRequest={lastTwoPayments.length === (key + 1)} {...otherProps}/>)}
     </StyledExpandedContainer>
 };
 

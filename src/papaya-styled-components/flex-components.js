@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import is from "styled-is";
-import { sizes } from "../Constants/mediaQueries";
+import {sizes} from "../Constants/mediaQueries";
 
 
 export const Flex = styled.div`
@@ -12,6 +12,7 @@ export const Flex = styled.div`
   
   border-top: ${({borderTop}) => borderTop};
   flex: ${({flex}) => flex};
+  width: ${({width}) => width};
   
   ${is("hideOnMobile")`
       @media (max-width: ${sizes.md}px) {
