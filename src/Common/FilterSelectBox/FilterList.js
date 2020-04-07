@@ -4,7 +4,7 @@ import { map, get } from "lodash";
 import { CheckBox } from "../Checkbox";
 import { DARK1, DARK3, BRIGHT1, BRIGHTERBLACK } from "../../Constants/colors";
 import Spinner from "../../Common/Spinner";
-import { checkIfList } from "./index";
+import { isList } from "./index";
 
 export default function FilterList({ filters, toggleIsSelected, onLazy, loading, hasMore }) {
     const observer = useRef();
@@ -31,7 +31,7 @@ export default function FilterList({ filters, toggleIsSelected, onLazy, loading,
     return (
         <FiltersContainer>
             {map(filters, (filter, index) => {
-                if (checkIfList(filter)) {
+                if (isList(filter)) {
                     return (
                         <FiltersGroupContainer
                             key={`filter-list-${index}`}

@@ -90,13 +90,7 @@ storiesOf("Filter Select Box", module)
     ))
     .add("With Search Term", () => (
         <div className="app">
-            <FilterSelectBox
-                filters={userTypeFilters}
-                onSave={onSave}
-                saveLabel="Save"
-                clearLabel="Clear Selection"
-                searchTerm="cu"
-            />
+            <FilterSelectBox filters={userTypeFilters} onSave={onSave} saveLabel="Save" clearLabel="Clear Selection" />
         </div>
     ))
     .add("With Lazy Load", () => (
