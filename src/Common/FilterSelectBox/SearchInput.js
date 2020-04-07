@@ -1,28 +1,32 @@
-import React from "react";
+import React, { inputEl, useImperativeHandle, forwardRef, useRef } from "react";
 import styled from "styled-components";
 import { toLower, debounce } from "lodash";
 import { ReactComponent as SearchIcon } from "../../assets/icons/Search.svg";
 import { ACCENT1, LIGHTBLUE } from "../../Constants/colors";
 
-export default function SearchInput({ onChange, setTerm, searchTerm, delay = 1000 }) {
+function SearchInput({ onChange, delay = 1000 }, ref) {
+    const inputEl = useRef(null);
     const onInputChange = debounce((value) => {
-        onChange(toLower(value));
+        onChange(value);
     }, delay);
 
-    const handleInputChange = (value) => {
-        setTerm(value);
-        onInputChange(value);
-    };
+    useImperativeHandle(ref, () => ({
+        clearInput: () => {
+            inputEl.current.value = "";
+        }
+    }));
 
     return (
         <SearchInputContainer>
             <StyledSearchInput>
                 <SearchIcon />
-                <input type="text" onChange={(event) => handleInputChange(event.target.value)} value={searchTerm} />
+                <input ref={inputEl} type="text" onChange={(event) => onInputChange(event.target.value)} />
             </StyledSearchInput>
         </SearchInputContainer>
     );
 }
+
+export default forwardRef(SearchInput);
 
 const StyledSearchInput = styled.div`
     display: flex;
