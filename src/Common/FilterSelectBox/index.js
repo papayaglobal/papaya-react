@@ -17,11 +17,11 @@ import {
     first,
     each
 } from "lodash";
-import * as hash from "object-hash";
 import { BRIGHT5, DARK2, ACCENT1DARK } from "../../Constants/colors";
 import FilterList from "./FilterList";
 import SearchInput from "./SearchInput";
 import Button from "../Button";
+const hash = require("object-hash");
 
 export const isList = (filter) => {
     if (filter.listName && filter.filtersList && filter.filtersList.length > 0) {
@@ -225,8 +225,7 @@ function FilterSelectBox(
         each(filters, (filter) => {
             if (isList(filter)) {
                 each(filter.filtersList, (listItem) => {
-                    const itemId = hash(listItem.data);
-                    dictionary[itemId] = listItem;
+                    dictionary[hash(listItem.data)] = listItem;
                 });
             } else {
                 dictionary[hash(filter.data)] = filter;
