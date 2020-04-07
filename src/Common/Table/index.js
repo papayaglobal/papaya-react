@@ -10,9 +10,10 @@ import {
     findIndex,
     isEmpty,
     isNil,
-    find
+    find,
+    isEqual
 } from "lodash";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } from "react";
 import styled from "styled-components";
 import { DARK3, DARK1 } from "../../Constants/colors";
 import SideMenuIcon from "../../assets/icons/context-menu.svg";
@@ -24,19 +25,22 @@ import Spinner from "../../Common/Spinner";
 import { CheckBox } from "../../Common/Checkbox";
 import { StyledActions } from "../../papaya-styled-components/contractorPaymentRowHelpers";
 
-export default function Table({
-    columns,
-    data,
-    onSelected,
-    expandable,
-    sideMenu,
-    defaultSideMenu,
-    rowCountDefault,
-    rowCountOptions,
-    onLazyLoad,
-    lazyExpand,
-    totalRows
-}) {
+function Table(
+    {
+        columns,
+        data,
+        onSelected,
+        expandable,
+        sideMenu,
+        defaultSideMenu,
+        rowCountDefault,
+        rowCountOptions,
+        onLazyLoad,
+        lazyExpand,
+        totalRows
+    },
+    ref
+) {
     const customData = map(data, (item, index) => {
         return {
             ...item,
@@ -45,7 +49,7 @@ export default function Table({
         };
     });
 
-    const customColumns = map(columns, column => {
+    const customColumns = map(columns, (column) => {
         return {
             ...column,
             sortOrder: null
@@ -57,7 +61,23 @@ export default function Table({
     const [firstRowIndex, setFirstRowIndex] = useState(0);
     const [rowCountState, setRowCountState] = useState(rowCountDefault);
     const [headerCheckboxState, setCheckboxState] = useState(false);
-    const paginRef = useRef();
+    const paginationRef = useRef();
+
+    useImperativeHandle(ref, () => ({
+        reset: () => {
+            setCustomColumnState(customColumns);
+            setCustomDataState(customData);
+
+            setFirstRowIndex(0);
+            paginationRef.current.goFirstPage();
+        }
+    }));
+
+    useEffect(() => {
+        if (!isEqual(customData, customDataState)) {
+            setCustomDataState(customData);
+        }
+    }, [data]);
 
     useEffect(() => {
         if (!isNil(onLazyLoad)) {
@@ -78,10 +98,7 @@ export default function Table({
             return;
         }
 
-        const sortedColumn = find(
-            customColumnState,
-            column => !isNil(column.sortOrder)
-        );
+        const sortedColumn = find(customColumnState, (column) => !isNil(column.sortOrder));
         const slicedData = await onLazyLoad({
             first: firstRowIndex,
             rowCount: rowCountState,
@@ -105,18 +122,8 @@ export default function Table({
             const isSortable = isNil(notSortable) || !notSortable;
 
             return (
-                <TableText
-                    key={`header-table-text-${headerIdx}`}
-                    flex={flex}
-                    header
-                >
-                    <span
-                        onClick={() =>
-                            isSortable && sortColumn(column, headerIdx)
-                        }
-                    >
-                        {output}
-                    </span>
+                <TableText key={`header-table-text-${headerIdx}`} flex={flex} isSortable={isSortable} header>
+                    <span onClick={() => isSortable && sortColumn(column, headerIdx)}>{output}</span>
                     <SortArrowContainer sortorder={sortOrder}>
                         <TableSortArrowIcon />
                     </SortArrowContainer>
@@ -127,12 +134,9 @@ export default function Table({
 
     const renderBody = () => {
         let rowsToShow = getRowsToShow();
-        return map(rowsToShow, row => {
+        return map(rowsToShow, (row) => {
             return (
-                <TableRowContainer
-                    key={`table-row-${row.rowIndex}`}
-                    isExpanded={row.isExpanded}
-                >
+                <TableRowContainer key={`table-row-${row.rowIndex}`} isExpanded={row.isExpanded}>
                     <TableRow isExpanded={row.isExpanded}>
                         {!isNil(row.isSelected) && (
                             <div>
@@ -143,20 +147,14 @@ export default function Table({
                             </div>
                         )}
                         {expandable && (
-                            <ExpandArrow
-                                onClick={() => expandRow(row.rowIndex, row)}
-                                isExpanded={row.isExpanded}
-                            >
+                            <ExpandArrow onClick={() => expandRow(row.rowIndex, row)} isExpanded={row.isExpanded}>
                                 <TableArrow></TableArrow>
                             </ExpandArrow>
                         )}
                         {map(customColumnState, (column, colKey) => {
                             const { colId, flex } = column;
                             return (
-                                <TableText
-                                    key={`body-table-text-${colKey}`}
-                                    flex={flex}
-                                >
+                                <TableText key={`body-table-text-${colKey}`} flex={flex}>
                                     {get(row, colId)}
                                 </TableText>
                             );
@@ -164,19 +162,12 @@ export default function Table({
                         {defaultSideMenu && renderSideMenu(row)}
                     </TableRow>
                     {expandable && (
-                        <ExpandRowContent
-                            isExpanded={row.isExpanded}
-                            ref={row.expandRowEl}
-                        >
+                        <ExpandRowContent isExpanded={row.isExpanded} ref={row.expandRowEl}>
                             {row.expandContent ? (
                                 row.expandContent
                             ) : (
                                 <SpinnerContainer>
-                                    <Spinner
-                                        width='34px'
-                                        height='34px'
-                                        color={DARK3}
-                                    />
+                                    <Spinner width="34px" height="34px" color={DARK3} />
                                 </SpinnerContainer>
                             )}
                         </ExpandRowContent>
@@ -189,7 +180,7 @@ export default function Table({
     const lazyRenderExpandContent = async (row, rowIndex) => {
         let currentData = customDataState;
         const newContent = await lazyExpand(row);
-        const index = currentData.findIndex(d => d.rowIndex === rowIndex);
+        const index = currentData.findIndex((d) => d.rowIndex === rowIndex);
         update(currentData, `[${index}].expandContent`, () => newContent);
 
         setCustomDataState([...currentData]);
@@ -202,11 +193,7 @@ export default function Table({
 
         let rowsToShow;
         if (rowCountState) {
-            rowsToShow = slice(
-                customDataState,
-                firstRowIndex,
-                firstRowIndex + rowCountState
-            );
+            rowsToShow = slice(customDataState, firstRowIndex, firstRowIndex + rowCountState);
         } else {
             rowsToShow = customDataState;
         }
@@ -214,12 +201,12 @@ export default function Table({
         return rowsToShow;
     };
 
-    const renderSideMenu = row => {
+    const renderSideMenu = (row) => {
         let list = [...defaultSideMenu];
         if (!isNil(row.sideMenuContent)) {
             list = row.sideMenuContent;
         }
-        list = map(list, sideMenu => ({
+        list = map(list, (sideMenu) => ({
             ...sideMenu,
             action: () => {
                 sideMenu.action(row);
@@ -229,11 +216,7 @@ export default function Table({
         return (
             <SideMenuContainer>
                 <StyledActions>
-                    <Dropdown
-                        list={list}
-                        icon={SideMenuIcon}
-                        buttonBackgroundColor={"transparent"}
-                    />
+                    <Dropdown list={list} icon={SideMenuIcon} buttonBackgroundColor={"transparent"} />
                 </StyledActions>
             </SideMenuContainer>
         );
@@ -241,23 +224,19 @@ export default function Table({
 
     const sortColumn = (column, headerIdx) => {
         let { sortOrder, colId } = column;
-        const updatedColumns = map(customColumnState, column => ({
+        const updatedColumns = map(customColumnState, (column) => ({
             ...column,
             sortOrder: null
         }));
 
         const updatedSortOrder = sortOrder === "asc" ? "desc" : "asc";
-        update(
-            updatedColumns,
-            `[${headerIdx}].sortOrder`,
-            () => updatedSortOrder
-        );
+        update(updatedColumns, `[${headerIdx}].sortOrder`, () => updatedSortOrder);
 
         setCustomColumnState([...updatedColumns]);
 
         if (!isNil(onLazyLoad)) {
             setFirstRowIndex(0);
-            paginRef.current.goFirstPage();
+            paginationRef.current.goFirstPage();
         } else {
             const updatedData = column.sortMethod
                 ? column.sortMethod(customDataState, updatedSortOrder)
@@ -265,18 +244,15 @@ export default function Table({
             setCustomDataState([...updatedData]);
             if (!isNil(rowCountDefault)) {
                 setFirstRowIndex(0);
-                paginRef.current.goFirstPage();
+                paginationRef.current.goFirstPage();
             }
         }
     };
 
-    const toggleCheckbox = rowIndex => {
+    const toggleCheckbox = (rowIndex) => {
         const updatedData = customDataState;
-        const index = findIndex(
-            updatedData,
-            item => item.rowIndex === rowIndex
-        );
-        update(updatedData, `[${index}].isSelected`, value => !value);
+        const index = findIndex(updatedData, (item) => item.rowIndex === rowIndex);
+        update(updatedData, `[${index}].isSelected`, (value) => !value);
         setCustomDataState([...updatedData]);
         if (onSelected) {
             onSelected(getSelected());
@@ -289,21 +265,17 @@ export default function Table({
     };
 
     const collapseRows = () => {
-        setCustomDataState(
-            map(customDataState, row => ({ ...row, isExpanded: false }))
-        );
+        setCustomDataState(map(customDataState, (row) => ({ ...row, isExpanded: false })));
     };
 
     const getSelected = () => {
-        let selectedRows = filter(customDataState, item => item.isSelected);
+        let selectedRows = filter(customDataState, (item) => item.isSelected);
 
-        return map(selectedRows, row =>
-            omit(row, ["isExpanded", "expandRowEl", "rowIndex"])
-        );
+        return map(selectedRows, (row) => omit(row, ["isExpanded", "expandRowEl", "rowIndex"]));
     };
 
-    const toggleAll = event => {
-        const updatedData = map(customDataState, item => {
+    const toggleAll = (event) => {
+        const updatedData = map(customDataState, (item) => {
             if (includes(getRowsToShow(), item)) {
                 item.isSelected = event.target.checked;
             }
@@ -320,20 +292,20 @@ export default function Table({
 
     const expandRow = (rowIndex, row) => {
         const updatedData = customDataState;
-        const index = updatedData.findIndex(d => d.rowIndex === rowIndex);
-        update(updatedData, `[${index}].isExpanded`, value => !value);
+        const index = updatedData.findIndex((d) => d.rowIndex === rowIndex);
+        update(updatedData, `[${index}].isExpanded`, (value) => !value);
         setCustomDataState([...updatedData]);
         if (lazyExpand && isNil(row.expandContent)) {
             lazyRenderExpandContent(row, rowIndex);
         }
     };
 
-    const changePage = page => {
+    const changePage = (page) => {
         collapseRows();
         setFirstRowIndex(page * rowCountState - rowCountState);
     };
 
-    const changeRowCount = rowCount => {
+    const changeRowCount = (rowCount) => {
         if (!rowCount) {
             return;
         }
@@ -346,10 +318,7 @@ export default function Table({
                 <TableRow header>
                     {!isNil(get(customDataState, "[0].isSelected")) && (
                         <div>
-                            <CheckBox
-                                checked={headerCheckboxState}
-                                onClick={toggleAll}
-                            />
+                            <CheckBox checked={headerCheckboxState} onClick={toggleAll} />
                         </div>
                     )}
                     {expandable && <ExpandArrow></ExpandArrow>}
@@ -359,13 +328,11 @@ export default function Table({
                 {renderBody()}
                 {rowCountState && (
                     <Paging
-                        ref={paginRef}
+                        ref={paginationRef}
                         pageCount={Math.ceil(
-                            onLazyLoad
-                                ? totalRows / rowCountState
-                                : customDataState.length / rowCountState
+                            onLazyLoad ? totalRows / rowCountState : customDataState.length / rowCountState
                         )}
-                        onNumClick={page => changePage(page)}
+                        onNumClick={(page) => changePage(page)}
                         rowCountDefault={{
                             value: rowCountDefault,
                             label: rowCountDefault
@@ -379,6 +346,8 @@ export default function Table({
     );
 }
 
+export default forwardRef(Table);
+
 const TableContainer = styled.div`
     margin: 0px 25px;
     border-top: 1px solid rgba(52, 57, 73, 0.1);
@@ -390,31 +359,26 @@ const TableRow = styled.div`
     display: flex;
     align-items: center;
     padding: 10px;
-    color: ${props => (props.header ? `${DARK3}` : `${DARK1}`)};
-    box-shadow: ${props =>
-        props.header || props.isExpanded
-            ? "none"
-            : "0 1px 4px 0 rgba(0, 0, 0, 0.1)"};
-    border-radius: ${props => (props.header ? "none" : "4px")};
-    transition: ${props =>
-        props.isExpanded ? "none" : "box-shadow 1.2s ease-out"};
+    color: ${(props) => (props.header ? `${DARK3}` : `${DARK1}`)};
+    box-shadow: ${(props) => (props.header || props.isExpanded ? "none" : "0 1px 4px 0 rgba(0, 0, 0, 0.1)")};
+    border-radius: ${(props) => (props.header ? "none" : "4px")};
+    transition: ${(props) => (props.isExpanded ? "none" : "box-shadow 1.2s ease-out")};
 `;
 
 const TableRowContainer = styled.div`
     display: flex;
     flex-direction: column;
-    box-shadow: ${props =>
-        props.isExpanded ? "0 1px 4px 0 rgba(0, 0, 0, 0.1)" : "none"};
+    box-shadow: ${(props) => (props.isExpanded ? "0 1px 4px 0 rgba(0, 0, 0, 0.1)" : "none")};
     transition: box-shadow 0.5s ease-out;
     margin-bottom: 7px;
 `;
 
 const TableText = styled.div`
-    flex: ${props => props.flex};
+    flex: ${(props) => props.flex};
     font-weight: ${({ header }) => (header ? "bold" : "regular")};
     span {
         &:hover {
-            cursor: pointer;
+            cursor: ${(props) => (props.isSortable ? "pointer" : "regular")};
         }
     }
 `;
@@ -453,8 +417,7 @@ const SortArrowContainer = styled.span`
     svg {
         transition: transform 0.5s, height 0.1s;
         height: ${({ sortorder }) => (sortorder ? "5px" : "0px")};
-        transform: ${({ sortorder }) =>
-            sortorder === "desc" ? "rotate(0deg)" : "rotate(-180deg)"};
+        transform: ${({ sortorder }) => (sortorder === "desc" ? "rotate(0deg)" : "rotate(-180deg)")};
     }
 `;
 
