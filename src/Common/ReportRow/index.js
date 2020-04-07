@@ -14,16 +14,19 @@ import more from "../../assets/icons/More.svg";
 import commentIcon from "../../assets/icons/Comment.svg";
 import PopOver from "../PopOver";
 
-const leaveTypes = {
-    sick: "Sick Leave(s)",
-    leave: "Vacations",
-    unpaid: "Unpaid"
-};
-
-const leaveColors = {
-    sick: "#E24C84",
-    leave: "#976FED",
-    unpaid: "#48C4D3"
+const ptoTypes = {
+    sick: {label: "Sick Leave(s)", color: "#E24C84"},
+    leave: {label: "Vacations", color: "#976FED"},
+    unpaid: {label: "Unpaid", color: "#48C4D3"},
+    child_care_leave: {label: "Child Care", color: "#F58614"},
+    maternity_leave: {label: "Maternity", color: "#F58614"},
+    paternity_leave: {label: "Paternity", color: "#F58614"},
+    parental_leave: {label: "Parental", color: "#F58614"},
+    marriage_leave: {label: "Marriage", color: "#F58614"},
+    birthday_leave: {label: "Birthday", color: "#72CF26"},
+    bereavement_leave: {label: "Bereavement", color: "#635F5B"},
+    military_leave: {label: "Military", color: "#4E9FC9"},
+    other: {label: "Other", color: "#4E9FC9"},
 };
 
 const ReportRowComponent = (props) => {
@@ -77,7 +80,7 @@ const ReportRowComponent = (props) => {
                 <div className="leaveWrapper">
                     {payPeriod && (<span className="date payPeriod">{payPeriod}</span>)}
                     <div className={`leaveBorder ${paddingPayPeriod ? "paddingPayPeriod" : ""}`}/>
-                    <span className="leaveType">{leaveTypes[type]}</span>
+                    <span className="leaveType">{ptoTypes[type].label}</span>
                 </div>
                 <div className="dateWrapper">
                     <span className="date">{dates}</span>
@@ -205,7 +208,7 @@ const ReportRow = styled(ReportRowComponent)`
   .leaveBorder {
     width: 3px;
     height: 14px;
-    background-color: ${props => leaveColors[props.type]};
+    background-color: ${props => ptoTypes[props.type].color};
     border-radius: 2.5px;
     &.paddingPayPeriod {
       margin-left: 122px;

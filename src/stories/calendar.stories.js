@@ -128,6 +128,22 @@ storiesOf("Calendar", module)
                         "__typename": "PtoItem"
                     },
                     {
+                        "id": 6,
+                        "type": "military_leave",
+                        "start": "2020-04-18",
+                        "end": "2020-04-18",
+                        "reportedByUserId": 33,
+                        "dateDisplayType": "SINGLE_DAY",
+                        "netDays": 1,
+                        "comment": "",
+                        "workerReport": currentPaymentPeriodWorkerReport,
+                        "informationSource": null,
+                        "attachments": [],
+                        "createdAt": "2019-09-23T14:34:44.000Z",
+                        "updatedAt": "2019-09-23T14:34:44.000Z",
+                        "__typename": "PtoItem"
+                    },
+                    {
                         "id": 8,
                         "type": "birthday_leave",
                         "start": "2020-03-07",

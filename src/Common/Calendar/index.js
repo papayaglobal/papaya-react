@@ -100,13 +100,15 @@ class Calendar extends React.Component {
         let formattedDate = "";
 
         while (day <= endDate) {
-            console.log("while.day =>", day);
             for (let i = 0; i < 7; i++) {
                 formattedDate = format(day, dateFormat);
                 const cloneDay = day;
                 days.push(
                     <Day
-                        className={`number ${this.getDayStatus({day, monthStart})}`}
+                        className={`number ${this.getDayType({day, monthStart})} ${this.getDayStatus({
+                            day,
+                            monthStart
+                        })}`}
                         type={this.getDayType({day, monthStart})}
                         key={day}
                         onClick={() => this.props.onDateClick(toDate(cloneDay))}

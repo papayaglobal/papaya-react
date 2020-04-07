@@ -180,7 +180,7 @@ export const Day = styled.div`
     .days {
       color: ${({type}) => get(ptoTypes, `${type}.currentPeriod.color`)};
     }
-    + .currentPeriod:before {
+    + .currentPeriod.${({type}) => type}:before {
       content: "";
       position: absolute;
       z-index: -1;
@@ -203,7 +203,7 @@ export const Day = styled.div`
     .days {
       color: ${({type}) => get(ptoTypes, `${type}.futurePeriod.color`)};      
     }
-    + .futurePeriod:before {
+    + .futurePeriod.${({type}) => type}:before {
       content: "";
       position: absolute;
       z-index: -1;
