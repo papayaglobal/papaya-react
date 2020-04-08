@@ -126,6 +126,9 @@ function FilterSelectBox(
     useImperativeHandle(ref, () => ({
         clearFilters: () => {
             clearSelections();
+        },
+        setSearchInput: () => {
+            searchEl.current.setInputValue();
         }
     }));
 
