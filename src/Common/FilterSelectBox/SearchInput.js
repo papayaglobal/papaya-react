@@ -1,10 +1,10 @@
-import React, { inputEl, useImperativeHandle, forwardRef, useRef } from "react";
+import { debounce } from "lodash";
+import React, { forwardRef, useImperativeHandle, useRef } from "react";
 import styled from "styled-components";
-import { toLower, debounce } from "lodash";
 import { ReactComponent as SearchIcon } from "../../assets/icons/Search.svg";
 import { ACCENT1, LIGHTBLUE } from "../../Constants/colors";
 
-function SearchInput({ onChange, searchTerm, delay = 1000 }, ref) {
+function SearchInput({ onChange, searchTerm, delay = 1000, placeholder }, ref) {
     const inputEl = useRef(null);
     const onInputChange = debounce((value) => {
         onChange(value);
@@ -23,7 +23,12 @@ function SearchInput({ onChange, searchTerm, delay = 1000 }, ref) {
         <SearchInputContainer>
             <StyledSearchInput>
                 <SearchIcon />
-                <input ref={inputEl} type="text" onChange={(event) => onInputChange(event.target.value)} />
+                <input
+                    ref={inputEl}
+                    type="text"
+                    onChange={(event) => onInputChange(event.target.value)}
+                    placeholder={placeholder}
+                />
             </StyledSearchInput>
         </SearchInputContainer>
     );
