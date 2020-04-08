@@ -4,7 +4,7 @@ import { toLower, debounce } from "lodash";
 import { ReactComponent as SearchIcon } from "../../assets/icons/Search.svg";
 import { ACCENT1, LIGHTBLUE } from "../../Constants/colors";
 
-function SearchInput({ onChange, delay = 1000 }, ref) {
+function SearchInput({ onChange, searchTerm, delay = 1000 }, ref) {
     const inputEl = useRef(null);
     const onInputChange = debounce((value) => {
         onChange(value);
@@ -13,6 +13,9 @@ function SearchInput({ onChange, delay = 1000 }, ref) {
     useImperativeHandle(ref, () => ({
         clearInput: () => {
             inputEl.current.value = "";
+        },
+        setInputValue: () => {
+            inputEl.current.value = searchTerm;
         }
     }));
 
