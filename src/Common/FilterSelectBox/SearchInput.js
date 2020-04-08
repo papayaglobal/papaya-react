@@ -13,6 +13,9 @@ function SearchInput({ onChange, delay = 1000 }, ref) {
     useImperativeHandle(ref, () => ({
         clearInput: () => {
             inputEl.current.value = "";
+        },
+        setInputValue: (value) => {
+            inputEl.current.value = value;
         }
     }));
 
