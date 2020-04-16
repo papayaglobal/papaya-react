@@ -124,7 +124,7 @@ function Table(
             return (
                 <TableText key={`header-table-text-${headerIdx}`} flex={flex} isSortable={isSortable} header>
                     <span onClick={() => isSortable && sortColumn(column, headerIdx)}>{output}</span>
-                    <SortArrowContainer sortorder={sortOrder}>
+                    <SortArrowContainer sortOrder={sortOrder}>
                         <TableSortArrowIcon />
                     </SortArrowContainer>
                 </TableText>
@@ -374,6 +374,7 @@ const TableRowContainer = styled.div`
 `;
 
 const TableText = styled.div`
+    position: relative;
     flex: ${(props) => props.flex};
     font-weight: ${({ header }) => (header ? "bold" : "regular")};
     span {
@@ -413,11 +414,13 @@ const SideMenuContainer = styled.div`
 `;
 
 const SortArrowContainer = styled.span`
+    position: absolute;
     margin-left: 5px;
+
     svg {
         transition: transform 0.5s, height 0.1s;
-        height: ${({ sortorder }) => (sortorder ? "5px" : "0px")};
-        transform: ${({ sortorder }) => (sortorder === "desc" ? "rotate(0deg)" : "rotate(-180deg)")};
+        height: ${({ sortOrder }) => (sortOrder ? "5px" : "0px")};
+        transform: ${({ sortOrder }) => (sortOrder === "desc" ? "rotate(0deg)" : "rotate(-180deg)")};
     }
 `;
 
