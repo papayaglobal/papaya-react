@@ -13,15 +13,19 @@ import {
     size,
     flatMap,
     omit,
-    find,
-    first,
-    each
+    uniqBy,
+    each,
+    get
 } from "lodash";
 import { BRIGHT5, DARK2, ACCENT1DARK } from "../../Constants/colors";
 import FilterList from "./FilterList";
 import SearchInput from "./SearchInput";
 import Button from "../Button";
 const hash = require("object-hash");
+
+export const hasList = (filters) => {
+    return isList(get(filters, "0", []));
+};
 
 export const isList = (filter) => {
     if (filter.listName && filter.filtersList && filter.filtersList.length > 0) {
@@ -83,7 +87,7 @@ const checkIfInDraft = (filterItem, draftFilters) => {
 };
 
 const mapFilters = (filters, draftFilters) => {
-    return map(filters, (filter) => {
+    const mappedFilters = map(filters, (filter) => {
         if (!isList(filter)) {
             return {
                 ...filter,
@@ -92,15 +96,20 @@ const mapFilters = (filters, draftFilters) => {
         } else {
             return {
                 ...filter,
-                filtersList: map(filter.filtersList, (item) => {
-                    return {
-                        ...item,
-                        isSelected: checkIfInDraft(filter, draftFilters) || item.isSelected || false
-                    };
-                })
+                filtersList: uniqBy(
+                    map(filter.filtersList, (item) => {
+                        return {
+                            ...item,
+                            isSelected: checkIfInDraft(filter, draftFilters) || item.isSelected || false
+                        };
+                    }),
+                    "data"
+                )
             };
         }
     });
+
+    return !hasList(filters) ? uniqBy(mappedFilters, "data") : mappedFilters;
 };
 
 const getCustomFilters = (newFilters, prevFilters, isLazyLoad, draftFilters) => {
@@ -109,13 +118,13 @@ const getCustomFilters = (newFilters, prevFilters, isLazyLoad, draftFilters) => 
     }
     const diff = mapFilters(slice(newFilters, size(prevFilters)), draftFilters);
 
-    return size(prevFilters) ? [...prevFilters, ...diff] : diff;
+    const customFilters = size(prevFilters) ? [...prevFilters, ...diff] : diff;
+
+    return customFilters;
 };
 
-function FilterSelectBox(
-    { filters, onSave, onLazy, loading, hasMore, saveLabel, clearLabel, searchTerm, inputDelay },
-    ref
-) {
+function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel, clearLabel, inputDelay }, ref) {
+    console.log("FilterSelectBox -> filters", filters);
     const searchEl = useRef(null);
     const [filtersState, setFiltersState] = useState([]);
     const [filtersToShow, setFiltersToShow] = useState([]);
@@ -176,50 +185,62 @@ function FilterSelectBox(
     };
 
     const getSelectedFilters = (givenFilters) => {
-        return compact(
+        const selectedFilters = compact(
             flatMap(givenFilters, (filterItem) => {
-                if (filterItem.listName) {
-                    return compact(map(filterItem.filtersList, (item) => item.isSelected === true && item));
+                if (isList(filterItem)) {
+                    return uniqBy(
+                        compact(map(filterItem.filtersList, (item) => item.isSelected === true && item)),
+                        "data"
+                    );
                 }
 
                 return filterItem.isSelected === true && filterItem;
             })
         );
+
+        return !hasList(givenFilters) ? uniqBy(selectedFilters, "data") : selectedFilters;
     };
 
     const getNewDrafts = (givenFilters, draftFilters) => {
-        return compact(
+        const newDrafts = compact(
             flatMap(givenFilters, (filterItem) => {
-                if (filterItem.listName) {
-                    return compact(
-                        map(
-                            filterItem.filtersList,
-                            (item) => item.isSelected === true && !checkIfInDraft(item, draftFilters) && item
-                        )
+                if (isList(filterItem)) {
+                    return uniqBy(
+                        compact(
+                            map(
+                                filterItem.filtersList,
+                                (item) => item.isSelected === true && !checkIfInDraft(item, draftFilters) && item
+                            )
+                        ),
+                        "data"
                     );
                 }
 
                 return filterItem.isSelected === true && !checkIfInDraft(filterItem, draftFilters) && filterItem;
             })
         );
+
+        return !hasList(givenFilters) ? uniqBy(newDrafts, "data") : newDrafts;
     };
 
     const getUnselectedFilters = (givenFilters) => {
-        return compact(
+        const unselectedFilters = compact(
             flatMap(givenFilters, (filterItem) => {
                 const unselectedFilters = compact(
                     map(filterItem.filtersList, (item) => item.isSelected === false && item)
                 );
-                if (filterItem.listName && !isEmpty(unselectedFilters)) {
+                if (isList(filterItem) && !isEmpty(unselectedFilters)) {
                     return {
                         ...filterItem,
-                        filtersList: unselectedFilters
+                        filtersList: uniqBy(unselectedFilters, "data")
                     };
                 }
 
                 return filterItem.isSelected === false && filterItem;
             })
         );
+
+        return !hasList(givenFilters) ? uniqBy(unselectedFilters, "data") : unselectedFilters;
     };
 
     const filtersToDictionary = (filters) => {
