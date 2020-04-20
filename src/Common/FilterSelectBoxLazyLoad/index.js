@@ -46,9 +46,9 @@ export default function FilterSelectBoxLazyLoad({ onSave }) {
         <div>
             <FilterSelectBox
                 filters={filtersState}
-                onSave={() => {
+                onSave={(filters) => {
                     changeFilters();
-                    onSave();
+                    onSave(filters);
                 }}
                 onLazy={changeFilters}
                 loading={loadingState}
