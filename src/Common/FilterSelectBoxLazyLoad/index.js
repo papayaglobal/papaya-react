@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { filter, includes, toLower, times, random } from "lodash";
+import { filter, times } from "lodash";
+import React, { useState } from "react";
 import FilterSelectBox from "../FilterSelectBox";
 
 const faker = require("faker");
@@ -46,7 +46,10 @@ export default function FilterSelectBoxLazyLoad({ onSave }) {
         <div>
             <FilterSelectBox
                 filters={filtersState}
-                onSave={onSave}
+                onSave={() => {
+                    changeFilters();
+                    onSave();
+                }}
                 onLazy={changeFilters}
                 loading={loadingState}
                 hasMore={hasMore}
