@@ -124,7 +124,6 @@ const getCustomFilters = (newFilters, prevFilters, isLazyLoad, draftFilters) => 
 };
 
 function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel, clearLabel, inputDelay }, ref) {
-    console.log("FilterSelectBox -> filters", filters);
     const searchEl = useRef(null);
     const [filtersState, setFiltersState] = useState([]);
     const [filtersToShow, setFiltersToShow] = useState([]);
@@ -185,17 +184,20 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
     };
 
     const getSelectedFilters = (givenFilters) => {
-        const selectedFilters = compact(
-            flatMap(givenFilters, (filterItem) => {
-                if (isList(filterItem)) {
-                    return uniqBy(
-                        compact(map(filterItem.filtersList, (item) => item.isSelected === true && item)),
-                        "data"
-                    );
-                }
+        const selectedFilters = uniqBy(
+            compact(
+                flatMap(givenFilters, (filterItem) => {
+                    if (isList(filterItem)) {
+                        return uniqBy(
+                            compact(map(filterItem.filtersList, (item) => item.isSelected === true && item)),
+                            "data"
+                        );
+                    }
 
-                return filterItem.isSelected === true && filterItem;
-            })
+                    return filterItem.isSelected === true && filterItem;
+                })
+            ),
+            "data"
         );
 
         return !hasList(givenFilters) ? uniqBy(selectedFilters, "data") : selectedFilters;
@@ -311,18 +313,22 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
     };
 
     const getFiltersByState = () => {
-        return map(filters, (filter) => {
-            if (isList(filter)) {
-                return {
-                    ...filter,
-                    filtersList: map(filter.filtersList, (filterListItem) => {
-                        return filtersDictionary[hash(filterListItem.data)];
-                    })
-                };
-            } else {
-                return filtersDictionary[hash(filter.data)];
-            }
-        });
+        return compact(
+            map(filters, (filter) => {
+                if (isList(filter)) {
+                    return {
+                        ...filter,
+                        filtersList: compact(
+                            map(filter.filtersList, (filterListItem) => {
+                                return filtersDictionary[hash(filterListItem.data)];
+                            })
+                        )
+                    };
+                } else {
+                    return filtersDictionary[hash(filter.data)];
+                }
+            })
+        );
     };
 
     const handleSave = () => {
