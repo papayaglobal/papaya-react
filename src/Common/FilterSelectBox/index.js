@@ -230,14 +230,36 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
         return dictionary;
     };
 
-    useEffect(() => {
-        updateGivenFilters(
-            !!onLazy
-                ? _.filter(filters, (filter) => {
-                      return _.isNil(filter.data) || _.isNil(filtersDictionary[hash(filter.data)]);
-                  })
-                : filters
+    const filterNonCachedItems = (filters) => {
+        const newFilters = _.compact(
+            _.map(filters, (filter) => {
+                if (isList(filter)) {
+                    const newListFilters = _.compact(
+                        _.map(filter.filtersList, (filterListItem) => {
+                            return filtersDictionary[hash(filterListItem.data)] ? null : filterListItem;
+                        })
+                    );
+
+                    if (_.isEmpty(newListFilters)) {
+                        return null;
+                    }
+
+                    return {
+                        ...filter,
+                        filtersList: newListFilters
+                    };
+                } else {
+                    return filtersDictionary[hash(filter.data)] ? null : filter;
+                }
+            })
         );
+
+        return newFilters;
+    };
+
+    useEffect(() => {
+        const toUpdate = !!onLazy ? filterNonCachedItems(filters) : filters;
+        updateGivenFilters(toUpdate);
     }, [filters]);
 
     useEffect(() => {
