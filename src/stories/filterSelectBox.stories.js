@@ -38,19 +38,19 @@ const filterGroups = [
 const userTypeFilters = [
     {
         output: <UserTypeFilter iconTitle="C" color="#00c7d6" text="Customer" />,
-        data: {},
+        data: "Customer",
         isSelected: false,
         searchTerm: "Customer"
     },
     {
         output: <UserTypeFilter iconTitle="P" color="#00c7d6" text="Papaya" />,
-        data: {},
+        data: "Papaya",
         isSelected: false,
         searchTerm: "Papaya"
     },
     {
         output: <UserTypeFilter iconTitle="S" color="#00c7d6" text="Supplier" />,
-        data: {},
+        data: "Supplier",
         isSelected: false,
         searchTerm: "Supplier"
     }
