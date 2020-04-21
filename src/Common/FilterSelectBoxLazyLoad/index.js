@@ -4,10 +4,13 @@ import FilterSelectBox from "../FilterSelectBox";
 
 const faker = require("faker");
 
-const fakeList = times(20, () => {
+const fakeList = times(20, (i) => {
     return {
-        output: faker.company.companyName(),
-        data: faker.company.catchPhrase()
+        output: `(${i + 1}) ${faker.company.companyName()}`,
+        data: {
+            id: faker.random.uuid(),
+            name: faker.company.companyName()
+        }
     };
 });
 
@@ -39,7 +42,7 @@ export default function FilterSelectBoxLazyLoad({ onSave }) {
             });
             setLoadingState(false);
             setSearchtem(value);
-        }, 2000);
+        }, 1000);
     };
 
     return (
@@ -53,6 +56,7 @@ export default function FilterSelectBoxLazyLoad({ onSave }) {
                 onLazy={changeFilters}
                 loading={loadingState}
                 hasMore={hasMore}
+                inputDelay={1000}
                 saveLabel="Save"
                 clearLabel="Clear Selection"
             />

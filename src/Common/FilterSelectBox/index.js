@@ -270,6 +270,7 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
     }, [filtersState]);
 
     const updateGivenFilters = (givenFilters) => {
+        // debugger;
         const customFilters = getCustomFilters(givenFilters, filtersState, !!onLazy, draftSelected);
         const selectedFilters = getSelectedFilters(customFilters);
         if (!isEmpty(selectedFilters)) {
