@@ -7,10 +7,6 @@ import SearchInput from "./SearchInput";
 import Button from "../Button";
 const hash = require("object-hash");
 
-export const hasList = (filters) => {
-    return isList(_.get(filters, "0", []));
-};
-
 export const isList = (filter) => {
     if (filter.listName && filter.filtersList && filter.filtersList.length > 0) {
         return true;
