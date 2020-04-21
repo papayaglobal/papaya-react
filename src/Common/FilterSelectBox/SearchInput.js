@@ -10,6 +10,10 @@ function SearchInput({ onChange, searchTerm, delay = 1000, placeholder }, ref) {
         onChange(value);
     }, delay);
 
+    if (inputEl.current) {
+        inputEl.current.focus();
+    }
+
     useImperativeHandle(ref, () => ({
         clearInput: () => {
             inputEl.current.value = "";
