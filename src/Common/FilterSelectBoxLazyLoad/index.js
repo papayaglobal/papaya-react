@@ -50,7 +50,7 @@ export default function FilterSelectBoxLazyLoad({ onSave }) {
             <FilterSelectBox
                 filters={filtersState}
                 onSave={(filters) => {
-                    changeFilters();
+                    changeFilters("");
                     onSave(filters);
                 }}
                 onLazy={changeFilters}
