@@ -228,8 +228,7 @@ function Table(
             ...column,
             sortOrder: null
         }));
-
-        const updatedSortOrder = sortOrder === "asc" ? "desc" : "asc";
+        const updatedSortOrder = sortOrder === "asc" ? "desc" : sortOrder === null ? "asc" : null;
         update(updatedColumns, `[${headerIdx}].sortOrder`, () => updatedSortOrder);
 
         setCustomColumnState([...updatedColumns]);
