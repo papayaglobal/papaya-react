@@ -1,5 +1,5 @@
 import { debounce } from "lodash";
-import React, { forwardRef, useImperativeHandle, useRef } from "react";
+import React, { forwardRef, useImperativeHandle, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { ReactComponent as SearchIcon } from "../../assets/icons/Search.svg";
 import { ACCENT1, LIGHTBLUE } from "../../Constants/colors";
@@ -10,9 +10,11 @@ function SearchInput({ onChange, searchTerm, delay = 1000, placeholder }, ref) {
         onChange(value);
     }, delay);
 
-    if (inputEl.current) {
-        inputEl.current.focus();
-    }
+    useEffect(() => {
+        if (inputEl.current) {
+            inputEl.current.focus();
+        }
+    }, []);
 
     useImperativeHandle(ref, () => ({
         clearInput: () => {
