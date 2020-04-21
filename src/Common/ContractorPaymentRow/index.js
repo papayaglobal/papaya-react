@@ -73,6 +73,14 @@ const FirstCollWrapper = styled(Flex)`
     }
 `;
 
+const StyledSubmittedContainer = styled(Flex)`
+  width: calc(100% - 165px);
+  @media (max-width: ${sizes.md}px) {
+    flex-grow: 12;  
+    width: auto;
+  }
+`;
+
 const getBackgroundColorByStatus = ({status}) => {
     switch (status) {
         case PAYMENT_REQUEST_STATUS.REJECTED:
@@ -114,7 +122,7 @@ const ContractorExpandedPaymentRow = (props) => {
             <SubmittedProForma style={{color: DARK1}}/>
         </FirstCollWrapper>
 
-        <Flex column width={"calc(100% - 165px)"}>
+        <StyledSubmittedContainer column>
             <StyledSubmittedText><strong>You</strong>'ve submitted a payment request for the {dateRange} payment period</StyledSubmittedText>
             <StyledAttachmentTitle margin={"25px 0 5px 0 "}>Pro Forma Invoice</StyledAttachmentTitle>
 
@@ -140,7 +148,7 @@ const ContractorExpandedPaymentRow = (props) => {
                     name={get(contractorPaymentRequestInvoice, "file.name")}
                 />
             </>}
-        </Flex>
+        </StyledSubmittedContainer>
     </RowWrapper>];
 
     if (isRejected) {

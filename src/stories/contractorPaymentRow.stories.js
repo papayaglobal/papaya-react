@@ -386,8 +386,18 @@ const actions = [
     }
 ];
 
+const CUSTOM_VIEWPORTS = {
+    GalaxyS9Plus: {
+        name: 'Galaxy S9/8 Plus',
+        styles: {
+            width: '412px',
+            height: '846px',
+        },
+    }
+};
+
 storiesOf("Contractor Payment Row", module)
-    .addParameters({viewport: {viewports: INITIAL_VIEWPORTS}})
+    .addParameters({viewport: {viewports: {...INITIAL_VIEWPORTS, ...CUSTOM_VIEWPORTS}}})
     .addDecorator(withKnobs)
     .add("iphone6", () => (
         <ContractorPaymentRow
