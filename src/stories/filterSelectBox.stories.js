@@ -4,6 +4,7 @@ import { number, withKnobs } from "@storybook/addon-knobs";
 import FilterSelectBox from "../Common/FilterSelectBox";
 import UserTypeFilter from "../Common/FilterSelectBox/UserTypeFilter";
 import FilterSelectBoxLazyLoad from "../Common/FilterSelectBoxLazyLoad";
+import FilterSelectGroupBoxLazyLoad from "../Common/FilterSelectGroupBoxLazyLoad";
 
 import "./stories.css";
 
@@ -96,5 +97,10 @@ storiesOf("Filter Select Box", module)
     .add("With Lazy Load", () => (
         <div className="app">
             <FilterSelectBoxLazyLoad onSave={onSave} />
+        </div>
+    ))
+    .add("Group With Lazy Load", () => (
+        <div className="app">
+            <FilterSelectGroupBoxLazyLoad onSave={onSave} />
         </div>
     ));
