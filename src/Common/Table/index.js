@@ -136,12 +136,8 @@ function Table(
         let rowsToShow = getRowsToShow();
         return map(rowsToShow, (row) => {
             return (
-                <TableRowContainer
-                    onClick={() => expandRow(row.rowIndex, row)}
-                    key={`table-row-${row.rowIndex}`}
-                    isExpanded={row.isExpanded}
-                >
-                    <TableRow isExpanded={row.isExpanded}>
+                <TableRowContainer key={`table-row-${row.rowIndex}`} isExpanded={row.isExpanded}>
+                    <TableRow onClick={() => expandRow(row.rowIndex, row)} isExpanded={row.isExpanded}>
                         {!isNil(row.isSelected) && (
                             <div>
                                 <CheckBox
@@ -366,6 +362,10 @@ const TableRow = styled.div`
     box-shadow: ${(props) => (props.header || props.isExpanded ? "none" : "0 1px 4px 0 rgba(0, 0, 0, 0.1)")};
     border-radius: ${(props) => (props.header ? "none" : "4px")};
     transition: ${(props) => (props.isExpanded ? "none" : "box-shadow 1.2s ease-out")};
+    pointer-events: ${({ header }) => (header ? "none" : "unset")};
+    &:hover {
+        cursor: pointer;
+    }
 `;
 
 const TableRowContainer = styled.div`
@@ -374,10 +374,6 @@ const TableRowContainer = styled.div`
     box-shadow: ${(props) => (props.isExpanded ? "0 1px 4px 0 rgba(0, 0, 0, 0.1)" : "none")};
     transition: box-shadow 0.5s ease-out;
     margin-bottom: 7px;
-
-    &:hover {
-        cursor: pointer;
-    }
 `;
 
 const TableText = styled.div`
