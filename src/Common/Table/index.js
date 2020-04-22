@@ -136,7 +136,11 @@ function Table(
         let rowsToShow = getRowsToShow();
         return map(rowsToShow, (row) => {
             return (
-                <TableRowContainer key={`table-row-${row.rowIndex}`} isExpanded={row.isExpanded}>
+                <TableRowContainer
+                    onClick={() => expandRow(row.rowIndex, row)}
+                    key={`table-row-${row.rowIndex}`}
+                    isExpanded={row.isExpanded}
+                >
                     <TableRow isExpanded={row.isExpanded}>
                         {!isNil(row.isSelected) && (
                             <div>
@@ -147,7 +151,7 @@ function Table(
                             </div>
                         )}
                         {expandable && (
-                            <ExpandArrow onClick={() => expandRow(row.rowIndex, row)} isExpanded={row.isExpanded}>
+                            <ExpandArrow isExpanded={row.isExpanded}>
                                 <TableArrow></TableArrow>
                             </ExpandArrow>
                         )}
@@ -370,6 +374,10 @@ const TableRowContainer = styled.div`
     box-shadow: ${(props) => (props.isExpanded ? "0 1px 4px 0 rgba(0, 0, 0, 0.1)" : "none")};
     transition: box-shadow 0.5s ease-out;
     margin-bottom: 7px;
+
+    &:hover {
+        cursor: pointer;
+    }
 `;
 
 const TableText = styled.div`
@@ -397,9 +405,6 @@ const ExpandArrow = styled.div`
     svg {
         transition: all 0.5s ease;
         transform: ${({ isExpanded }) => (isExpanded ? "rotate(90deg)" : "")};
-        &:hover {
-            cursor: pointer;
-        }
     }
 `;
 
