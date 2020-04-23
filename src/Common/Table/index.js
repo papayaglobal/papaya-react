@@ -362,9 +362,8 @@ const TableRow = styled.div`
     box-shadow: ${(props) => (props.header || props.isExpanded ? "none" : "0 1px 4px 0 rgba(0, 0, 0, 0.1)")};
     border-radius: ${(props) => (props.header ? "none" : "4px")};
     transition: ${(props) => (props.isExpanded ? "none" : "box-shadow 1.2s ease-out")};
-    pointer-events: ${({ header }) => (header ? "none" : "unset")};
     &:hover {
-        cursor: pointer;
+        cursor: ${({ header }) => (header ? "unset" : "pointer")};
     }
 `;
 
