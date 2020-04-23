@@ -7,13 +7,13 @@ import "./stories.css";
 import Paging from "../Common/Paging";
 
 export const actions = {
-  onClick: action("onClick")
+    onClick: action("onClick")
 };
 
 storiesOf("Paging", module)
-  .addDecorator(withKnobs)
-  .add("Default", () => (
-    <div className="app">
-      <Paging pageCount={6} onNumClick={num => console.log(num)}></Paging>
-    </div>
-  ));
+    .addDecorator(withKnobs)
+    .add("Default", () => (
+        <div className="app">
+            <Paging pageCount={9999999} onNumClick={(num) => console.log(num)}></Paging>
+        </div>
+    ));
