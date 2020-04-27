@@ -6,7 +6,7 @@ import { DARK1, DARK3, BRIGHT1, BRIGHTERBLACK } from "../../Constants/colors";
 import Spinner from "../../Common/Spinner";
 import { isList } from "./index";
 
-export default function FilterList({ filters, toggleIsSelected, onLazy, loading, hasMore }) {
+export default function FilterList({ filters, toggleIsSelected, onLazy, loading, hasMore, filterClassName }) {
     const observer = useRef();
     const lastFilterEl = useCallback(
         (node) => {
@@ -47,6 +47,7 @@ export default function FilterList({ filters, toggleIsSelected, onLazy, loading,
                                             <FilterItem
                                                 ref={lastFilterEl}
                                                 onClick={() => toggleIsSelected(item, filter.listName)}
+                                                className={filterClassName}
                                             >
                                                 <CheckBox
                                                     className="check-box"
@@ -67,6 +68,7 @@ export default function FilterList({ filters, toggleIsSelected, onLazy, loading,
                                         <FilterItem
                                             key={`item-Index-${itemIndex}`}
                                             onClick={() => toggleIsSelected(item, filter.listName)}
+                                            className={filterClassName}
                                         >
                                             <CheckBox
                                                 className="check-box"
@@ -84,7 +86,11 @@ export default function FilterList({ filters, toggleIsSelected, onLazy, loading,
                 if (filters.length === index + 1) {
                     return (
                         <span key={`filter-item-${index}`}>
-                            <FilterItem ref={lastFilterEl} onClick={() => toggleIsSelected(filter)}>
+                            <FilterItem
+                                ref={lastFilterEl}
+                                className={filterClassName}
+                                onClick={() => toggleIsSelected(filter)}
+                            >
                                 <CheckBox
                                     className="check-box"
                                     checked={filter.isSelected}
@@ -101,7 +107,7 @@ export default function FilterList({ filters, toggleIsSelected, onLazy, loading,
                     );
                 } else {
                     return (
-                        <FilterItem key={index} onClick={() => toggleIsSelected(filter)}>
+                        <FilterItem key={index} className={filterClassName} onClick={() => toggleIsSelected(filter)}>
                             <CheckBox
                                 className="check-box"
                                 checked={filter.isSelected}

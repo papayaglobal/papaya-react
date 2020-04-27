@@ -101,7 +101,10 @@ const getCustomFilters = (newFilters, prevFilters, isLazyLoad, draftFilters) => 
     return customFilters;
 };
 
-function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel, clearLabel, inputDelay }, ref) {
+function FilterSelectBox(
+    { filters, onSave, onLazy, loading, hasMore, saveLabel, clearLabel, inputDelay, filterClassName },
+    ref
+) {
     const searchEl = useRef(null);
     const [filtersState, setFiltersState] = useState([]);
     const [filtersToShow, setFiltersToShow] = useState([]);
@@ -375,6 +378,7 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
                         onLazy={() => onLazy(searchTermState)}
                         loading={loading}
                         hasMore={hasMore}
+                        filterClassName={filterClassName}
                     />
                     <ActionButtons>
                         <span onClick={clearSelections}>{clearLabel}</span>
