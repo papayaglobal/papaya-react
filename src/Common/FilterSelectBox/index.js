@@ -94,9 +94,26 @@ const getCustomFilters = (newFilters, prevFilters, isLazyLoad, draftFilters) => 
         return mapFilters(newFilters);
     }
 
-    const diff = mapFilters(newFilters, draftFilters);
+    const diff = [];
 
-    const customFilters = _.size(prevFilters) ? [...prevFilters, ...diff] : diff;
+    const newFiltersToAdd = mapFilters(newFilters, draftFilters);
+
+    _.each(newFiltersToAdd, (filter) => {
+        const relatedTo = _.find(
+            prevFilters,
+            (prevFilter) => filter.listName === prevFilter.listName
+        );
+        if (relatedTo) {
+            relatedTo.filtersList = _.uniqBy(
+                _.concat(relatedTo.filtersList, filter.filtersList),
+                "output"
+            );
+        } else {
+            diff.push(filter);
+        }
+    })
+
+    const customFilters = _.concat(prevFilters, diff);
 
     return customFilters;
 };
