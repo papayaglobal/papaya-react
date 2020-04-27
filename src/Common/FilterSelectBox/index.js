@@ -161,21 +161,6 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
 
     const handleSearch = (value, givenFilters = filtersState) => {
         setSearchTermState(value);
-        if (onLazy) {
-            onLazy(value);
-            setFiltersState([]);
-
-            return;
-        }
-
-        if (!value) {
-            setFiltersToShow(filtersState);
-
-            return;
-        }
-
-        const searchedFilters = filterBySearchTerm(givenFilters, value);
-        setFiltersToShow(_.flatten(searchedFilters));
     };
 
     const getSelectedFilters = (givenFilters) => {
@@ -278,6 +263,14 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
         const toUpdate = !!onLazy ? filterNonCachedItems(filters) : filters;
         updateGivenFilters(toUpdate);
     }, [filters]);
+
+    useEffect(() => {
+        if (onLazy) {
+            onLazy(searchTermState);
+
+            setFiltersState(filterBySearchTerm(filtersState, searchTermState));
+        }
+    }, [searchTermState]);
 
     useEffect(() => {
         const newDictionary = filtersToDictionary(filtersState);
