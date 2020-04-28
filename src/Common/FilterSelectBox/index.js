@@ -123,9 +123,9 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
     const [filtersState, setFiltersState] = useState([]);
     const [filtersToShow, setFiltersToShow] = useState([]);
     const [draftSelected, setDraftSelected] = useState([]);
-    const [filtersDictionary, setFiltersDictionary] = useState({});
     const [searchTermState, setSearchTermState] = useState("");
     const [previousFilters, setPreviousFilters] = useState([]);
+    const [selectedFilters, setSelectedFilters] = useState([]);
 
     useImperativeHandle(ref, () => ({
         clearFilters: () => {
@@ -171,7 +171,7 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
                     _.map(filterItem.filtersList, (item) => item.isSelected === false && item)
                 );
                 if (isList(filterItem) && !_.isEmpty(unselectedFilters)) {
-                    return {
+                    return filterItem.listName !== "Selected" && {
                         ...filterItem,
                         filtersList: unselectedFilters
                     };
@@ -182,22 +182,6 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
         );
 
         return unselectedFilters;
-    };
-
-    const filtersToDictionary = (filters) => {
-        const dictionary = {};
-
-        _.each(filters, (filter) => {
-            if (isList(filter)) {
-                _.each(filter.filtersList, (listItem) => {
-                    dictionary[hash(listItem.data)] = listItem;
-                });
-            } else {
-                dictionary[hash(filter.data)] = filter;
-            }
-        });
-
-        return dictionary;
     };
 
     useEffect(() => {
@@ -212,12 +196,6 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
         }
     }, [searchTermState]);
 
-    useEffect(() => {
-        const newDictionary = filtersToDictionary(filtersState);
-
-        setFiltersDictionary(newDictionary);
-    }, [filtersState]);
-
     const updateGivenFilters = (givenFilters) => {
         const customFilters = getCustomFilters(
             givenFilters,
@@ -225,8 +203,16 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
             !!onLazy,
             draftSelected
         );
-        setFiltersState(customFilters);
-        setFiltersToShow(customFilters);
+        const unselectedFilters = getUnselectedFilters(customFilters);
+        const filterStateContent = _.size(selectedFilters) ? _.concat(
+            [{
+                listName: "Selected",
+                filtersList: selectedFilters
+            }],
+            unselectedFilters
+        ) : unselectedFilters;
+        setFiltersState(filterStateContent);
+        setFiltersToShow(filterStateContent);
     };
 
     const handleToggle = (item, listName) => {
@@ -248,32 +234,12 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
         }
     };
 
-    const getFiltersByState = () => {
-        return _.compact(
-            _.map(filters, (filter) => {
-                if (isList(filter)) {
-                    return {
-                        ...filter,
-                        filtersList: _.compact(
-                            _.map(filter.filtersList, (filterListItem) => {
-                                return filtersDictionary[hash(filterListItem.data)];
-                            })
-                        )
-                    };
-                } else {
-                    return filtersDictionary[hash(filter.data)];
-                }
-            })
-        );
-    };
-
     const handleSave = () => {
         setSearchTermState("");
         searchEl.current.clearInput();
 
         if (!_.isEmpty(draftSelected)) {
-            const orderedFilters = getFiltersByState();
-            const unselectedFilters = getUnselectedFilters(orderedFilters);
+            const unselectedFilters = getUnselectedFilters(filtersState);
             const filterStateContent = [
                 {
                     listName: "Selected",
@@ -288,6 +254,7 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
             setFiltersState(unselectedFilters);
             setFiltersToShow(unselectedFilters);
         }
+        setSelectedFilters(draftSelected);
 
         if (!onSave) {
             return;
