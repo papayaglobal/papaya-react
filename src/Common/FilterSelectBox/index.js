@@ -14,27 +14,6 @@ export const isList = (filter) => {
     return false;
 };
 
-const unSelectAll = (filters) => {
-    return _.map(filters, (filter) => {
-        if (!isList(filter)) {
-            return {
-                ...filter,
-                isSelected: false
-            };
-        } else {
-            return {
-                ...filter,
-                filtersList: _.map(filter.filtersList, (item) => {
-                    return {
-                        ...item,
-                        isSelected: false
-                    };
-                })
-            };
-        }
-    });
-};
-
 const checkIfEqualAndToggle = (filterListItem, item) => {
     return _.isEqual(filterListItem, item)
         ? { ...filterListItem, isSelected: !filterListItem.isSelected }
@@ -60,9 +39,14 @@ const toggleFilter = (filters, { item, listName }) => {
     });
 };
 
+const isEqualFilters = (filter, compareFilter) => _.isEqual(
+    _.omit(filter, "isSelected"),
+    _.omit(compareFilter, "isSelected")
+)
+
 const checkIfInDraft = (filterItem, draftFilters) => {
     return !_.isEmpty(
-        _.filter(draftFilters, (draft) => _.isEqual(_.omit(draft, "isSelected"), _.omit(filterItem, "isSelected")))
+        _.filter(draftFilters, (draft) => isEqualFilters(draft, filterItem))
     );
 };
 
@@ -71,7 +55,7 @@ const mapFilters = (filters, draftFilters) => {
         if (!isList(filter)) {
             return {
                 ...filter,
-                isSelected: checkIfInDraft(filter, draftFilters) || filter.isSelected || false
+                isSelected: checkIfInDraft(filter, draftFilters)
             };
         } else {
             return {
@@ -79,7 +63,7 @@ const mapFilters = (filters, draftFilters) => {
                 filtersList: _.map(filter.filtersList, (item) => {
                     return {
                         ...item,
-                        isSelected: checkIfInDraft(item, draftFilters) || item.isSelected || false
+                        isSelected: checkIfInDraft(item, draftFilters)
                     };
                 })
             };
@@ -87,6 +71,20 @@ const mapFilters = (filters, draftFilters) => {
     });
 
     return mappedFilters;
+};
+
+const getSelectedFilters = (givenFilters) => {
+    const selectedFilters = _.compact(
+        _.flatMap(givenFilters, (filterItem) => {
+            if (isList(filterItem)) {
+                return _.compact(_.map(filterItem.filtersList, (item) => item.isSelected === true && item));
+            }
+
+            return filterItem.isSelected === true && filterItem;
+        })
+    );
+
+    return selectedFilters;
 };
 
 const getCustomFilters = (newFilters, prevFilters, isLazyLoad) => {
@@ -170,22 +168,24 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
         const unselectedFilters = _.compact(
             _.flatMap(givenFilters, (filterItem) => {
                 const unselectedFilters = _.compact(
-                    _.differenceWith(filterItem.filtersList, selectedFilters, (filter, selectedFilter) => {
-                        return _.isEqual(_.omit(filter, "isSelected"), _.omit(selectedFilter, "isSelected"))
-                    })
+                    _.differenceWith(filterItem.filtersList, selectedFilters, isEqualFilters)
                 );
-                if (isList(filterItem) && !_.isEmpty(unselectedFilters)) {
-                    return filterItem.listName !== "Selected" && {
+
+                if (isList(filterItem)) {
+                    if (_.isEmpty(unselectedFilters)) {
+
+                        return false;
+                    }
+
+                    return {
                         ...filterItem,
                         filtersList: unselectedFilters
                     };
                 }
+
                 return !_.find(
                     selectedFilters,
-                    (filter) => _.isEqual(
-                        _.omit(filter, "isSelected"),
-                        _.omit(filterItem, "isSelected")
-                    )
+                    (filter) => isEqualFilters(filter, filterItem)
                 ) && filterItem;
             })
         );
@@ -194,20 +194,18 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
     };
 
     const getFiltersToShow = () => {
-        const customFiltersToShow = mapFilters(filtersState, draftSelected);
+        let result = filtersState;
         if (!_.isEmpty(selectedFilters)) {
-            const unselectedFilters = getUnselectedFilters(customFiltersToShow, selectedFilters);
-            const filterStateContent = [
+            const unselectedFilters = getUnselectedFilters(result, selectedFilters);
+            result = [
                 {
                     listName: "Selected",
-                    filtersList: draftSelected
+                    filtersList: selectedFilters
                 },
                 ...unselectedFilters
             ];
-    
-            return filterStateContent;
         }
-        return customFiltersToShow;
+        return filterBySearchTerm(mapFilters(result, draftSelected), searchTermState);
     }
 
     useEffect(() => {
@@ -220,13 +218,13 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
         if (onLazy) {
             onLazy(searchTermState);
         } else {
-            setFiltersToShow(filterBySearchTerm(getFiltersToShow(), searchTermState));
+            setFiltersToShow(getFiltersToShow());
         }
     }, [searchTermState]);
 
     useEffect(() => {
         setFiltersToShow(getFiltersToShow());
-    }, [filtersState, selectedFilters]);
+    }, [filtersState, selectedFilters, draftSelected]);
 
     const updateGivenFilters = (givenFilters) => {
         const wasPreviously = filterBySearchTerm(filtersState, searchTermState);
@@ -235,6 +233,15 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
             wasPreviously,
             !!onLazy
         );
+        const selectedFilters = getSelectedFilters(givenFilters);
+        setDraftSelected((prev) => _.concat(
+            _.differenceWith(selectedFilters, prev, isEqualFilters),
+            prev
+        ));
+        setSelectedFilters((prev) => _.concat(
+            _.differenceWith(selectedFilters, prev, isEqualFilters),
+            prev
+        ));
         setFiltersState(customFilters);
     };
 
@@ -244,16 +251,6 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
                 ? _.filter(prev, (draftFilter) => !_.isEqual(draftFilter, item))
                 : [...prev, { ...item, isSelected: true }]
         );
-        const updatedFilters = toggleFilter(filtersToShow, { item, listName });
-
-        if (!onLazy) {
-            const searchedFilters = searchTermState
-                ? filterBySearchTerm(updatedFilters, searchTermState)
-                : updatedFilters;
-            setFiltersToShow(searchedFilters);
-        } else {
-            setFiltersToShow(updatedFilters);
-        }
     };
 
     const handleSave = () => {
@@ -269,7 +266,6 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
     };
 
     const clearSelections = () => {
-        setSelectedFilters([]);
         setDraftSelected([]);
         setSearchTermState("");
         searchEl.current.clearInput();
