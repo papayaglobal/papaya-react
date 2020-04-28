@@ -89,27 +89,29 @@ const mapFilters = (filters, draftFilters) => {
     return mappedFilters;
 };
 
-const getCustomFilters = (newFilters, prevFilters, isLazyLoad, draftFilters) => {
+const getCustomFilters = (newFilters, prevFilters, isLazyLoad) => {
     if (!isLazyLoad) {
-        return mapFilters(newFilters);
+        return newFilters;
     }
 
-    const diff = [];
+    let diff = [];
 
-    const newFiltersToAdd = mapFilters(newFilters, draftFilters);
-
-    _.each(newFiltersToAdd, (filter) => {
-        const relatedTo = _.find(
-            prevFilters,
-            (prevFilter) => filter.listName === prevFilter.listName
-        );
-        if (relatedTo) {
-            relatedTo.filtersList = _.uniqBy(
-                _.concat(relatedTo.filtersList, filter.filtersList),
-                "output"
+    _.each(newFilters, (filter) => {
+        if (isList(filter)) {
+            const relatedTo = _.find(
+                prevFilters,
+                (prevFilter) => filter.listName === prevFilter.listName
             );
+            if (relatedTo) {
+                relatedTo.filtersList = _.uniqBy(
+                    _.concat(relatedTo.filtersList, filter.filtersList),
+                    "output"
+                );
+            } else {
+                diff.push(filter);
+            }
         } else {
-            diff.push(filter);
+            diff = _.differenceWith(newFilters, prevFilters, _.isEqual);
         }
     })
 
@@ -164,11 +166,13 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
         setSearchTermState(value);
     };
 
-    const getUnselectedFilters = (givenFilters) => {
+    const getUnselectedFilters = (givenFilters, selectedFilters = []) => {
         const unselectedFilters = _.compact(
             _.flatMap(givenFilters, (filterItem) => {
                 const unselectedFilters = _.compact(
-                    _.map(filterItem.filtersList, (item) => item.isSelected === false && item)
+                    _.differenceWith(filterItem.filtersList, selectedFilters, (filter, selectedFilter) => {
+                        return _.isEqual(_.omit(filter, "isSelected"), _.omit(selectedFilter, "isSelected"))
+                    })
                 );
                 if (isList(filterItem) && !_.isEmpty(unselectedFilters)) {
                     return filterItem.listName !== "Selected" && {
@@ -176,13 +180,35 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
                         filtersList: unselectedFilters
                     };
                 }
-
-                return filterItem.isSelected === false && filterItem;
+                return !_.find(
+                    selectedFilters,
+                    (filter) => _.isEqual(
+                        _.omit(filter, "isSelected"),
+                        _.omit(filterItem, "isSelected")
+                    )
+                ) && filterItem;
             })
         );
 
         return unselectedFilters;
     };
+
+    const getFiltersToShow = () => {
+        const customFiltersToShow = mapFilters(filtersState, draftSelected);
+        if (!_.isEmpty(selectedFilters)) {
+            const unselectedFilters = getUnselectedFilters(customFiltersToShow, selectedFilters);
+            const filterStateContent = [
+                {
+                    listName: "Selected",
+                    filtersList: draftSelected
+                },
+                ...unselectedFilters
+            ];
+    
+            return filterStateContent;
+        }
+        return customFiltersToShow;
+    }
 
     useEffect(() => {
         updateGivenFilters(filters);
@@ -193,26 +219,23 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
     useEffect(() => {
         if (onLazy) {
             onLazy(searchTermState);
+        } else {
+            setFiltersToShow(filterBySearchTerm(getFiltersToShow(), searchTermState));
         }
     }, [searchTermState]);
 
+    useEffect(() => {
+        setFiltersToShow(getFiltersToShow());
+    }, [filtersState, selectedFilters]);
+
     const updateGivenFilters = (givenFilters) => {
+        const wasPreviously = filterBySearchTerm(filtersState, searchTermState);
         const customFilters = getCustomFilters(
             givenFilters,
-            filterBySearchTerm(filtersState, searchTermState),
-            !!onLazy,
-            draftSelected
+            wasPreviously,
+            !!onLazy
         );
-        const unselectedFilters = getUnselectedFilters(customFilters);
-        const filterStateContent = _.size(selectedFilters) ? _.concat(
-            [{
-                listName: "Selected",
-                filtersList: selectedFilters
-            }],
-            unselectedFilters
-        ) : unselectedFilters;
-        setFiltersState(filterStateContent);
-        setFiltersToShow(filterStateContent);
+        setFiltersState(customFilters);
     };
 
     const handleToggle = (item, listName) => {
@@ -221,8 +244,7 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
                 ? _.filter(prev, (draftFilter) => !_.isEqual(draftFilter, item))
                 : [...prev, { ...item, isSelected: true }]
         );
-        const updatedFilters = toggleFilter(filtersState, { item, listName });
-        setFiltersState(updatedFilters);
+        const updatedFilters = toggleFilter(filtersToShow, { item, listName });
 
         if (!onLazy) {
             const searchedFilters = searchTermState
@@ -238,22 +260,6 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
         setSearchTermState("");
         searchEl.current.clearInput();
 
-        if (!_.isEmpty(draftSelected)) {
-            const unselectedFilters = getUnselectedFilters(filtersState);
-            const filterStateContent = [
-                {
-                    listName: "Selected",
-                    filtersList: draftSelected
-                },
-                ...unselectedFilters
-            ];
-            setFiltersState(filterStateContent);
-            setFiltersToShow(filterStateContent);
-        } else {
-            const unselectedFilters = unSelectAll(filters);
-            setFiltersState(unselectedFilters);
-            setFiltersToShow(unselectedFilters);
-        }
         setSelectedFilters(draftSelected);
 
         if (!onSave) {
@@ -263,9 +269,7 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
     };
 
     const clearSelections = () => {
-        const unselectedFilters = unSelectAll(filters); // not using filtersstate cuz need to original positions
-        setFiltersState(unselectedFilters);
-        setFiltersToShow(unselectedFilters);
+        setSelectedFilters([]);
         setDraftSelected([]);
         setSearchTermState("");
         searchEl.current.clearInput();
