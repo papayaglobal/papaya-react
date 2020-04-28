@@ -37,7 +37,8 @@ function Table(
         rowCountOptions,
         onLazyLoad,
         lazyExpand,
-        totalRows
+        totalRows,
+        className
     },
     ref
 ) {
@@ -313,7 +314,7 @@ function Table(
 
     return (
         <>
-            <TableContainer>
+            <TableContainer className={className}>
                 <TableRow header>
                     {!isNil(get(customDataState, "[0].isSelected")) && (
                         <div>
