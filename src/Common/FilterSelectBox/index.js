@@ -79,7 +79,7 @@ const mapFilters = (filters, draftFilters) => {
                 filtersList: _.map(filter.filtersList, (item) => {
                     return {
                         ...item,
-                        isSelected: checkIfInDraft(filter, draftFilters) || item.isSelected || false
+                        isSelected: checkIfInDraft(item, draftFilters) || item.isSelected || false
                     };
                 })
             };
@@ -125,6 +125,7 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
     const [draftSelected, setDraftSelected] = useState([]);
     const [filtersDictionary, setFiltersDictionary] = useState({});
     const [searchTermState, setSearchTermState] = useState("");
+    const [previousFilters, setPreviousFilters] = useState([]);
 
     useImperativeHandle(ref, () => ({
         clearFilters: () => {
@@ -159,41 +160,8 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
         );
     };
 
-    const handleSearch = (value, givenFilters = filtersState) => {
+    const handleSearch = (value) => {
         setSearchTermState(value);
-    };
-
-    const getSelectedFilters = (givenFilters) => {
-        const selectedFilters = _.compact(
-            _.flatMap(givenFilters, (filterItem) => {
-                if (isList(filterItem)) {
-                    return _.compact(_.map(filterItem.filtersList, (item) => item.isSelected === true && item));
-                }
-
-                return filterItem.isSelected === true && filterItem;
-            })
-        );
-
-        return selectedFilters;
-    };
-
-    const getNewDrafts = (givenFilters, draftFilters) => {
-        const newDrafts = _.compact(
-            _.flatMap(givenFilters, (filterItem) => {
-                if (isList(filterItem)) {
-                    return _.compact(
-                        _.map(
-                            filterItem.filtersList,
-                            (item) => item.isSelected === true && !checkIfInDraft(item, draftFilters) && item
-                        )
-                    );
-                }
-
-                return filterItem.isSelected === true && !checkIfInDraft(filterItem, draftFilters) && filterItem;
-            })
-        );
-
-        return newDrafts;
     };
 
     const getUnselectedFilters = (givenFilters) => {
@@ -232,43 +200,15 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
         return dictionary;
     };
 
-    const filterNonCachedItems = (filters) => {
-        const newFilters = _.compact(
-            _.map(filters, (filter) => {
-                if (isList(filter)) {
-                    const newListFilters = _.compact(
-                        _.map(filter.filtersList, (filterListItem) => {
-                            return filtersDictionary[hash(filterListItem.data)] ? null : filterListItem;
-                        })
-                    );
-
-                    if (_.isEmpty(newListFilters)) {
-                        return null;
-                    }
-
-                    return {
-                        ...filter,
-                        filtersList: newListFilters
-                    };
-                } else {
-                    return filtersDictionary[hash(filter.data)] ? null : filter;
-                }
-            })
-        );
-
-        return newFilters;
-    };
-
     useEffect(() => {
-        const toUpdate = !!onLazy ? filterNonCachedItems(filters) : filters;
-        updateGivenFilters(toUpdate);
-    }, [filters]);
+        updateGivenFilters(filters);
+
+        setPreviousFilters(filters);
+    }, [!_.isEqual(filters, previousFilters)]);
 
     useEffect(() => {
         if (onLazy) {
             onLazy(searchTermState);
-
-            setFiltersState(filterBySearchTerm(filtersState, searchTermState));
         }
     }, [searchTermState]);
 
@@ -279,24 +219,14 @@ function FilterSelectBox({ filters, onSave, onLazy, loading, hasMore, saveLabel,
     }, [filtersState]);
 
     const updateGivenFilters = (givenFilters) => {
-        const customFilters = getCustomFilters(givenFilters, filtersState, !!onLazy, draftSelected);
-        const selectedFilters = getSelectedFilters(customFilters);
-        if (!_.isEmpty(selectedFilters)) {
-            const orderedFilters = getUnselectedFilters(customFilters);
-            const filterStateContent = [
-                {
-                    listName: "Selected",
-                    filtersList: selectedFilters
-                },
-                ...orderedFilters
-            ];
-            setFiltersState(filterStateContent);
-            setFiltersToShow(filterStateContent);
-        } else {
-            setFiltersState(customFilters);
-            setFiltersToShow(customFilters);
-        }
-        setDraftSelected((prev) => [...prev, ...getNewDrafts(customFilters, draftSelected)]);
+        const customFilters = getCustomFilters(
+            givenFilters,
+            filterBySearchTerm(filtersState, searchTermState),
+            !!onLazy,
+            draftSelected
+        );
+        setFiltersState(customFilters);
+        setFiltersToShow(customFilters);
     };
 
     const handleToggle = (item, listName) => {
