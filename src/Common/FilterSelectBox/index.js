@@ -382,7 +382,7 @@ function FilterSelectBox(
                     />
                     <ActionButtons>
                         <span onClick={clearSelections}>{clearLabel}</span>
-                        <Button size="medium" onClick={handleSave}>
+                        <Button className="save-btn" size="medium" onClick={handleSave}>
                             {saveLabel}
                         </Button>
                     </ActionButtons>
