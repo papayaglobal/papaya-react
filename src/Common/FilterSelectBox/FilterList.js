@@ -39,7 +39,9 @@ export default function FilterList({ filters, toggleIsSelected, onLazy, loading,
                             filterIndex={index}
                             listLength={filters.length}
                         >
-                            <FilterListName filterIndex={index}>{filter.listName}</FilterListName>
+                            <FilterListName className="filter-list-name" filterIndex={index}>
+                                {filter.listName}
+                            </FilterListName>
                             {map(filter.filtersList, (item, itemIndex) => {
                                 if (filter.filtersList.length === itemIndex + 1 && filters.length === index + 1) {
                                     return (
