@@ -11,7 +11,8 @@ import {
     isEmpty,
     isNil,
     find,
-    isEqual
+    isEqual,
+    toLower
 } from "lodash";
 import React, { useEffect, useRef, useState, forwardRef, useImperativeHandle } from "react";
 import styled from "styled-components";
@@ -124,7 +125,12 @@ function Table(
 
             return (
                 <TableText key={`header-table-text-${headerIdx}`} flex={flex} isSortable={isSortable} header>
-                    <span onClick={() => isSortable && sortColumn(column, headerIdx)}>{output}</span>
+                    <span
+                        className={`${toLower(output)}-table-header`}
+                        onClick={() => isSortable && sortColumn(column, headerIdx)}
+                    >
+                        {output}
+                    </span>
                     <SortArrowContainer sortOrder={sortOrder}>
                         <TableSortArrowIcon />
                     </SortArrowContainer>
