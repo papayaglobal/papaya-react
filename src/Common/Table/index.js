@@ -144,7 +144,11 @@ function Table(
         return map(rowsToShow, (row) => {
             return (
                 <TableRowContainer key={`table-row-${row.rowIndex}`} isExpanded={row.isExpanded}>
-                    <TableRow onClick={() => expandRow(row.rowIndex, row)} isExpanded={row.isExpanded}>
+                    <TableRow
+                        className="table-row"
+                        onClick={() => expandRow(row.rowIndex, row)}
+                        isExpanded={row.isExpanded}
+                    >
                         {!isNil(row.isSelected) && (
                             <div>
                                 <CheckBox
